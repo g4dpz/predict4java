@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/main/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/main/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/testutil.jar"/>
+	<classpathentry kind="lib" path="lib/test/qdox-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/joda-time-jar-1.6.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
