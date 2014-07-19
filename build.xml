@@ -9,7 +9,7 @@
 	<property file="${user.home}/.ant/${project}.build.properties"/>
 	<property file="${user.home}/build.properties"/>
 	<property file="${basedir}/${project}.build.properties"/>
-	
+
 	<!-- The version file name -->
 	<property file="${basedir}/version.properties"/>
 	<property file="${basedir}/build.number"/>
@@ -63,7 +63,7 @@
 	<property name="dir.output.reports.findbugs" value="${dir.output.reports}/findbugs"/>
 	<property name="dir.output.reports.findbugs.xml" value="${dir.output.reports.findbugs}/xml"/>
 	<property name="dir.output.reports.jdepend" value="${dir.output.reports}/jdepend"/>
-	
+
 	<property name="dir.output.deploy" value="${dir.output}/deploy"/>
 	<property name="dir.output.war" value="${dir.output}/war"/>
 
@@ -74,7 +74,7 @@
 	<property name="database.dir" value="${basedir}/database" />
 	<property name="schema.baseline.file" value="${schema.dir}/000_blank_database.xml"/>
 	<property name="schema.changelog.file" value="${schema.dir}/websat.xml"/>
-	
+
 	<!-- properties file used to configure the environment for running unit tests -->
 	<property name="test.jdbc.properties"
 		value="${test.src.dir}/jdbc.properties" />
@@ -147,7 +147,7 @@
 	<taskdef resource="checkstyletask.properties" classpathref="path.classpath.checkstyle" />
 	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
 		classpathref="path.classpath.findbugs" />
-	<taskdef resource="liquibasetasks.properties" 
+	<taskdef resource="liquibasetasks.properties"
 		classpathref="path.classpath.test"/>
 
 	<!-- jdepend libraries must be on the global classpath, within ~/.ant/lib or specified with -lib
@@ -312,6 +312,9 @@
 		<mkdir dir="${dir.output.reports.test.html}"/>
 
 		<junit fork="yes" forkmode="once" printsummary="yes"  failureproperty="failure.unittest">
+
+			<jvmarg value="-XX:-UseSplitVerifier" />
+
 			<sysproperty key="net.sourceforge.cobertura.datafile"
 				file="${file.coverage.data}" />
 
@@ -352,7 +355,7 @@
 		<mkdir dir="${dir.output.reports.findbugs.xml}"/>
 		<findbugs home="${findbugs.home.dir}"
                 output="xml"
-                outputFile="${dir.output.reports.findbugs.xml}/findbugs.xml" 
+                outputFile="${dir.output.reports.findbugs.xml}/findbugs.xml"
 			 	jvmargs="-Xmx512M">
 			<sourcePath path="${dir.src.main}" />
 			<auxClasspath>
@@ -369,14 +372,17 @@
 		<buildnumber />
 		<jar file="${dir.dist}/predict4java_${version.majorminor}.${svn.revision}.${build.number}.jar" basedir="${dir.output.classes.main}"/>
 	</target>
-	
+
 	<target name="canDoSvn">
 		<condition property="can.do.svn">
-			<available file="svn" type="file">
-				<filepath>
-					<pathelement path="${env.PATH}"/>
-				</filepath>
-			</available>
+			<and>
+				<available file="svn" type="file">
+					<filepath>
+						<pathelement path="${env.PATH}"/>
+					</filepath>
+				</available>
+				<available file=".svn" type="dir" />
+			</and>
 		</condition>
 	</target>
 
