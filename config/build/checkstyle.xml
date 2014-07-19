@@ -87,9 +87,6 @@ Standard checks
             <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="Do not enforce this. We want to allow inline conditionals"/>
             <property name="severity" value="ignore"/>
         </module>
-        <module name="DoubleCheckedLocking">
-            <property name="severity" value="error"/>
-        </module>
         <module name="EmptyStatement">
             <property name="severity" value="error"/>
         </module>
