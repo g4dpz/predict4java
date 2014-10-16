@@ -77,15 +77,12 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
     }
 
     /**
-     * This function is used to calculate the position and velocity of deep-space (period > 225
+     * This function is used to calculate the position and velocity of deep-space (period &gt; 255
      * minutes) satellites. tsince is time since epoch in minutes, tle is a pointer to a tle_t
      * structure with Keplerian orbital elements and pos and vel are vector_t structures returning
      * ECI satellite position and velocity. Use Convert_Sat_State() to convert to km and km/S.
      *
      * @param tsince time since the epoch
-     * @param position the position
-     * @param velocity the velocity
-     * @param satPos the position of the satellite
      */
     @Override
     protected synchronized void calculateSDP4(final double tsince) {
@@ -580,7 +577,10 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
         }
 
         /**
-         * @param tle
+         *
+         * Calculates a resonance for a TLE
+         *
+         * @param tle The TLE to calculate resonance for
          */
         private void calculateResonance(final TLE tle) {
             resonance = true;
@@ -860,8 +860,7 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
         /**
          * Initialises the Synchronous resonance terms.
          *
-         * @param tle The <code>TLE</code>
-         * @param dsv The <code>DeepSpaceValueObject</code>
+         * @param tle The TLE
          */
         private void initSynchronousResonanceTerms(final TLE tle) {
             resonance = true;
@@ -890,8 +889,7 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
         /**
          * Entrance for deep space secular effects.
          *
-         * @param tle the three line elements
-         * @param dsv the deep space values
+         * @param tle The TLE
          */
         private void dpsec(final TLE tle) {
             dsv.xll = dsv.xll + ssl * dsv.t;
@@ -1041,7 +1039,6 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
          * Entrance for lunar-solar periodics.
          *
          * @param tle the three line elements
-         * @param dsv the deep space values
          */
         private void dpper(final TLE tle) {
             sinis = Math.sin(dsv.xinc);
@@ -1107,13 +1104,10 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
                 dsv.xll = dsv.xll + pl;
                 dsv.omgadf = xls - dsv.xll - Math.cos(dsv.xinc) * dsv.xnode;
             }
-            return;
         }
 
         /**
          * Apply periodics with Lyddane modification.
-         *
-         * @param dsv the space values
          */
         private void applyPeriodics() {
             sinok = Math.sin(dsv.xnode);
@@ -1141,7 +1135,6 @@ public class DeepSpaceSatellite extends AbstractSatellite implements Serializabl
          * Reference: The 1992 Astronomical Almanac, page B6.
          *
          * @param epoch the epach
-         * @param dsv the deep space values
          * @return the Greenwich Mean Sidereal Time
          */
         private double thetaG(final double epoch) {

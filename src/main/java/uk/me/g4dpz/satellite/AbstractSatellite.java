@@ -174,7 +174,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
 
         final Calendar sgp4Epoch = Calendar.getInstance(TZ);
         sgp4Epoch.clear();
-        sgp4Epoch.set(1979, 11, 31, 0, 0, 0);
+        sgp4Epoch.set(1979, Calendar.DECEMBER, 31, 0, 0, 0);
         final long then = sgp4Epoch.getTimeInMillis();
         final long millis = now - then;
         return millis / 1000.0 / 60.0 / 60.0 / 24.0;
@@ -308,7 +308,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         double phi;
         double c;
         int i = 0;
-        boolean converged = false;
+        boolean converged;
 
         do {
             phi = satPos.getLatitude();
@@ -349,7 +349,6 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
      * Get the position of the satellite.
      *
      * @param gsPos the ground station position
-     * @param satPos the position of the satellite
      * @param date the date
      */
     @Override
@@ -463,7 +462,6 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
      * @param velocityVector the velocity vector
      * @param gsPos the ground tstation position
      * @param squintVector the squint vector
-     * @param satellitePosition the satellite position
      *
      */
     private void calculateObs(final double julianUTC,
@@ -603,7 +601,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         this.perigee = perigee;
     }
 
-    static class Vector4 extends Object implements Serializable {
+    static class Vector4 implements Serializable {
 
         /** serialized id. */
         private static final long serialVersionUID = -8804649332186066551L;

@@ -80,8 +80,6 @@ public class PassPredictor {
     /**
      * Constructor.
      *
-     * @param tle the Three Line Elements
-     * @param qth the ground station position
      * @throws IllegalArgumentException bad argument passed in
      * @throws SatNotFoundException
      * @throws InvalidTleException
@@ -147,13 +145,23 @@ public class PassPredictor {
         return nextSatPass(date, false);
     }
 
+    /**
+     *
+     * Find the next satellite pass for a specific date
+     *
+     * @param date The date fo find the next pass for
+     * @param windBack Whether to wind back 1/4 of an orbit
+     * @return The satellite pass time
+     * @throws InvalidTleException
+     * @throws SatNotFoundException
+     */
     public SatPassTime nextSatPass(final Date date, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
 
-        int aosAzimuth = 0;
-        int losAzimuth = 0;
+        int aosAzimuth;
+        int losAzimuth;
         double maxElevation = 0;
-        double elevation = 0;
+        double elevation;
 
         validateData();
 
@@ -279,9 +287,7 @@ public class PassPredictor {
      * @param start Date
      *
      *            newTLE = true; validateData();
-     * @param end Date
-     * @param firstAosLimit in hours
-     * @return List<SatPassTime>
+     * @return List&lt;SatPassTime&gt;
      * @throws SatNotFoundException
      * @throws InvalidTleException
      */

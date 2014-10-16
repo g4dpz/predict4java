@@ -117,7 +117,7 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
     }
 
     /**
-     * Test method for {@link uk.me.g4dpz.satellite.PassPredictor#nextSatPass()}.
+     * Test method for {@link uk.me.g4dpz.satellite.PassPredictor#nextSatPass(java.util.Date)}.
      */
     @Test
     public final void testNextSatPass() {
@@ -183,7 +183,7 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
     }
 
     /**
-     * Test method for {@link uk.me.g4dpz.satellite.PassPredictor#nextSatPass()}.
+     * Test method for {@link uk.me.g4dpz.satellite.PassPredictor#nextSatPass(java.util.Date, boolean)}.
      */
     @Test
     public final void testNextSatPassWithWindBack() {
