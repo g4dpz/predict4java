@@ -131,7 +131,6 @@ public class GroundStationPosition {
     /**
      * The horizonElevations to set.
      *
-     * @param horizonElevations the list of horizontal elevations
      * @throws IllegalArgumentException the input arguments were incorrect
      */
     public final void setHorizonElevations(final int[] theHorizonElevations)
