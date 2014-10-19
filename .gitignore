@@ -83,4 +83,4 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
-!/localrepo/**
+!/src/lib/**
