@@ -80,6 +80,11 @@ public abstract class AbstractSatelliteTestBase {
             "1 33139U 06026MX  09359.84164805  .10408321  74078-5  34039-2 0  6397",
             "2 33139 064.8768 254.5588 0010700 285.2081 074.8503 16.45000000 91112"};
 
+    protected static final String[] NIL_START_TLE = {
+            "0 AO-51 [+]",
+            "1 28375U 04025K   09105.66391970  .00000003  00000-0  13761-4 0  3643",
+            "2 28375 098.0551 118.9086 0084159 315.8041 043.6444 14.40638450251959"};
+
     protected static final String LATITUDE = "52.4670";
     protected static final String LONGITUDE = "-2.022";
     protected static final int HEIGHT_AMSL = 200;

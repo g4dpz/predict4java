@@ -73,6 +73,13 @@ public final class TLETest extends AbstractSatelliteTestBase {
     }
 
     @Test
+    public void testNilStartTLE() {
+
+        final TLE tle = new TLE(NIL_START_TLE, true);
+        checkData(tle);
+    }
+
+    @Test
     public void testTLEReadDeepSpace() {
         final String[] theTLE = {
                 "AO-40",

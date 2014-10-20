@@ -124,13 +124,21 @@ public class TLE implements Serializable {
         this.createddate = tle.createddate;
     }
 
+    public TLE(final String[] tle) throws IllegalArgumentException {
+        this(tle, false);
+    }
+
     /**
      * Constructor.
      *
      * @param tle the three line elements
      * @throws IllegalArgumentException here was something wrong with the TLE
      */
-    public TLE(final String[] tle) throws IllegalArgumentException {
+    public TLE(final String[] tle, boolean nilStart) throws IllegalArgumentException {
+
+        if (nilStart) {
+            tle[0] = tle[0].substring(2);
+        }
 
         if (null == tle) {
             throw new IllegalArgumentException("TLE was null");
