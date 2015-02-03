@@ -29,8 +29,6 @@ package uk.me.g4dpz.satellite;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.gtcgroup.testutil.TestUtil;
-
 /**
  * @author David A. B. Johnson, g4dpz
  *
@@ -41,11 +39,5 @@ public final class SatPassTimeTest {
      * Default Constructor.
      */
     public SatPassTimeTest() {
-    }
-
-    @Test
-    public void testSatPassTime() {
-        Assert.assertTrue(TestUtil.verifyMutable(new SatPassTime(),
-                "./src/uk/me/g4dpz/satellite/SatPassTime.java", 0));
     }
 }

@@ -29,7 +29,6 @@ package uk.me.g4dpz.satellite;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.gtcgroup.testutil.TestUtil;
 
 /**
  * @author David A. B. Johnson, g4dpz
@@ -41,12 +40,6 @@ public final class SatPosTest {
      * Default Constructor.
      */
     public SatPosTest() {
-    }
-
-    @Test
-    public void testSatPos() {
-        Assert.assertTrue(TestUtil.verifyMutable(new SatPos(),
-                "./src/uk/me/g4dpz/satellite/SatPos.java", 0));
     }
 
     @Test
