@@ -69,7 +69,7 @@ public class GroundStationPosition {
      * @param heightAMSL the height of te ground station above mean sea level, in metres
      */
     public GroundStationPosition(final double latitude, final double longitude,
-            final double heightAMSL, String name) {
+            final double heightAMSL, final String name) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.heightAMSL = heightAMSL;

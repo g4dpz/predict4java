@@ -26,8 +26,6 @@
  */
 package uk.me.g4dpz.satellite;
 
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author David A. B. Johnson, g4dpz

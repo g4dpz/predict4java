@@ -36,7 +36,9 @@ import org.junit.Test;
  */
 public final class SatPosTest {
 
-    /**
+    private static final String FORMAT_4F = "%4.0f %4.0f";
+
+	/**
      * Default Constructor.
      */
     public SatPosTest() {
@@ -49,19 +51,19 @@ public final class SatPosTest {
         pos.setLongitude(0);
         pos.setAltitude(1000);
         double[][] rangeCircle = pos.getRangeCircle();
-        Assert.assertEquals("  30    0", String.format("%4.0f %4.0f", rangeCircle[0][0], rangeCircle[0][1]));
-        Assert.assertEquals("   1  330", String.format("%4.0f %4.0f", rangeCircle[89][0], rangeCircle[89][1]));
-        Assert.assertEquals(" -30  359", String.format("%4.0f %4.0f", rangeCircle[179][0], rangeCircle[179][1]));
-        Assert.assertEquals("  -1   30", String.format("%4.0f %4.0f", rangeCircle[269][0], rangeCircle[269][1]));
+        Assert.assertEquals("  30    0", String.format(FORMAT_4F, rangeCircle[0][0], rangeCircle[0][1]));
+        Assert.assertEquals("   1  330", String.format(FORMAT_4F, rangeCircle[89][0], rangeCircle[89][1]));
+        Assert.assertEquals(" -30  359", String.format(FORMAT_4F, rangeCircle[179][0], rangeCircle[179][1]));
+        Assert.assertEquals("  -1   30", String.format(FORMAT_4F, rangeCircle[269][0], rangeCircle[269][1]));
 
 
-        pos.setLatitude(10.0/360.0*2.0*Math.PI);
-        pos.setLongitude(10.0/360.0*2.0*Math.PI);
+        pos.setLatitude(10.0 / 360.0 * 2.0 * Math.PI);
+        pos.setLongitude(10.0 / 360.0 * 2.0 * Math.PI);
         pos.setAltitude(1000);
         rangeCircle = pos.getRangeCircle();
-        Assert.assertEquals("  40   10", String.format("%4.0f %4.0f", rangeCircle[0][0], rangeCircle[0][1]));
-        Assert.assertEquals("   9  339", String.format("%4.0f %4.0f", rangeCircle[89][0], rangeCircle[89][1]));
-        Assert.assertEquals(" -20    9", String.format("%4.0f %4.0f", rangeCircle[179][0], rangeCircle[179][1]));
-        Assert.assertEquals("   8   41", String.format("%4.0f %4.0f", rangeCircle[269][0], rangeCircle[269][1]));
+        Assert.assertEquals("  40   10", String.format(FORMAT_4F, rangeCircle[0][0], rangeCircle[0][1]));
+        Assert.assertEquals("   9  339", String.format(FORMAT_4F, rangeCircle[89][0], rangeCircle[89][1]));
+        Assert.assertEquals(" -20    9", String.format(FORMAT_4F, rangeCircle[179][0], rangeCircle[179][1]));
+        Assert.assertEquals("   8   41", String.format(FORMAT_4F, rangeCircle[269][0], rangeCircle[269][1]));
     }
 }

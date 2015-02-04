@@ -134,7 +134,7 @@ public class TLE implements Serializable {
      * @param tle the three line elements
      * @throws IllegalArgumentException here was something wrong with the TLE
      */
-    public TLE(final String[] tle, boolean nilStart) throws IllegalArgumentException {
+    public TLE(final String[] tle, final boolean nilStart) throws IllegalArgumentException {
 
         if (nilStart) {
             tle[0] = tle[0].substring(2);

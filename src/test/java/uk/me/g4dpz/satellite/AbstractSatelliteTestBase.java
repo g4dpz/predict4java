@@ -35,7 +35,10 @@ import java.util.TimeZone;
  */
 public abstract class AbstractSatelliteTestBase {
 
-    protected AbstractSatelliteTestBase() {
+    private static final String TLE_AO51_2 = "2 28375 098.0551 118.9086 0084159 315.8041 043.6444 14.40638450251959";
+
+	private static final String TLE_AO51_1 = "1 28375U 04025K   09105.66391970  .00000003  00000-0  13761-4 0  3643";
+	protected AbstractSatelliteTestBase() {
 
     }
 
@@ -52,8 +55,8 @@ public abstract class AbstractSatelliteTestBase {
 
     protected static final String[] LEO_TLE = {
             "AO-51 [+]",
-            "1 28375U 04025K   09105.66391970  .00000003  00000-0  13761-4 0  3643",
-            "2 28375 098.0551 118.9086 0084159 315.8041 043.6444 14.40638450251959"};
+            TLE_AO51_1,
+            TLE_AO51_2};
 
     protected static final String[] DEEP_SPACE_TLE = {
             "AO-40",
@@ -82,8 +85,8 @@ public abstract class AbstractSatelliteTestBase {
 
     protected static final String[] NIL_START_TLE = {
             "0 AO-51 [+]",
-            "1 28375U 04025K   09105.66391970  .00000003  00000-0  13761-4 0  3643",
-            "2 28375 098.0551 118.9086 0084159 315.8041 043.6444 14.40638450251959"};
+            TLE_AO51_1,
+            TLE_AO51_2};
 
     protected static final String LATITUDE = "52.4670";
     protected static final String LONGITUDE = "-2.022";
