@@ -40,7 +40,9 @@ import org.junit.Test;
  */
 public class LEOSatelliteTest extends AbstractSatelliteTestBase {
 
-    private static final String ECLIPSE_DEPTH = "-0.2353420";
+    private static final String FORMAT_6_1F_6_1F = "%6.1f %6.1f";
+
+	private static final String ECLIPSE_DEPTH = "-0.2353420";
 
     private static final String THETA_VALUE = "-1.8011516";
 
@@ -132,11 +134,11 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
         Assert.assertFalse(satellitePosition.isEclipsed());
         Assert.assertTrue(satellite.willBeSeen(GROUND_STATION));
 
-        double[][] rangeCircle = satellitePosition.getRangeCircle();
-        Assert.assertEquals("  59.9  355.6", String.format("%6.1f %6.1f", rangeCircle[0][0], rangeCircle[0][1]));
-        Assert.assertEquals("  28.8  323.8", String.format("%6.1f %6.1f", rangeCircle[89][0], rangeCircle[89][1]));
-        Assert.assertEquals("   4.8  355.2", String.format("%6.1f %6.1f", rangeCircle[179][0], rangeCircle[179][1]));
-        Assert.assertEquals("  27.9   27.2", String.format("%6.1f %6.1f", rangeCircle[269][0], rangeCircle[269][1]));
+        final double[][] rangeCircle = satellitePosition.getRangeCircle();
+        Assert.assertEquals("  59.9  355.6", String.format(FORMAT_6_1F_6_1F, rangeCircle[0][0], rangeCircle[0][1]));
+        Assert.assertEquals("  28.8  323.8", String.format(FORMAT_6_1F_6_1F, rangeCircle[89][0], rangeCircle[89][1]));
+        Assert.assertEquals("   4.8  355.2", String.format(FORMAT_6_1F_6_1F, rangeCircle[179][0], rangeCircle[179][1]));
+        Assert.assertEquals("  27.9   27.2", String.format(FORMAT_6_1F_6_1F, rangeCircle[269][0], rangeCircle[269][1]));
     }
 
     @Test

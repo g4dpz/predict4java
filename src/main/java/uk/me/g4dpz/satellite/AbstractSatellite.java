@@ -35,6 +35,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, visit http://www.fsf.org/
  */
+
 package uk.me.g4dpz.satellite;
 
 import java.io.Serializable;
@@ -757,7 +758,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
     /**
      * Solves Keplers' Equation.
      *
-     * @param temp an array of temporary values we pass ariund as part of the orbit calculation.
+     * @param temp an array of temporary values we pass around as part of the orbit calculation.
      * @param axn
      * @param ayn
      * @param capu

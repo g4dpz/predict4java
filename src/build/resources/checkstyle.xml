@@ -98,11 +98,6 @@ Standard checks
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows">
-            <property name="allowUnchecked" value="true"/>
-            <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="We allow redundant throws for documentation purposes, but mark as info."/>
-            <property name="severity" value="info"/>
-        </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="FinalClass"/>
@@ -128,7 +123,6 @@ Standard checks
         <module name="IllegalType">
             <property name="tokens" value="METHOD_DEF,PARAMETER_DEF,VARIABLE_DEF"/>
         </module>
-        <module name="JUnitTestCase"/>
         <module name="MissingCtor"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleVariableDeclarations"/>
@@ -244,6 +238,5 @@ Standard checks
         <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="Do not enforce this."/>
         <property name="severity" value="ignore"/>
     </module>
-    <module name="NewlineAtEndOfFile"/>
     <module name="Translation"/>
 </module>

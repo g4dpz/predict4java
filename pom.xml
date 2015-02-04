@@ -5,7 +5,7 @@
 
 	<groupId>uk.me.g4dpz</groupId>
 	<artifactId>predict4java</artifactId>
-	<version>1.1</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
@@ -14,7 +14,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compiler.source.version>1.6</compiler.source.version>
+		<compiler.source.version>1.8</compiler.source.version>
 	</properties>
 
 	<licenses>
@@ -178,10 +178,6 @@
 	</reporting>
 
 	<distributionManagement>
-		<repository>
-			<id>predict4java-releases</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
 
 		<snapshotRepository>
 			<id>predict4java-staging</id>
