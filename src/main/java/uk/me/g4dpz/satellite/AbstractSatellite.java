@@ -46,6 +46,17 @@ import java.util.TimeZone;
 abstract class AbstractSatellite implements Satellite, Serializable {
 
     private static final long serialVersionUID = 1156988980297227860L;
+    
+    private static final double DEG2RAD = 1.745329251994330E-2;
+
+    static final double TWO_PI = Math.PI * 2.0;
+    private static final double EPSILON = 1.0E-12;
+    protected static final double TWO_THIRDS = 2.0 / 3.0;
+    protected static final double EARTH_RADIUS_KM = 6.378137E3;
+    protected static final double XKE = 7.43669161E-2;
+    protected static final double CK2 = 5.413079E-4;
+    /** J3 Harmonic (WGS '72). */
+    protected static final double J3_HARMONIC = -2.53881E-6;
 
     private static final double MINS_PER_DAY = 1.44E3;
     private static final double PI_OVER_TWO = Math.PI / 2.0;
@@ -519,7 +530,7 @@ abstract class AbstractSatellite implements Satellite, Serializable {
         final int sector = (int)(satPos.getAzimuth() / TWO_PI
                 * 360.0 / 10.0);
 
-        double elevation = (satPos.getElevation() / Satellite.TWO_PI) * 360.0;
+        double elevation = (satPos.getElevation() / TWO_PI) * 360.0;
 
         if (elevation > 0.0) {
             if (elevation > 90) {

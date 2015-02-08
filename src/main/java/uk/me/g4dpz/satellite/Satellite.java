@@ -41,20 +41,6 @@ import java.util.Date;
 
 public interface Satellite {
 
-    double DEG2RAD = 1.745329251994330E-2;
-    double TWO_PI = Math.PI * 2.0;
-    double EPSILON = 1.0E-12;
-    double TWO_THIRDS = 2.0 / 3.0;
-    double EARTH_RADIUS_KM = 6.378137E3;
-    double XKE = 7.43669161E-2;
-    double CK2 = 5.413079E-4;
-    /** J2 Harmonic (WGS '72). */
-    double J2_HARMONIC = 1.0826158E-3;
-    /** J3 Harmonic (WGS '72). */
-    double J3_HARMONIC = -2.53881E-6;
-    /** J4 Harmonic (WGS '72). */
-    double J4_HARMONIC = -1.65597E-6;
-
     @Deprecated
     void getPosition(GroundStationPosition qth, SatPos satPos, Date time);
 
