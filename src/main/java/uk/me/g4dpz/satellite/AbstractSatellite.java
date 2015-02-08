@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public abstract class AbstractSatellite implements Satellite, Serializable {
+abstract class AbstractSatellite implements Satellite, Serializable {
 
     private static final long serialVersionUID = 1156988980297227860L;
 
