@@ -108,23 +108,16 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>  
-			        <groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>  
-				<dependencies>
-					<dependency>
-						<groupId>org.ow2.asm</groupId>
-			                        <artifactId>asm</artifactId>
-					        <version>5.0.3</version>
-		                    	</dependency>
-		                </dependencies>
-		        </plugin>  
 		</plugins>
 	</build>
 
 	<reporting>
 		<plugins>
+		    <plugin>
+		          <groupId>org.jacoco</groupId>
+			  <artifactId>jacoco-maven-plugin</artifactId>
+			  <version>0.7.3-SNAPSHOT</version>
+	          </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
