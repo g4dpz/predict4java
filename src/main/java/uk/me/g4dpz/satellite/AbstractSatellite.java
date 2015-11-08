@@ -527,21 +527,11 @@ abstract class AbstractSatellite implements Satellite, Serializable {
 
         final int sector = (int)(satPos.getAzimuth() / TWO_PI
                 * 360.0 / 10.0);
-<<<<<<< HEAD:src/main/uk/me/g4dpz/satellite/AbstractSatellite.java
         
-        double elevation = (satPos.getElevation() / Satellite.TWO_PI) * 360.0;
+        double elevation = (satPos.getElevation() / TWO_PI) * 360.0;
         
         if (elevation > 0.0 && elevation > 90) {
             elevation = 180 - elevation;
-=======
-
-        double elevation = (satPos.getElevation() / TWO_PI) * 360.0;
-
-        if (elevation > 0.0) {
-            if (elevation > 90) {
-                elevation = 180 - elevation;
-            }
->>>>>>> 1c22b58202e0a61c48b87005b1ae7365eb501756:src/main/java/uk/me/g4dpz/satellite/AbstractSatellite.java
         }
 
         satPos.setAboveHorizon(elevation - gsPos.getHorizonElevations()[sector] > EPSILON);
