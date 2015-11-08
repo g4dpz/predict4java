@@ -1,4 +1,4 @@
-/**
+/*
     predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
     Copyright (C)  2004-2010  David A. B. Johnson, G4DPZ.
@@ -66,10 +66,10 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
 
     protected static final double PERIGEE_156_KM = 156.0;
 
-    /* WGS 84 Earth radius km */
+    /** WGS 84 Earth radius km. */
     protected static final double EARTH_RADIUS = 6.378137E3;
 
-    /* Solar radius - km (IAU 76) */
+    /** Solar radius - km (IAU 76). */
     protected static final double SOLAR_RADIUS = 6.96000E5;
 
     private double s4;
@@ -84,7 +84,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
     private final Vector4 position = new Vector4();
     /** Velocity vector of the satellite. Used to store the velocity for later calculations. */
     private final Vector4 velocity = new Vector4();
-    /** Date/time at which the position and velocity were calculated */
+    /** Date/time at which the position and velocity were calculated. */
     private double julUTC;
     /** Satellite position. Used to store the SatPos for later calculations. */
     private SatPos satPos;
@@ -381,11 +381,9 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
 
         final Vector4 squintVector = new Vector4();
 
-        //
         // /** All angles in rads. Distance in km. Velocity in km/S **/
         // /* Calculate satellite Azi, Ele, Range and Range-rate */
         calculateObs(julUTC, position, velocity, gsPos, squintVector);
-        //
         /* Calculate satellite Lat North, Lon East and Alt. */
 
         calculateLatLonAlt(julUTC, position, satPos);
@@ -432,11 +430,11 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         final double c = AbstractSatellite.invert(Math.sqrt(1.0 + FLATTENING_FACTOR * (FLATTENING_FACTOR - 2)
                 * AbstractSatellite.sqr(Math.sin(DEG2RAD * gsPos.getLatitude()))));
         final double sq = AbstractSatellite.sqr(1.0 - FLATTENING_FACTOR) * c;
-        final double achcp = (EARTH_RADIUS_KM * c + (gsPos.getHeightAMSL() / 1000.0))
+        final double achcp = (EARTH_RADIUS_KM * c + gsPos.getHeightAMSL() / 1000.0)
                 * Math.cos(DEG2RAD * gsPos.getLatitude());
         obsPos.setXYZ(achcp * Math.cos(gsPos.getTheta()),
                 achcp * Math.sin(gsPos.getTheta()),
-                (EARTH_RADIUS_KM * sq + (gsPos.getHeightAMSL() / 1000.0))
+                (EARTH_RADIUS_KM * sq + gsPos.getHeightAMSL() / 1000.0)
                         * Math.sin(DEG2RAD * gsPos.getLatitude()));
         obsVel.setXYZ(-MFACTOR * obsPos.getY(),
                 MFACTOR * obsPos.getX(),
@@ -522,13 +520,11 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         
         double elevation = (satPos.getElevation() / Satellite.TWO_PI) * 360.0;
         
-        if (elevation > 0.0) {
-            if (elevation > 90) {
-                elevation = 180 - elevation;
-            }
+        if (elevation > 0.0 && elevation > 90) {
+            elevation = 180 - elevation;
         }
 
-        satPos.setAboveHorizon((elevation - gsPos.getHorizonElevations()[sector]) > EPSILON);
+        satPos.setAboveHorizon(elevation - gsPos.getHorizonElevations()[sector] > EPSILON);
     }
 
     /**
@@ -555,8 +551,8 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
                     * (2.0 / 3.0));
             final double apogee = sma * (1.0 + tle.getEccn()) - EARTH_RADIUS_KM;
 
-            return (Math.acos(EARTH_RADIUS_KM
-                    / (apogee + EARTH_RADIUS_KM)) + (lin * DEG2RAD)) > Math
+            return Math.acos(EARTH_RADIUS_KM
+                    / (apogee + EARTH_RADIUS_KM)) + lin * DEG2RAD > Math
                     .abs(qth.getLatitude() * DEG2RAD);
         }
 
@@ -605,19 +601,19 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
 
     static class Vector4 extends Object implements Serializable {
 
-        /** serialized id. */
+        /** Serialized id. */
         private static final long serialVersionUID = -8804649332186066551L;
 
-        /** the w part of the vector. ` */
+        /** The w part of the vector. ` */
         private double w;
-        /** the x part of the vector. ` */
+        /** The x part of the vector. ` */
         private double x;
-        /** the y part of the vector. ` */
+        /** The y part of the vector. ` */
         private double y;
-        /** the z part of the vector. ` */
+        /** The z part of the vector. ` */
         private double z;
 
-        /** default constructor. */
+        /** Default constructor. */
         Vector4() {
             this.w = 0.0;
             this.x = 0.0;
@@ -724,7 +720,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
                     this.z - vector.z);
         }
 
-        public static final Vector4 scalarMultiply(final Vector4 vector, final double multiplier) {
+        public static Vector4 scalarMultiply(final Vector4 vector, final double multiplier) {
 
             return new Vector4(
                     vector.w * Math.abs(multiplier),
@@ -736,7 +732,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         /**
          * Calculates the angle between vectors v1 and v2.
          */
-        public static final double angle(final Vector4 v1, final Vector4 v2) {
+        public static double angle(final Vector4 v1, final Vector4 v2) {
             AbstractSatellite.magnitude(v1);
             AbstractSatellite.magnitude(v2);
             return Math.acos(AbstractSatellite.dot(v1, v2) / (v1.w * v2.w));
@@ -745,7 +741,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         /**
          * Subtracts vector v2 from v1.
          */
-        public static final Vector4 subtract(final Vector4 v1, final Vector4 v2) {
+        public static Vector4 subtract(final Vector4 v1, final Vector4 v2) {
 
             final Vector4 v3 = new Vector4();
             v3.x = v1.x - v2.x;
@@ -886,12 +882,7 @@ public abstract class AbstractSatellite implements Satellite, Serializable {
         final double delta = Vector4.angle(sunVector, earth);
         eclipseDepth = sdEarth - sdSun - delta;
 
-        if (sdEarth < sdSun) {
-            return false;
-        }
-        else {
-            return eclipseDepth >= 0;
-        }
+        return sdEarth >= sdSun && eclipseDepth >= 0;
     }
 
     private Vector4 calculateSunVector() {
