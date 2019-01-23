@@ -1,7 +1,7 @@
 /**
     predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
-    Copyright (C)  2004-2010  David A. B. Johnson, G4DPZ.
+    Copyright (C)  2004-2019  David A. B. Johnson, G4DPZ.
 
     This class is a Java port of one of the core elements of
     the Predict program, Copyright John A. Magliacane,
@@ -57,7 +57,7 @@ public class SatPassTime implements Serializable {
     private static final String NEW_LINE = "\n";
     private static final String DEG_NL = " deg.\n";
 
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm a");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm:ss a");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMMM d, yyyy");
 
     public SatPassTime(final Date startTime, final Date endTime, final String polePassed,
@@ -142,9 +142,10 @@ public class SatPassTime implements Serializable {
                 + "Start Time: "
                 + TIME_FORMAT.format(startTime)
                 + NEW_LINE
-                +
-                // "End Time: " + mTimeFormatter.format(endDate_time) + "\n" +
-                String.format("Duration: %4.1f min.\n", duration)
+                + "End Time: "
+                + TIME_FORMAT.format(endTime)
+                + NEW_LINE
+                + String.format("Duration: %4.1f min.\n", duration)
                 + "AOS Azimuth: " + aos + DEG_NL
                 + String.format("Max Elevation: %4.1f deg.\n", maxEl)
                 + "LOS Azimuth: " + los + " deg.";

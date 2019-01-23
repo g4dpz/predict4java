@@ -1,7 +1,7 @@
 /**
  predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
- Copyright (C)  2004-2010  David A. B. Johnson, G4DPZ.
+ Copyright (C)  2004-2019  David A. B. Johnson, G4DPZ.
 
  Author: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
 
@@ -129,6 +129,7 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
         Assert.assertEquals("-2.0654976", String.format(FORMAT_9_7F, satellitePosition.getTheta()));
         Assert.assertEquals("-0.3097643", String.format(FORMAT_9_7F, satellitePosition.getEclipseDepth()));
         Assert.assertFalse(satellitePosition.isEclipsed());
+        Assert.assertFalse(satellitePosition.isAboveHorizon());
         Assert.assertTrue(satellite.willBeSeen(GROUND_STATION));
 
         final double[][] rangeCircle = satellitePosition.getRangeCircle();

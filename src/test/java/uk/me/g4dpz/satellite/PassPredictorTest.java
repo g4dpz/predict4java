@@ -1,7 +1,7 @@
 /**
  predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
- Copyright (C)  2004-2010  David A. B. Johnson, G4DPZ.
+ Copyright (C)  2004-2019  David A. B. Johnson, G4DPZ.
 
  Author: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
 
@@ -254,7 +254,8 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
             final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate(), true);
 
             assertEquals("Date: January 5, 2019\n" +
-                    "Start Time: 5:45 AM\n" +
+                    "Start Time: 5:45:35 AM\n" +
+                    "End Time: 5:54:45 AM\n" +
                     "Duration:  9.2 min.\n" +
                     "AOS Azimuth: 35 deg.\n" +
                     "Max Elevation:  7.5 deg.\n" +

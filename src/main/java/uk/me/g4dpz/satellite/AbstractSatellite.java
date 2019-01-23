@@ -1,7 +1,7 @@
 /*
     predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
-    Copyright (C)  2004-2010  David A. B. Johnson, G4DPZ.
+    Copyright (C)  2004-2019  David A. B. Johnson, G4DPZ.
 
     This class is a Java port of one of the core elements of
     the Predict program, Copyright John A. Magliacane,
