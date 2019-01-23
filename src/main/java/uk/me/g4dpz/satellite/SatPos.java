@@ -42,7 +42,7 @@ import java.util.Date;
 
 /**
  *
- * @author g4dpz
+ * @author Dave Johnson, G4DPZ
  *
  */
 public class SatPos {

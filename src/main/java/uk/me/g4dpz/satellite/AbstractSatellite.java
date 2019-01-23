@@ -305,8 +305,8 @@ abstract class AbstractSatellite implements Satellite, Serializable {
      * Reference: The 1992 Astronomical Almanac, page K12.
      *
      * @param time the time
-     * @param position the position
-     * @param satPos the satellite position
+     * @param positionVector the position
+     * @param satellitePosition the satellite position
      */
     private void calculateLatLonAlt(final double time,
             final Vector4 positionVector, final SatPos satellitePosition) {

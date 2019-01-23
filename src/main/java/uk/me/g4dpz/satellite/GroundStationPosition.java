@@ -40,7 +40,7 @@ package uk.me.g4dpz.satellite;
 /**
  * The location of the Satellite Grund Station.
  *
- * @author g4dpz
+ * @author Dave Johnson, G4DPZ
  */
 public class GroundStationPosition {
     private double latitude;

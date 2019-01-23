@@ -13,4 +13,4 @@ Neoklis Kyriazis, 5B4AZ, later re-wrote Dr. Kelso's code in C, and released it u
 
 The project has been ported again to be an Eclipse / Maven project
 
-The Author of this version is: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
+The Author of this version is: David A. B. Johnson, G4DPZ <dave@g4dpz.me.com>

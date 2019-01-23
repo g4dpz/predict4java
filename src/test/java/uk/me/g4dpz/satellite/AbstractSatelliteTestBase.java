@@ -30,15 +30,17 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 /**
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  *
  */
 public abstract class AbstractSatelliteTestBase {
 
-    private static final String TLE_AO51_2 = "2 28375 098.0551 118.9086 0084159 315.8041 043.6444 14.40638450251959";
+    private static final String TLE_AO73_1 = "1 39444U 13066AE  19022.64066251  .00000197  00000-0  30529-4 0  9994";
+    private static final String TLE_AO73_2 = "2 39444  97.5704  46.1367 0058931 149.4120 211.0552 14.81847272277569";
 
-	private static final String TLE_AO51_1 = "1 28375U 04025K   09105.66391970  .00000003  00000-0  13761-4 0  3643";
-	protected AbstractSatelliteTestBase() {
+    protected static final String EPOCH = "2019-01-23T00:00:00Z";
+
+    protected AbstractSatelliteTestBase() {
 
     }
 
@@ -54,39 +56,39 @@ public abstract class AbstractSatelliteTestBase {
     static final long SECONDS_PER_DAY = 24 * 60 * 60;
 
     protected static final String[] LEO_TLE = {
-            "AO-51 [+]",
-            TLE_AO51_1,
-            TLE_AO51_2};
+            "FUNCUBE-1 (AO-73)",
+            TLE_AO73_1,
+            TLE_AO73_2};
 
     protected static final String[] DEEP_SPACE_TLE = {
             "AO-40",
-            "1 26609U 00072B   09105.66069202 -.00000356  00000-0  10000-3 0  2169",
-            "2 26609 009.1977 023.4368 7962000 194.9139 106.0662 01.25584647 38840"};
+            "1 26609U 00072B   19022.38481103 -.00000134  00000-0  00000+0 0  9992",
+            "2 26609   7.4088  95.8526 7982264 349.5632   1.0214  1.25587570 83680"};
 
     protected static final String[] GEOSYNC_TLE = {
-            "EUTELSAT 2-F1",
-            "1 20777U 90079B   09356.31446792  .00000081  00000-0  10000-3 0  9721",
-            "2 20777   9.6834  57.1012 0004598 207.1414 152.7950  0.99346230 50950"};
+            "ES'HAIL 2",
+            "1 43700U 18090A   19022.59033389  .00000135  00000-0  00000+0 0  9994",
+            "2 43700   0.0189 110.5219 0001117 199.1803  50.2639  1.00270746   826"};
 
     protected static final String[] MOLNIYA_TLE = {
             "MOLNIYA 1-80",
-            "1 21118U 91012A   09357.87605320  .00001593  00000-0  10000-3 0  7339",
-            "2 21118  61.8585 240.5458 7236516 255.2789  21.0579  2.00792202138149"};
+            "1 21118U 91012A   19021.70755179 -.00000500  00000-0  12360+0 0  9997",
+            "2 21118  63.5565 115.5896 6805505 289.4226  12.3652  2.05245802205499"};
 
     protected static final String[] WEATHER_TLE = {
             "TIROS N [P]",
-            "1 11060U 78096A   09359.84164805 -.00000019  00000-0  13276-4 0  3673",
-            "2 11060  98.9548 331.5509 0010393 187.3222 172.7804 14.17491792826101"};
+            "1 11060U 78096A   19022.78581026 +.00000003 +00000-0 +22800-4 0  9998",
+            "2 11060 098.8131 081.3601 0011632 108.7639 251.4799 14.18221917295601"};
 
     protected static final String[] DE_ORBIT_TLE = {
-            "COSMOS 2421 DEB",
-            "1 33139U 06026MX  09359.84164805  .10408321  74078-5  34039-2 0  6397",
-            "2 33139 064.8768 254.5588 0010700 285.2081 074.8503 16.45000000 91112"};
+            "IRIDIUM 168",
+            "1 43924U 19002C   19022.85733379 +.00000007 +00000-0 -35335-5 0  9995",
+            "2 43924 086.4965 042.8715 0001485 057.7222 302.4127 14.52383246001639"};
 
     protected static final String[] NIL_START_TLE = {
-            "0 AO-51 [+]",
-            TLE_AO51_1,
-            TLE_AO51_2};
+            "0 FUNCUBE-1 (AO-73)",
+            TLE_AO73_1,
+            TLE_AO73_2};
 
     protected static final String LATITUDE = "52.4670";
     protected static final String LONGITUDE = "-2.022";

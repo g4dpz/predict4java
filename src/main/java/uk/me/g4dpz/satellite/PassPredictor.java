@@ -37,19 +37,15 @@
  */
 package uk.me.g4dpz.satellite;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.*;
 
 /**
  * Class which provides Pass Prediction.
  *
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  *
  */
 public class PassPredictor {

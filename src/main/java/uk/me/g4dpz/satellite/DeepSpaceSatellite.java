@@ -42,7 +42,7 @@ import java.io.Serializable;
 /**
  * DeepSpaceSatellite.
  *
- * @author g4dpz
+ * @author Dave Johnson, G4DPZ
  *
  */
 public class DeepSpaceSatellite extends AbstractSatellite implements Serializable {

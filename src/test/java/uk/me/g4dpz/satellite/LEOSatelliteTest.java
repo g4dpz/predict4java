@@ -35,32 +35,32 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  *
  */
 public class LEOSatelliteTest extends AbstractSatelliteTestBase {
 
     private static final String FORMAT_6_1F_6_1F = "%6.1f %6.1f";
 
-	private static final String ECLIPSE_DEPTH = "-0.2353420";
+	private static final String ECLIPSE_DEPTH = "0.3126017";
 
-    private static final String THETA_VALUE = "-1.8011516";
+    private static final String THETA_VALUE = "1.3884668";
 
-    private static final String RANGE_RATE_VALUE = "-3.0094317";
+    private static final String RANGE_RATE_VALUE = "-4.5870742";
 
-    private static final String RANGE_VALUE = "5433";
+    private static final String RANGE_VALUE = "5896";
 
-    private static final String PHASE_VALUE = "4.5526109";
+    private static final String PHASE_VALUE = "4.6259329";
 
-    private static final String ALTITUDE_VALUE = "848.4319560";
+    private static final String ALTITUDE_VALUE = "834.2640362";
 
-    private static final String LATITUDE_VALUE = "1.4098576";
+    private static final String LATITUDE_VALUE = "0.2246360";
 
-    private static final String LONGITUDE_VALUE = "2.8305378";
+    private static final String LONGITUDE_VALUE = "5.5415690";
 
-    private static final String ELEVATION_VALUE = "-0.2617647";
+    private static final String ELEVATION_VALUE = "-0.3171858";
 
-    private static final String AZIMUTH_VALUE = "0.0602822";
+    private static final String AZIMUTH_VALUE = "4.0938158";
 
     private static final String FORMAT_4_0F = "%4.0f";
 
@@ -68,9 +68,7 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
 
     private static final String FORMAT_9_7F = "%9.7f";
 
-    private static final String BASE_TIME = "2009-12-26T00:00:00Z";
-
-    private DateTime timeNow;
+    private static DateTime timeNow;
 
     public LEOSatelliteTest() {
 
@@ -81,6 +79,7 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        timeNow = new DateTime(EPOCH);
     }
 
     /**
@@ -111,8 +110,6 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
     @Test
     public final void testLEOSatellite() {
 
-        timeNow = new DateTime("2009-04-17T06:57:32Z");
-
         final TLE tle = new TLE(LEO_TLE);
 
         Assert.assertFalse(tle.isDeepspace());
@@ -121,30 +118,28 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
 
         final SatPos satellitePosition = satellite.getPosition(GROUND_STATION, timeNow.toDate());
 
-        Assert.assertEquals("3.2421950", String.format(FORMAT_9_7F, satellitePosition.getAzimuth()));
-        Assert.assertEquals("0.1511580", String.format(FORMAT_9_7F, satellitePosition.getElevation()));
-        Assert.assertEquals("6.2069835", String.format(FORMAT_9_7F, satellitePosition.getLongitude()));
-        Assert.assertEquals("0.5648232", String.format(FORMAT_9_7F, satellitePosition.getLatitude()));
-        Assert.assertEquals("818.1375014", String.format(FORMAT_10_7F, satellitePosition.getAltitude()));
-        Assert.assertEquals("3.4337605", String.format(FORMAT_9_7F, satellitePosition.getPhase()));
-        Assert.assertEquals("2506", String.format(FORMAT_4_0F, satellitePosition.getRange()));
-        Assert.assertEquals("6.4832408", String.format(FORMAT_9_7F, satellitePosition.getRangeRate()));
-        Assert.assertEquals("-0.9501914", String.format(FORMAT_9_7F, satellitePosition.getTheta()));
-        Assert.assertEquals("-0.7307717", String.format(FORMAT_9_7F, satellitePosition.getEclipseDepth()));
+        Assert.assertEquals("0.4834087", String.format(FORMAT_9_7F, satellitePosition.getAzimuth()));
+        Assert.assertEquals("-0.4013931", String.format(FORMAT_9_7F, satellitePosition.getElevation()));
+        Assert.assertEquals("2.0876046", String.format(FORMAT_9_7F, satellitePosition.getLongitude()));
+        Assert.assertEquals("1.1033099", String.format(FORMAT_9_7F, satellitePosition.getLatitude()));
+        Assert.assertEquals("599.4546846", String.format(FORMAT_10_7F, satellitePosition.getAltitude()));
+        Assert.assertEquals("5.7245752", String.format(FORMAT_9_7F, satellitePosition.getPhase()));
+        Assert.assertEquals("6273", String.format(FORMAT_4_0F, satellitePosition.getRange()));
+        Assert.assertEquals("3.4462891", String.format(FORMAT_9_7F, satellitePosition.getRangeRate()));
+        Assert.assertEquals("-2.0654976", String.format(FORMAT_9_7F, satellitePosition.getTheta()));
+        Assert.assertEquals("-0.3097643", String.format(FORMAT_9_7F, satellitePosition.getEclipseDepth()));
         Assert.assertFalse(satellitePosition.isEclipsed());
         Assert.assertTrue(satellite.willBeSeen(GROUND_STATION));
 
         final double[][] rangeCircle = satellitePosition.getRangeCircle();
-        Assert.assertEquals("  59.9  355.6", String.format(FORMAT_6_1F_6_1F, rangeCircle[0][0], rangeCircle[0][1]));
-        Assert.assertEquals("  28.8  323.8", String.format(FORMAT_6_1F_6_1F, rangeCircle[89][0], rangeCircle[89][1]));
-        Assert.assertEquals("   4.8  355.2", String.format(FORMAT_6_1F_6_1F, rangeCircle[179][0], rangeCircle[179][1]));
-        Assert.assertEquals("  27.9   27.2", String.format(FORMAT_6_1F_6_1F, rangeCircle[269][0], rangeCircle[269][1]));
+        Assert.assertEquals("  87.1  119.6", String.format(FORMAT_6_1F_6_1F, rangeCircle[0][0], rangeCircle[0][1]));
+        Assert.assertEquals("  55.0   74.6", String.format(FORMAT_6_1F_6_1F, rangeCircle[89][0], rangeCircle[89][1]));
+        Assert.assertEquals("  39.3  119.1", String.format(FORMAT_6_1F_6_1F, rangeCircle[179][0], rangeCircle[179][1]));
+        Assert.assertEquals("  54.4  163.7", String.format(FORMAT_6_1F_6_1F, rangeCircle[269][0], rangeCircle[269][1]));
     }
 
     @Test
     public final void testWeatherSatellite() {
-
-        timeNow = new DateTime(BASE_TIME);
 
         final TLE tle = new TLE(WEATHER_TLE);
 
@@ -164,15 +159,13 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
         Assert.assertEquals(RANGE_RATE_VALUE, String.format(FORMAT_9_7F, satellitePosition.getRangeRate()));
         Assert.assertEquals(THETA_VALUE, String.format(FORMAT_9_7F, satellitePosition.getTheta()));
         Assert.assertEquals(ECLIPSE_DEPTH, String.format(FORMAT_9_7F, satellitePosition.getEclipseDepth()));
-        Assert.assertFalse(satellitePosition.isEclipsed());
+        Assert.assertTrue(satellitePosition.isEclipsed());
         Assert.assertTrue(satellite.willBeSeen(GROUND_STATION));
 
     }
 
     @Test
     public final void testIvoAlgorithm() {
-
-        timeNow = new DateTime(BASE_TIME);
 
         final TLE tle = new TLE(WEATHER_TLE);
 
@@ -198,14 +191,12 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
         Assert.assertEquals(RANGE_VALUE, String.format(FORMAT_4_0F, Math.floor(satellitePosition.getRange())));
         Assert.assertEquals(RANGE_RATE_VALUE, String.format(FORMAT_9_7F, satellitePosition.getRangeRate()));
         Assert.assertEquals(ECLIPSE_DEPTH, String.format(FORMAT_9_7F, satellitePosition.getEclipseDepth()));
-        Assert.assertFalse(satellitePosition.isEclipsed());
+        Assert.assertTrue(satellitePosition.isEclipsed());
 
     }
 
     @Test
     public final void testDeOrbitSatellite() {
-
-        timeNow = new DateTime(BASE_TIME);
 
         final TLE tle = new TLE(DE_ORBIT_TLE);
 
@@ -217,7 +208,7 @@ public class LEOSatelliteTest extends AbstractSatelliteTestBase {
 
         final SatPos satellitePosition = satellite.calculateSatelliteGroundTrack();
 
-        Assert.assertEquals("57.2854215", String.format(FORMAT_10_7F, satellitePosition.getAltitude()));
+        Assert.assertEquals("720.2320545", String.format(FORMAT_10_7F, satellitePosition.getAltitude()));
 
     }
 }

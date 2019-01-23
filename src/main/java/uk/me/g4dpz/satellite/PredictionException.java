@@ -38,7 +38,7 @@
 package uk.me.g4dpz.satellite;
 
 /**
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  */
 public class PredictionException extends Exception {
 

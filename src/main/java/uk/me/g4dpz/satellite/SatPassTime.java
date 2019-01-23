@@ -40,6 +40,7 @@ package uk.me.g4dpz.satellite;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class SatPassTime implements Serializable {
 
@@ -147,5 +148,25 @@ public class SatPassTime implements Serializable {
                 + "AOS Azimuth: " + aos + DEG_NL
                 + String.format("Max Elevation: %4.1f deg.\n", maxEl)
                 + "LOS Azimuth: " + los + " deg.";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SatPassTime)) return false;
+        SatPassTime that = (SatPassTime) o;
+        return aos == that.aos &&
+                los == that.los &&
+                Double.compare(that.getMaxEl(), getMaxEl()) == 0 &&
+                Objects.equals(getStartTime(), that.getStartTime()) &&
+                Objects.equals(getEndTime(), that.getEndTime()) &&
+                Objects.equals(tca, that.tca) &&
+                Objects.equals(getPolePassed(), that.getPolePassed());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getStartTime(), getEndTime(), tca, getPolePassed(), aos, los, getMaxEl());
     }
 }

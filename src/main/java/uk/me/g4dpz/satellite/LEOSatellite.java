@@ -41,7 +41,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author g4dpz
+ * @author Dave Johnson, G4DPZ
  *
  */
 public class LEOSatellite extends AbstractSatellite implements Serializable {

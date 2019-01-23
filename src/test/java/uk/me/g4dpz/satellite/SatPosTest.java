@@ -31,7 +31,7 @@ import org.junit.Test;
 
 
 /**
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  *
  */
 public final class SatPosTest {

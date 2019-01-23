@@ -44,25 +44,18 @@ public class IlluminationTest extends AbstractSatelliteTestBase {
 
         final Satellite satellite = SatelliteFactory.createSatellite(tle);
 
-        DateTime timeNow = new DateTime("2009-06-01T00:00:00Z");
+        DateTime timeNow = new DateTime(EPOCH);
 
-        for (int day = 0; day < 30; day++) {
+        boolean illuminated = true;
+
+        for (int day = 0; day < 30 * 24 * 60; day++) {
             final SatPos satPos = satellite.getPosition(GROUND_STATION, timeNow.toDate());
-
-            switch (day) {
-                case 4:
-                case 9:
-                case 14:
-                case 19:
-                case 24:
-                case 29:
-                    Assert.assertTrue("Satellite should have been eclipsed on day " + day, satPos.isEclipsed());
-                    break;
-                default:
-                    Assert.assertFalse("Satellite should not have been eclipsed on day " + day, satPos.isEclipsed());
-                    break;
+            final boolean inSun = !satPos.isEclipsed();
+            timeNow = timeNow.plusMinutes(1);
+            if (illuminated != inSun) {
+                System.out.println(day + ", " + inSun);
+                illuminated = inSun;
             }
-            timeNow = timeNow.plusDays(1);
         }
     }
 

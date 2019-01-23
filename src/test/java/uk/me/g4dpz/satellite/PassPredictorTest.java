@@ -26,32 +26,31 @@
  */
 package uk.me.g4dpz.satellite;
 
+import org.joda.time.DateTime;
+import org.junit.*;
+
+import java.util.Calendar;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * @author David A. B. Johnson, g4dpz
+ * @author David A. B. Johnson, badgersoft
  *
  */
 public class PassPredictorTest extends AbstractSatelliteTestBase {
 
-    private static final String DATE_2009_01_05T04_30_00Z = "2009-01-05T04:30:00Z";
-    private static final String DATE_2009_01_05T04_32_15_0000 = "2009-01-05T04:32:15+0000";
-    private static final String DATE_2009_01_05T04_28_10_0000 = "2009-01-05T04:28:10+0000";
-    private static final String DATE_2009_01_05T07_00_00Z = "2009-01-05T07:00:00Z";
+    private static final String DATE_2019_01_05T04_30_00Z = "2019-01-05T04:30:00Z";
+    private static final String DATE_2019_01_05T07_00_00Z = "2019-01-05T07:00:00Z";
     private static final String NORTH = "north";
     private static final String STRING_PAIR = "%s, %s";
     private static final String NONE = "none";
     private static final String INVALID_TLE_EXCEPTION_WAS_THROWN = "InvalidTleException was thrown";
     private static final String SAT_NOT_FOUND_EXCEPTION_WAS_THROWN = "SatNotFoundException was thrown";
     private static final String INVALID_TLE_EXCEPTION_WAS_NOT_THROWN = "InvalidTleException was not thrown";
+    public static final String T07_20_50_0000 = "2019-01-05T07:20:50+0000";
+    public static final String T07_33_50_0000 = "2019-01-05T07:33:50+0000";
 
     public PassPredictorTest() {
     }
@@ -124,55 +123,59 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         try {
             final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            final DateTime cal = new DateTime("2009-01-05T00:00:00Z");
+            final DateTime cal = new DateTime(EPOCH);
+
             SatPassTime passTime = passPredictor.nextSatPass(cal.toDate());
-            Assert.assertEquals(DATE_2009_01_05T04_28_10_0000, TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals(DATE_2009_01_05T04_32_15_0000, TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals("2009-01-05T04:30:10+0000", TZ_FORMAT.format(passTime.getTCA()));
-            Assert.assertEquals(NONE, passTime.getPolePassed());
-            Assert.assertEquals(52, passTime.getAosAzimuth());
-            Assert.assertEquals(84, passTime.getLosAzimuth());
-            Assert.assertEquals("0.9", String.format("%3.1f", passTime.getMaxEl()));
-            Assert.assertEquals(Long.valueOf(436802379L),
+            assertEquals("2019-01-23T06:26:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
+            assertEquals("2019-01-23T06:37:55+0000", TZ_FORMAT.format(passTime.getEndTime()));
+            assertEquals("2019-01-23T06:32:05+0000", TZ_FORMAT.format(passTime.getTCA()));
+            assertEquals("none", passTime.getPolePassed());
+            assertEquals(25, passTime.getAosAzimuth());
+            assertEquals(154, passTime.getLosAzimuth());
+            assertEquals("19.0", String.format("%3.1f", passTime.getMaxEl()));
+            assertEquals(Long.valueOf(436808875L),
                     passPredictor.getDownlinkFreq(436800000L, passTime.getStartTime()));
-            Assert.assertEquals(Long.valueOf(145800719L),
+            assertEquals(Long.valueOf(145802972L),
                     passPredictor.getUplinkFreq(145800000L, passTime.getEndTime()));
 
-            passTime = passPredictor.nextSatPass(passTime.getStartTime());
-            Assert.assertEquals("2009-01-05T06:04:00+0000", TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals("2009-01-05T06:18:00+0000", TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals(NONE, passTime.getPolePassed());
-            Assert.assertEquals(22, passTime.getAosAzimuth());
-            Assert.assertEquals(158, passTime.getLosAzimuth());
-            Assert.assertEquals(24.42, passTime.getMaxEl(), 0.02);
+            System.out.println(passTime.toString());
+
+            SatPassTime passTime2 = passPredictor.nextSatPass(cal.toDate());
+            assertTrue(passTime.equals(passTime2));
 
             passTime = passPredictor.nextSatPass(passTime.getStartTime());
-            Assert.assertEquals("2009-01-05T07:42:45+0000", TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals("2009-01-05T07:57:50+0000", TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals(NORTH, passTime.getPolePassed());
-            Assert.assertEquals(11, passTime.getAosAzimuth());
-            Assert.assertEquals(207, passTime.getLosAzimuth());
-            Assert.assertEquals("62.19", String.format("%5.2f", passTime.getMaxEl()));
+            assertEquals("2019-01-23T08:02:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
+            assertEquals("2019-01-23T08:15:05+0000", TZ_FORMAT.format(passTime.getEndTime()));
+            assertEquals(NORTH, passTime.getPolePassed());
+            assertEquals(10, passTime.getAosAzimuth());
+            assertEquals(208, passTime.getLosAzimuth());
+            assertEquals("53.23", String.format("%5.2f", passTime.getMaxEl()));
+
+            System.out.println("\n" + passTime.toString());
 
             passTime = passPredictor.nextSatPass(passTime.getStartTime());
-            Assert.assertEquals("2009-01-05T09:22:05+0000", TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals("2009-01-05T09:34:20+0000", TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals(NORTH, passTime.getPolePassed());
-            Assert.assertEquals(4, passTime.getAosAzimuth());
-            Assert.assertEquals(256, passTime.getLosAzimuth());
-            Assert.assertEquals(14.3, passTime.getMaxEl(), 0.02);
+            assertEquals("2019-01-23T09:39:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
+            assertEquals("2019-01-23T09:48:45+0000", TZ_FORMAT.format(passTime.getEndTime()));
+            assertEquals(NONE, passTime.getPolePassed());
+            assertEquals(356, passTime.getAosAzimuth());
+            assertEquals(262, passTime.getLosAzimuth());
+            assertEquals(9.1, passTime.getMaxEl(), 0.02);
+
+            System.out.println("\n" + passTime.toString());
 
             passTime = passPredictor.nextSatPass(passTime.getStartTime());
-            Assert.assertEquals("2009-01-05T11:02:05+0000", TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals("2009-01-05T11:07:35+0000", TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals(NONE, passTime.getPolePassed());
-            Assert.assertEquals(355, passTime.getAosAzimuth());
-            Assert.assertEquals(312, passTime.getLosAzimuth());
-            Assert.assertEquals(1.8, passTime.getMaxEl(), 0.05);
+            assertEquals("2019-01-23T15:54:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
+            assertEquals("2019-01-23T16:02:20+0000", TZ_FORMAT.format(passTime.getEndTime()));
+            assertEquals(NONE, passTime.getPolePassed());
+            assertEquals(81, passTime.getAosAzimuth());
+            assertEquals(7, passTime.getLosAzimuth());
+            assertEquals(5.3, passTime.getMaxEl(), 0.05);
+
+            System.out.println("\n" + passTime.toString());
         }
         catch (final InvalidTleException e) {
             Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
@@ -180,6 +183,30 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
         catch (final SatNotFoundException snfe) {
             Assert.fail(SAT_NOT_FOUND_EXCEPTION_WAS_THROWN);
         }
+    }
+
+    @Test
+    public void sameCallProducesSameResults() {
+
+
+        final TLE tle = new TLE(LEO_TLE);
+
+        try {
+            final PassPredictor passPredictor1 = new PassPredictor(tle, GROUND_STATION);
+            final PassPredictor passPredictor2 = new PassPredictor(tle, GROUND_STATION);
+            //final DateTime cal = new DateTime(EPOCH);
+            Calendar cal = Calendar.getInstance();
+            SatPassTime passTime1 = passPredictor1.nextSatPass(cal.getTime());
+            SatPassTime passTime2 = passPredictor2.nextSatPass(cal.getTime());
+            assertTrue(passTime1.toString().equals(passTime2.toString()));
+        }
+        catch (final InvalidTleException e) {
+            Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
+        }
+        catch (final SatNotFoundException snfe) {
+            Assert.fail(SAT_NOT_FOUND_EXCEPTION_WAS_THROWN);
+        }
+
     }
 
     /**
@@ -190,21 +217,21 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         try {
             final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            final DateTime cal = new DateTime(DATE_2009_01_05T04_30_00Z);
+            final DateTime cal = new DateTime(DATE_2019_01_05T04_30_00Z);
             final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate(), true);
-            Assert.assertEquals(DATE_2009_01_05T04_28_10_0000, TZ_FORMAT.format(passTime.getStartTime()));
-            Assert.assertEquals(DATE_2009_01_05T04_32_15_0000, TZ_FORMAT.format(passTime.getEndTime()));
-            Assert.assertEquals(NONE, passTime.getPolePassed());
-            Assert.assertEquals(52, passTime.getAosAzimuth());
-            Assert.assertEquals(84, passTime.getLosAzimuth());
-            Assert.assertEquals(0.9, passTime.getMaxEl(), 0.05);
-            Assert.assertEquals(Long.valueOf(436802379L),
+            assertEquals("2019-01-05T05:45:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
+            assertEquals("2019-01-05T05:54:45+0000", TZ_FORMAT.format(passTime.getEndTime()));
+            assertEquals(NONE, passTime.getPolePassed());
+            assertEquals(35, passTime.getAosAzimuth());
+            assertEquals(126, passTime.getLosAzimuth());
+            assertEquals(7.54, passTime.getMaxEl(), 0.05);
+            assertEquals(Long.valueOf(436806687L),
                     passPredictor.getDownlinkFreq(436800000L, passTime.getStartTime()));
-            Assert.assertEquals(Long.valueOf(145800719L),
+            assertEquals(Long.valueOf(145802209L),
                     passPredictor.getUplinkFreq(145800000L, passTime.getEndTime()));
         }
         catch (final InvalidTleException e) {
@@ -219,19 +246,19 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
     public void correctToStringResult() {
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         try {
             final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            final DateTime cal = new DateTime(DATE_2009_01_05T04_30_00Z);
+            final DateTime cal = new DateTime(DATE_2019_01_05T04_30_00Z);
             final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate(), true);
 
-            Assert.assertEquals("Date: January 5, 2009\n"
-                        + "Start Time: 4:28 AM\n"
-                        + "Duration:  4.1 min.\n"
-                        + "AOS Azimuth: 52 deg.\n"
-                        + "Max Elevation:  0.9 deg.\n"
-                        + "LOS Azimuth: 84 deg.", passTime.toString());
+            assertEquals("Date: January 5, 2019\n" +
+                    "Start Time: 5:45 AM\n" +
+                    "Duration:  9.2 min.\n" +
+                    "AOS Azimuth: 35 deg.\n" +
+                    "Max Elevation:  7.5 deg.\n" +
+                    "LOS Azimuth: 126 deg.", passTime.toString());
         }
         catch (final InvalidTleException e) {
             Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
@@ -248,11 +275,11 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
     public final void poleIsPassed() {
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         try {
             final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            DateTime cal = new DateTime(DATE_2009_01_05T07_00_00Z);
+            DateTime cal = new DateTime(DATE_2019_01_05T07_00_00Z);
 
             boolean northFound = false;
             boolean southFound = false;
@@ -267,14 +294,14 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
                 final String polePassed = passTime.getPolePassed();
                 if (!polePassed.equals(NONE)) {
                     if (!northFound && polePassed.equals(NORTH)) {
-                        Assert.assertEquals("2009-01-05T07:42:45+0000, north", String.format(STRING_PAIR,
+                        assertEquals("2019-01-05T08:57:25+0000, north", String.format(STRING_PAIR,
                                 TZ_FORMAT.format(passTime.getStartTime()), polePassed));
                         northFound = true;
 
                         minute += (int)((endTime - startTime) / 60000);
                     }
                     else if (!southFound && polePassed.equals("south")) {
-                        Assert.assertEquals("2009-01-06T07:03:20+0000, south", String.format(STRING_PAIR,
+                        assertEquals("2019-01-05T07:20:50+0000, south", String.format(STRING_PAIR,
                                 TZ_FORMAT.format(passTime.getStartTime()), polePassed));
                         southFound = true;
 
@@ -298,13 +325,13 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-        final DateTime start = new DateTime(DATE_2009_01_05T07_00_00Z);
+        final DateTime start = new DateTime(DATE_2019_01_05T07_00_00Z);
 
         final List<SatPassTime> passed = passPredictor.getPasses(start.toDate(), 24, false);
-        Assert.assertEquals(10, passed.size());
+        assertEquals(9, passed.size());
     }
 
     @Test
@@ -312,14 +339,14 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-        final DateTime start = new DateTime(DATE_2009_01_05T07_00_00Z);
+        final DateTime start = new DateTime(DATE_2019_01_05T07_00_00Z);
 
         final List<SatPassTime> passes = passPredictor.getPasses(start.toDate(), 24, true);
-        Assert.assertEquals(10, passes.size());
-        Assert.assertEquals(1039, passPredictor.getIterationCount());
+        assertEquals(9, passes.size());
+        assertEquals(1137, passPredictor.getIterationCount());
     }
 
     @Test
@@ -327,17 +354,17 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
         final TLE tle = new TLE(LEO_TLE);
 
-        Assert.assertTrue(!tle.isDeepspace());
+        assertTrue(!tle.isDeepspace());
 
         final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-        final DateTime referenceDate = new DateTime(DATE_2009_01_05T07_00_00Z);
+        final DateTime referenceDate = new DateTime(DATE_2019_01_05T07_00_00Z);
         final int incrementSeconds = 30;
         final int minutesBefore = 50;
         final int minutesAfter = 50;
         final List<SatPos> positions =
                 passPredictor.getPositions(referenceDate.toDate(), incrementSeconds,
                         minutesBefore, minutesAfter);
-        Assert.assertEquals(200, positions.size());
+        assertEquals(200, positions.size());
 
     }
 
