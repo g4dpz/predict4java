@@ -25,8 +25,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com:badgersoftdotcom/predict4java.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:badgersoftdotcom/predict4java.git</developerConnection>
+		<connection>scm:git:git://github.com:g4dpz/predict4java.git</connection>
+		<developerConnection>scm:git:git@github.com:g4dpz/predict4java.git</developerConnection>
 		<url>https://github.com/g4dpz/predict4java</url>
 	</scm>
 
