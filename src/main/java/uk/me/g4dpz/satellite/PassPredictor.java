@@ -425,8 +425,8 @@ public class PassPredictor {
      *
      * @param stepSize The default number of seconds to increment each step of the propagator
      */
-    public static void setDefaultStepSize(int val) {
-        defaultStepSize = val;
+    public static void setDefaultStepSize(int defaultStepSize) {
+        PassPredictor.defaultStepSize = defaultStepSize;
     }
 
     /**
@@ -434,8 +434,8 @@ public class PassPredictor {
      *
      * @param stepSize The default number of seconds to increment each step of the propagator
      */
-    public PassPredictor setStepSize(int val) {
-        stepSize = val;
+    public PassPredictor setStepSize(int stepSize) {
+        this.stepSize = stepSize;
         return this;
     }
 }
