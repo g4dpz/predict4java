@@ -423,7 +423,7 @@ public class PassPredictor {
     /**
      * Set the default stepSize for all propagators
      *
-     * @param stepSize The default number of seconds to increment each step of the propagator
+     * @param defaultStepSize The default number of seconds to increment each step of the propagator
      */
     public static void setDefaultStepSize(int defaultStepSize) {
         PassPredictor.defaultStepSize = defaultStepSize;
