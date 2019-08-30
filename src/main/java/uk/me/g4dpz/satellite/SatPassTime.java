@@ -62,14 +62,13 @@ public class SatPassTime implements Serializable {
 
     public SatPassTime(final Date startTime, final Date endTime, final String polePassed,
             final int aos, final int los, final double maxEl) {
-        new SatPassTime(
-                startTime,
-                endTime,
-                new Date((startTime.getTime() + endTime.getTime()) / 2),
-                polePassed,
-                aos,
-                los,
-                maxEl);
+        this(startTime,
+            endTime,
+            new Date((startTime.getTime() + endTime.getTime()) / 2),
+            polePassed,
+            aos,
+            los,
+            maxEl);
     }
 
     public SatPassTime() {
