@@ -766,9 +766,9 @@ abstract class AbstractSatellite implements Satellite, Serializable {
      * Solves Keplers' Equation.
      *
      * @param temp an array of temporary values we pass around as part of the orbit calculation.
-     * @param axn
-     * @param ayn
-     * @param capu
+     * @param axn axn param
+     * @param ayn ayn param
+     * @param capu capu param
      */
     protected static void converge(final double[] temp, final double axn,
             final double ayn, final double capu) {

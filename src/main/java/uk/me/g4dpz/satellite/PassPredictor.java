@@ -74,14 +74,18 @@ public class PassPredictor {
     private Date tca;
 
     private static int defaultStepSize = 5;
+
     private int stepSize = defaultStepSize;
+    private double minEl = 0.0;
 
     /**
      * Constructor.
      *
+     * @param theTLE the TLE
+     * @param theQTH the GroundStation
      * @throws IllegalArgumentException bad argument passed in
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public PassPredictor(final TLE theTLE, final GroundStationPosition theQTH)
             throws IllegalArgumentException, InvalidTleException, SatNotFoundException {
@@ -107,9 +111,10 @@ public class PassPredictor {
      * Gets the downlink frequency corrected for doppler.
      *
      * @param freq the original frequency in Hz
+     * @param date the date to use when computing frequency
      * @return the doppler corrected frequency in Hz
      * @throws InvalidTleException bad TLE passed in
-     * @throws SatNotFoundException
+     * @throws SatNotFoundException no satellite
      */
     public Long getDownlinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
@@ -151,8 +156,8 @@ public class PassPredictor {
      * @param date The date fo find the next pass for
      * @param windBack Whether to wind back 1/4 of an orbit
      * @return The satellite pass time
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * @throws InvalidTleException bad TLE passed in
+     * @throws SatNotFoundException no satellite
      */
     public SatPassTime nextSatPass(final Date date, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -181,14 +186,14 @@ public class PassPredictor {
         SatPos prevPos = satPos;
 
         // test for the elevation being above the horizon
-        if (satPos.getElevation() > 0.0) {
+        if (satPos.getElevation() > minEl) {
 
             // move time forward in 30 second intervals until the sat goes below
             // the horizon
             do {
                 satPos = getPosition(cal, 60);
             }
-            while (satPos.getElevation() > 0.0);
+            while (satPos.getElevation() > minEl);
 
             // move time forward 3/4 orbit
             cal.add(Calendar.MINUTE, threeQuarterOrbitMinutes());
@@ -204,7 +209,7 @@ public class PassPredictor {
                 tca = now;
             }
         }
-        while (satPos.getElevation() < 0.0);
+        while (satPos.getElevation() < minEl);
 
         // refine it to 'stepSize' seconds
         cal.add(Calendar.SECOND, -60);
@@ -218,7 +223,7 @@ public class PassPredictor {
             }
             prevPos = satPos;
         }
-        while (satPos.getElevation() < 0.0);
+        while (satPos.getElevation() < minEl);
 
         final Date startDate = satPos.getTime();
 
@@ -240,7 +245,7 @@ public class PassPredictor {
             }
             prevPos = satPos;
         }
-        while (satPos.getElevation() > 0.0);
+        while (satPos.getElevation() > minEl);
 
         newTLE = true;
         validateData();
@@ -256,7 +261,7 @@ public class PassPredictor {
                 tca = now;
             }
         }
-        while (satPos.getElevation() > 0.0);
+        while (satPos.getElevation() > minEl);
 
         final Date endDate = satPos.getTime();
         losAzimuth = (int)((satPos.getAzimuth() / (2.0 * Math.PI)) * 360.0);
@@ -269,9 +274,9 @@ public class PassPredictor {
     /**
      * @param cal
      * @param offSet
-     * @return
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * @return current position
+     * @throws InvalidTleException bad TLE passed in
+     * @throws SatNotFoundException no satellite
      */
     private SatPos getPosition(final Calendar cal, final int offSet)
             throws InvalidTleException, SatNotFoundException {
@@ -285,11 +290,11 @@ public class PassPredictor {
      * Gets a list of SatPassTime
      *
      * @param start Date
-     *
-     *            newTLE = true; validateData();
+     * @param hoursAhead number of hours
+     * @param windBack jump back some before starting
      * @return List&lt;SatPassTime&gt;
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public List<SatPassTime> getPasses(final Date start, final int hoursAhead, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -390,13 +395,13 @@ public class PassPredictor {
     /**
      * Calculates positions of satellite for a given point in time, time range and step incremen.
      *
-     * @param referenceDate
-     * @param incrementSeconds
-     * @param minutesBefore
-     * @param minutesAfter
+     * @param referenceDate point int time
+     * @param incrementSeconds step increment
+     * @param minutesBefore minutes before
+     * @param minutesAfter minutes after
      * @return list of SatPos
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public List<SatPos> getPositions(
             final Date referenceDate,
@@ -432,10 +437,22 @@ public class PassPredictor {
     /**
      * Set the stepSize for this propagator
      *
-     * @param stepSize The default number of seconds to increment each step of the propagator
+     * @param stepSize The number of seconds to increment each step of the propagator
+     * @return this object
      */
     public PassPredictor setStepSize(int stepSize) {
         this.stepSize = stepSize;
+        return this;
+    }
+
+    /**
+     * Set the minimum elevation to be considered visible
+     *
+     * @param minEl The minimum elevation
+     * @return this object
+     */
+    public PassPredictor setMinElevation(double minEl) {
+        this.minEl = minEl;
         return this;
     }
 }
