@@ -62,6 +62,7 @@ public class PassPredictor {
     static final TimeZone TZ = TimeZone.getTimeZone(UTC);
 
     private static Log log = LogFactory.getLog(PassPredictor.class);
+    private static int defaultStepSize = 5;
 
     private boolean newTLE = true;
 
@@ -72,6 +73,8 @@ public class PassPredictor {
     private final double meanMotion;
     private int iterationCount;
     private Date tca;
+
+    private int stepSize = defaultStepSize;
 
     /**
      * Constructor.
@@ -168,7 +171,8 @@ public class PassPredictor {
         // get the current position
         final Calendar cal = Calendar.getInstance(TZ);
         cal.clear();
-        cal.setTimeInMillis(date.getTime());
+        // round down to nearest second
+        cal.setTimeInMillis(date.getTime() / 1000 * 1000);
 
         // wind back time 1/4 of an orbit
         if (windBack) {
@@ -204,10 +208,10 @@ public class PassPredictor {
         }
         while (satPos.getElevation() < 0.0);
 
-        // refine it to 5 seconds
+        // refine it to 'stepSize' seconds
         cal.add(Calendar.SECOND, -60);
         do {
-            satPos = getPosition(cal, 5);
+            satPos = getPosition(cal, stepSize);
             final Date now = cal.getTime();
             elevation = satPos.getElevation();
             if (elevation > maxElevation) {
@@ -243,10 +247,10 @@ public class PassPredictor {
         newTLE = true;
         validateData();
 
-        // refine it to 5 seconds
+        // refine it to 'stepSize' seconds
         cal.add(Calendar.SECOND, -30);
         do {
-            satPos = getPosition(cal, 5);
+            satPos = getPosition(cal, stepSize);
             final Date now = cal.getTime();
             elevation = satPos.getElevation();
             if (elevation > maxElevation) {
@@ -419,4 +423,25 @@ public class PassPredictor {
 
         return positions;
     }
+
+    /**
+     * Set the default stepSize for all propagators
+     *
+     * @param defaultStepSize The default number of seconds to increment each step of the propagator
+     */
+    public static void setDefaultStepSize(int defaultStepSize) {
+        PassPredictor.defaultStepSize = defaultStepSize;
+    }
+
+    /**
+     * Set the stepSize for this propagator
+     *
+     * @param stepSize The number of seconds to increment each step of the propagator
+     * @return this object
+     */
+    public PassPredictor setStepSize(int stepSize) {
+        this.stepSize = stepSize;
+        return this;
+    }
+
 }
