@@ -67,6 +67,7 @@ public class GroundStationPosition {
      * @param latitude the latitue of the ground station in degrees, North: positive
      * @param longitude the longitude of the ground station in degrees, East: positive
      * @param heightAMSL the height of te ground station above mean sea level, in metres
+     * @param name station name
      */
     public GroundStationPosition(final double latitude, final double longitude,
             final double heightAMSL, final String name) {
@@ -131,6 +132,7 @@ public class GroundStationPosition {
     /**
      * The horizonElevations to set.
      *
+     * @param theHorizonElevations elevation obscura information
      * @throws IllegalArgumentException the input arguments were incorrect
      */
     public final void setHorizonElevations(final int[] theHorizonElevations)

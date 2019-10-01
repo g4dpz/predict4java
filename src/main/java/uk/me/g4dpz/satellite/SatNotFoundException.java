@@ -52,22 +52,22 @@ public class SatNotFoundException extends PredictionException {
     }
 
     /**
-     * @param message
+     * @param message error message
      */
     public SatNotFoundException(final String message) {
         super(message);
     }
 
     /**
-     * @param cause
+     * @param cause error cause
      */
     public SatNotFoundException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message
-     * @param cause
+     * @param message error message
+     * @param cause error cause
      */
     public SatNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
