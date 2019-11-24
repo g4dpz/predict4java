@@ -1,4 +1,4 @@
-[![build status](http://img.shields.io/jenkins/s/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](https://travis-ci.org/badgersoftdotcom/predict4java.svg?branch=master) [![test results](http://img.shields.io/jenkins/t/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](https://travis-ci.org/badgersoftdotcom/predict4java.svg?branch=master) [![issues](http://img.shields.io/github/issues/badgersoftdotcom/predict4java.svg?style=flat-square)](https://github.com/badgersoftdotcom/predict4java/issues/) [![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![build status](https://travis-ci.com/g4dpz/predict4java.svg?branch=master) [![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
 predict4java
 ============
 `predict4java` provides real-time satellite tracking and orbital prediction information.
@@ -13,4 +13,4 @@ Neoklis Kyriazis, 5B4AZ, later re-wrote Dr. Kelso's code in C, and released it u
 
 The project has been ported again to be an Eclipse / Maven project
 
-The Author of this version is: David A. B. Johnson, G4DPZ <dave@g4dpz.me.com>
+The Author of this version is: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
