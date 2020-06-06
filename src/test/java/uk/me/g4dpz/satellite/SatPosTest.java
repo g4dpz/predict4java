@@ -26,6 +26,7 @@
  */
 package uk.me.g4dpz.satellite;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,8 +35,10 @@ import org.junit.Test;
  * @author David A. B. Johnson, badgersoft
  *
  */
-public final class SatPosTest {
+public final class SatPosTest extends AbstractSatelliteTestBase {
 
+    private static final String DATE_2019_01_05T04_30_00Z = "2019-01-05T04:30:00Z";
+    private static final String FORMAT_9_7F = "%9.7f";
     private static final String FORMAT_4F = "%4.0f %4.0f";
 
 	/**
@@ -65,5 +68,25 @@ public final class SatPosTest {
         Assert.assertEquals("   9  339", String.format(FORMAT_4F, rangeCircle[89][0], rangeCircle[89][1]));
         Assert.assertEquals(" -20    9", String.format(FORMAT_4F, rangeCircle[179][0], rangeCircle[179][1]));
         Assert.assertEquals("   8   41", String.format(FORMAT_4F, rangeCircle[269][0], rangeCircle[269][1]));
+    }
+
+    @Test
+    public void getPositionTest() {
+
+        final DateTime cal = new DateTime(DATE_2019_01_05T04_30_00Z);
+
+        final TLE tle = new TLE(LEO_TLE);
+
+        Satellite satellite = SatelliteFactory.createSatellite(tle);
+
+        final SatPos position = satellite.getPosition(new GroundStationPosition(52.4670, -2.022, 200.0), cal.toDate());
+
+        Assert.assertEquals("-0.5645316", String.format(FORMAT_9_7F, position.getElevation()));
+        Assert.assertEquals("2.4480619", String.format(FORMAT_9_7F, position.getAzimuth()));
+        Assert.assertEquals("588.9215596", String.format(FORMAT_9_7F, position.getAltitude()));
+        Assert.assertEquals("-0.1991553", String.format(FORMAT_9_7F, position.getLatitude()));
+        Assert.assertEquals("0.6303462", String.format(FORMAT_9_7F, position.getLongitude()));
+        Assert.assertEquals("7810.1868943", String.format(FORMAT_9_7F, position.getRange()));
+        Assert.assertEquals("4.8611346", String.format(FORMAT_9_7F, position.getRangeRate()));
     }
 }
