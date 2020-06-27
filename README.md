@@ -1,4 +1,4 @@
-[![build status](https://travis-ci.com/g4dpz/predict4java.svg?branch=master) [![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
 predict4java
 ============
 `predict4java` provides real-time satellite tracking and orbital prediction information.
