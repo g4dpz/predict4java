@@ -47,10 +47,14 @@ public abstract class AbstractSatelliteTestBase {
     static final GroundStationPosition GROUND_STATION =
             new GroundStationPosition(52.4670, -2.022, 200);
 
-    protected static final SimpleDateFormat TZ_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-    /** The time at which we do all the calculations. */
+    /** Use UTC for all calculations and date formats. */
     static final TimeZone TZ = TimeZone.getTimeZone("UTC:UTC");
+
+    protected static final SimpleDateFormat TZ_FORMAT;
+    static {
+        TZ_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        TZ_FORMAT.setTimeZone(TZ);
+    }
 
     /** Seconds per day. */
     static final long SECONDS_PER_DAY = 24 * 60 * 60;
