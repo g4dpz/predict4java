@@ -90,7 +90,7 @@ public class TLE implements Serializable {
     /**
      * Copy constructor.
      *
-     * @param tle
+     * @param tle the TLE
      */
     public TLE(final TLE tle) {
         this.catnum = tle.catnum;
@@ -128,6 +128,7 @@ public class TLE implements Serializable {
      * Constructor.
      *
      * @param tle the three line elements
+     * @param nilStart does first line contain a nil character
      * @throws IllegalArgumentException here was something wrong with the TLE
      */
     public TLE(final String[] tle, final boolean nilStart) throws IllegalArgumentException {

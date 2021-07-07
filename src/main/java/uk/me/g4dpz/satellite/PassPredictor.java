@@ -62,6 +62,7 @@ public class PassPredictor {
     static final TimeZone TZ = TimeZone.getTimeZone(UTC);
 
     private static Log log = LogFactory.getLog(PassPredictor.class);
+    private static int defaultStepSize = 5;
 
     private boolean newTLE = true;
 
@@ -73,12 +74,16 @@ public class PassPredictor {
     private int iterationCount;
     private Date tca;
 
+    private int stepSize = defaultStepSize;
+
     /**
      * Constructor.
      *
+     * @param theTLE the TLE
+     * @param theQTH the GroundStation
      * @throws IllegalArgumentException bad argument passed in
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public PassPredictor(final TLE theTLE, final GroundStationPosition theQTH)
             throws IllegalArgumentException, InvalidTleException, SatNotFoundException {
@@ -106,7 +111,7 @@ public class PassPredictor {
      * @param freq the original frequency in Hz
      * @return the doppler corrected frequency in Hz
      * @throws InvalidTleException bad TLE passed in
-     * @throws SatNotFoundException
+     * @throws SatNotFoundException no satellite
      */
     public Long getDownlinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
@@ -148,8 +153,8 @@ public class PassPredictor {
      * @param date The date fo find the next pass for
      * @param windBack Whether to wind back 1/4 of an orbit
      * @return The satellite pass time
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * @throws InvalidTleException bad TLE passed in
+     * @throws SatNotFoundException no satellite
      */
     public SatPassTime nextSatPass(final Date date, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -166,7 +171,8 @@ public class PassPredictor {
         // get the current position
         final Calendar cal = Calendar.getInstance(TZ);
         cal.clear();
-        cal.setTimeInMillis(date.getTime());
+        // round down to nearest second
+        cal.setTimeInMillis(date.getTime() / 1000 * 1000);
 
         // wind back time 1/4 of an orbit
         if (windBack) {
@@ -202,10 +208,10 @@ public class PassPredictor {
         }
         while (satPos.getElevation() < 0.0);
 
-        // refine it to 5 seconds
+        // refine it to 'stepSize' seconds
         cal.add(Calendar.SECOND, -60);
         do {
-            satPos = getPosition(cal, 5);
+            satPos = getPosition(cal, stepSize);
             final Date now = cal.getTime();
             elevation = satPos.getElevation();
             if (elevation > maxElevation) {
@@ -241,10 +247,10 @@ public class PassPredictor {
         newTLE = true;
         validateData();
 
-        // refine it to 5 seconds
+        // refine it to 'stepSize' seconds
         cal.add(Calendar.SECOND, -30);
         do {
-            satPos = getPosition(cal, 5);
+            satPos = getPosition(cal, stepSize);
             final Date now = cal.getTime();
             elevation = satPos.getElevation();
             if (elevation > maxElevation) {
@@ -265,9 +271,9 @@ public class PassPredictor {
     /**
      * @param cal
      * @param offSet
-     * @return
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * @return current position
+     * @throws InvalidTleException bad TLE passed in
+     * @throws SatNotFoundException no satellite
      */
     private SatPos getPosition(final Calendar cal, final int offSet)
             throws InvalidTleException, SatNotFoundException {
@@ -281,11 +287,13 @@ public class PassPredictor {
      * Gets a list of SatPassTime
      *
      * @param start Date
+     * @param hoursAhead number of hours
+     * @param windBack jump back some before starting
      *
      *            newTLE = true; validateData();
      * @return List&lt;SatPassTime&gt;
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public List<SatPassTime> getPasses(final Date start, final int hoursAhead, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -386,13 +394,13 @@ public class PassPredictor {
     /**
      * Calculates positions of satellite for a given point in time, time range and step incremen.
      *
-     * @param referenceDate
-     * @param incrementSeconds
-     * @param minutesBefore
-     * @param minutesAfter
+     * @param referenceDate point in time
+     * @param incrementSeconds step increment
+     * @param minutesBefore minutes before
+     * @param minutesAfter minutes after
      * @return list of SatPos
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @throws SatNotFoundException no satellite
+     * @throws InvalidTleException bad TLE passed in
      */
     public List<SatPos> getPositions(
             final Date referenceDate,
@@ -415,4 +423,25 @@ public class PassPredictor {
 
         return positions;
     }
+
+    /**
+     * Set the default stepSize for all propagators
+     *
+     * @param defaultStepSize The default number of seconds to increment each step of the propagator
+     */
+    public static void setDefaultStepSize(int defaultStepSize) {
+        PassPredictor.defaultStepSize = defaultStepSize;
+    }
+
+    /**
+     * Set the stepSize for this propagator
+     *
+     * @param stepSize The number of seconds to increment each step of the propagator
+     * @return this object
+     */
+    public PassPredictor setStepSize(int stepSize) {
+        this.stepSize = stepSize;
+        return this;
+    }
+
 }
