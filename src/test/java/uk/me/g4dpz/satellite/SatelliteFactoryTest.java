@@ -1,7 +1,7 @@
 /**
  predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
- Copyright (C)  2004-2019  David A. B. Johnson, G4DPZ.
+ Copyright (C)  2004-2022  David A. B. Johnson, G4DPZ.
 
  Author: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
 
