@@ -37,7 +37,7 @@
  */
 package uk.me.g4dpz.satellite;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -411,14 +411,14 @@ public class TLE implements Serializable {
     /**
      * @return Xndt2o
      */
-    public synchronized double getXndt2o() {
+    public double getXndt2o() {
         return xndt2o;
     }
 
     /**
      * @return Xno
      */
-    public synchronized double getXno() {
+    public double getXno() {
         return xno;
     }
 

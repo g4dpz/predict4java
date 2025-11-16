@@ -37,14 +37,12 @@
  */
 package uk.me.g4dpz.satellite;
 
-import java.io.Serializable;
-
 /**
  *
  * @author Dave Johnson, G4DPZ
  *
  */
-public class LEOSatellite extends AbstractSatellite implements Serializable {
+public class LEOSatellite extends AbstractSatellite {
 
     private static final long serialVersionUID = 1206152575764077691L;
     private double aodp;

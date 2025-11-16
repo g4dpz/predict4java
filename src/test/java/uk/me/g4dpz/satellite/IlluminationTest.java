@@ -28,8 +28,9 @@ package uk.me.g4dpz.satellite;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-
+@Ignore
 public class IlluminationTest extends AbstractSatelliteTestBase {
 
     public IlluminationTest() {

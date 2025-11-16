@@ -45,7 +45,7 @@ import java.io.Serializable;
  * @author Dave Johnson, G4DPZ
  *
  */
-public class DeepSpaceSatellite extends AbstractSatellite implements Serializable {
+public class DeepSpaceSatellite extends AbstractSatellite {
 
     private static final long serialVersionUID = -9151311937099118037L;
     private double c1;

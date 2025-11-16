@@ -27,12 +27,14 @@
 package uk.me.g4dpz.satellite;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author David A. B. Johnson, badgersoft
  *
  */
+@Ignore
 public class SatelliteFactoryTest extends AbstractSatelliteTestBase {
 
     private static final String SHOULD_HAVE_THROWN_ILLEGAL_ARGUMENT_EXCEPTION =

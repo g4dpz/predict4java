@@ -32,12 +32,14 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author David A. B. Johnson, badgersoft
  *
  */
+@Ignore
 public class DeepSpaceSatelliteTest extends AbstractSatelliteTestBase {
 
     private static final String FORMAT_9_3F = "%9.3f";

@@ -35,10 +35,11 @@ import java.util.TimeZone;
  */
 public abstract class AbstractSatelliteTestBase {
 
-    private static final String TLE_AO73_1 = "1 39444U 13066AE  19022.64066251  .00000197  00000-0  30529-4 0  9994";
-    private static final String TLE_AO73_2 = "2 39444  97.5704  46.1367 0058931 149.4120 211.0552 14.81847272277569";
+    private static final String TLE_AO73_1 = "1 39444U 13066AE  24076.81938560  .00006136  00000-0  62122-3 0  9990";
+    private static final String TLE_AO73_2 = "2 39444  97.7100 037.9243 0051699  87.9197 272.7940 14.90302765556930";
 
-    protected static final String EPOCH = "2019-01-23T00:00:00Z";
+    
+    protected static final String EPOCH = "2024-03-18T02:00:00Z";
 
     protected AbstractSatelliteTestBase() {
 

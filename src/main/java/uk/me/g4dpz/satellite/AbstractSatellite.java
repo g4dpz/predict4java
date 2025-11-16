@@ -105,6 +105,13 @@ abstract class AbstractSatellite implements Satellite, Serializable {
     static final TimeZone TZ = TimeZone.getTimeZone("UTC:UTC");
 
     private final double julEpoch;
+    
+    // Reusable objects to reduce allocations
+    private final Vector4 obsPos = new Vector4();
+    private final Vector4 obsVel = new Vector4();
+    private final Vector4 range = new Vector4();
+    private final Vector4 rgvel = new Vector4();
+    private final Vector4 squintVector = new Vector4();
 
     public AbstractSatellite(final TLE tle) {
         this.tle = tle;
@@ -390,8 +397,6 @@ abstract class AbstractSatellite implements Satellite, Serializable {
 
         AbstractSatellite.magnitude(velocity);
 
-        final Vector4 squintVector = new Vector4();
-
         // /** All angles in rads. Distance in km. Velocity in km/S **/
         // /* Calculate satellite Azi, Ele, Range and Range-rate */
         calculateObs(julUTC, position, velocity, gsPos, squintVector);
@@ -477,11 +482,6 @@ abstract class AbstractSatellite implements Satellite, Serializable {
     private void calculateObs(final double julianUTC,
             final Vector4 positionVector, final Vector4 velocityVector, final GroundStationPosition gsPos,
             final Vector4 squintVector) {
-
-        final Vector4 obsPos = new Vector4();
-        final Vector4 obsVel = new Vector4();
-        final Vector4 range = new Vector4();
-        final Vector4 rgvel = new Vector4();
 
         AbstractSatellite.calculateUserPosVel(julianUTC, gsPos, obsPos, obsVel);
 
@@ -862,7 +862,6 @@ abstract class AbstractSatellite implements Satellite, Serializable {
      */
     @Override
     public synchronized SatPos calculateSatPosForGroundStation(final GroundStationPosition gsPos) {
-        final Vector4 squintVector = new Vector4();
         // All angles in rads. Distance in km. Velocity in km/s
         // Calculate satellite Azi, Ele, Range and Range-rate
         calculateObs(julUTC, position, velocity, gsPos, squintVector);

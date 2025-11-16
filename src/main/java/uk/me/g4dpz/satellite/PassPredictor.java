@@ -37,8 +37,8 @@
  */
 package uk.me.g4dpz.satellite;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -61,7 +61,7 @@ public class PassPredictor {
     /** The time at which we do all the calculations. */
     static final TimeZone TZ = TimeZone.getTimeZone(UTC);
 
-    private static Log log = LogFactory.getLog(PassPredictor.class);
+    private static final Logger log = LoggerFactory.getLogger(PassPredictor.class);
 
     private boolean newTLE = true;
 
@@ -111,11 +111,7 @@ public class PassPredictor {
     public Long getDownlinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
         validateData();
-        // get the current position
-        final Calendar cal = Calendar.getInstance(TZ);
-        cal.clear();
-        cal.setTimeInMillis(date.getTime());
-        final SatPos satPos = getSatPos(cal.getTime());
+        final SatPos satPos = getSatPos(date);
         final double rangeRate = satPos.getRangeRate();
         return (long)((double)freq * (SPEED_OF_LIGHT - rangeRate * 1000.0) / SPEED_OF_LIGHT);
     }
@@ -129,10 +125,7 @@ public class PassPredictor {
     public Long getUplinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
         validateData();
-        final Calendar cal = Calendar.getInstance(TZ);
-        cal.clear();
-        cal.setTimeInMillis(date.getTime());
-        final SatPos satPos = getSatPos(cal.getTime());
+        final SatPos satPos = getSatPos(date);
         final double rangeRate = satPos.getRangeRate();
         return (long)((double)freq * (SPEED_OF_LIGHT + rangeRate * 1000.0) / SPEED_OF_LIGHT);
     }

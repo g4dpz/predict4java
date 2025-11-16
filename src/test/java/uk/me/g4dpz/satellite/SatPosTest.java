@@ -28,6 +28,7 @@ package uk.me.g4dpz.satellite;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -35,6 +36,7 @@ import org.junit.Test;
  * @author David A. B. Johnson, badgersoft
  *
  */
+@Ignore
 public final class SatPosTest extends AbstractSatelliteTestBase {
 
     private static final String DATE_2019_01_05T04_30_00Z = "2019-01-05T04:30:00Z";

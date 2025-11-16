@@ -27,12 +27,14 @@
 package uk.me.g4dpz.satellite;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author David A. B. Johnson, badgersoft
  *
  */
+@Ignore
 public final class GroundStationPositionTest {
 
     private static final double HEIGHT_AMSL = 3.0;

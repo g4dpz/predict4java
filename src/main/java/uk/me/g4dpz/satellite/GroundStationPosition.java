@@ -121,11 +121,7 @@ public class GroundStationPosition {
      * @return the horizonElevations
      */
     public final int[] getHorizonElevations() {
-        final int[] horizonElevationsCopy = new int[horizonElevations.length];
-
-        System.arraycopy(horizonElevationsCopy, 0, horizonElevations, 0, horizonElevations.length);
-
-        return horizonElevationsCopy;
+        return horizonElevations;
     }
 
     /**
@@ -141,7 +137,7 @@ public class GroundStationPosition {
                     "Expected 36 Horizon Elevations, got: " + theHorizonElevations.length);
         }
 
-        System.arraycopy(this.horizonElevations, 0, theHorizonElevations, 0, theHorizonElevations.length);
+        System.arraycopy(theHorizonElevations, 0, this.horizonElevations, 0, theHorizonElevations.length);
     }
 
     public String getName() {
