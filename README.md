@@ -36,14 +36,14 @@ Real-time satellite tracking and orbital prediction library for Java.
 <dependency>
     <groupId>uk.me.g4dpz</groupId>
     <artifactId>predict4java</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-implementation 'uk.me.g4dpz:predict4java:1.2.0'
+implementation 'uk.me.g4dpz:predict4java:1.2.1'
 ```
 
 ### Basic Usage
@@ -224,5 +224,5 @@ GitHub: [@g4dpz](https://github.com/g4dpz)
 
 ---
 
-**Version 1.2.0** - February 15, 2026  
-Optimized for performance and modern Java development
+**Version 1.2.1** - February 15, 2026  
+Bug fixes, security improvements, and working examples

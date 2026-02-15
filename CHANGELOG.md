@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-02-15
+
+### Added
+- Examples directory with four working examples (BasicSatelliteTracking, PassPrediction, DopplerShiftCalculation, MultiSatelliteTracking)
+- Maven build configuration for examples with automatic dependency management
+- Comprehensive examples README with usage instructions
+
+### Fixed
+- Integer overflow risk in PassPredictor.getPositions() - now uses long literal for millisecond conversion
+- Integer overflow risk in LongDurationTest - now uses long literals for time calculations (24L * 60 * 60 * 1000)
+- Implicit narrowing conversion in AbstractSatellite.julianDateOfYear() - now explicitly casts double to long
+- Default encoding issue in TLE.importSat() - now explicitly uses UTF-8
+- Internal representation exposure in GroundStationPosition.getHorizonElevations() - now returns defensive copy
+- Javadoc warnings suppressed with doclint configuration
+
+### Changed
+- Updated Checkstyle suppressions for better compatibility with scientific code patterns
+- Updated SpotBugs configuration with comprehensive exclusion filters for scientific computing patterns
+- Improved CI/CD workflow with proper SpotBugs plugin invocation
+
 ## [1.2.0] - 2026-02-15
 
 ### Added
