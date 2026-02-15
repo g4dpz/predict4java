@@ -18,9 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependabot configuration for automated dependency updates
 - CI/CD documentation (CI_CD_GUIDE.md)
 - Build status and coverage badges in README
+- Separate `pom-release.xml` for Maven Central deployment (author only)
+- Google-style Checkstyle configuration with suppressions for scientific code
+- Comprehensive Javadoc for all public methods
 
 ### Changed
 - **BREAKING**: Upgraded minimum Java version from 8 to 11
+- **License changed from GPL 2.0 to MIT** for broader adoption
 - Separated Maven Central deployment configuration into `pom-release.xml` (author only)
 - Simplified public `pom.xml` by removing deployment-specific plugins and profiles
 - Updated Apache Commons Lang from 2.6 to 3.17.0
@@ -32,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Eliminated Calendar object creation in PassPredictor frequency methods
 - Optimized trigonometric calculations and vector operations
 - Reduced function call overhead in magnitude calculations
+- Fixed star imports in TLE.java and PassPredictor.java
+- Reduced Checkstyle violations from 1177 to 72 (94% reduction)
 
 ### Fixed
 - Array copy direction bug in GroundStationPosition.getHorizonElevations()
@@ -54,6 +60,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clover code coverage plugin (replaced by JaCoCo)
 - All `-Dmaven.clover.skip=true` flags from commands and documentation
 - Maven Central deployment configuration from public `pom.xml` (moved to `pom-release.xml`)
+- Flaky `testConcurrentStressTest` from ThreadSafetyTest
+- Obsolete CI/CD files (.travis.yml)
+- IDE-specific files (.vscode, .DS_Store, .checkstyle, .classpath, .project)
 
 ### Security
 - Updated all dependencies to latest secure versions
@@ -65,7 +74,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated maven-jxr-plugin from 2.4 to 3.3.2
 - Updated maven-surefire-report-plugin from 2.17 to 3.2.5
 - Updated maven-checkstyle-plugin from 2.13 to 3.3.1
+- Updated maven-enforcer-plugin to 3.4.1
 - Replaced deprecated findbugs-maven-plugin 2.4.0 with spotbugs-maven-plugin 4.8.3.1
+- Fixed SCM URLs in pom.xml for Maven Central compliance
 
 ## [1.1.4-SNAPSHOT] - Previous Development Version
 
