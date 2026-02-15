@@ -220,7 +220,7 @@ Special thanks to:
 
 **David A. B. Johnson (G4DPZ)**  
 Email: dave@g4dpz.me.uk  
-GitHub: [@badgersoftdotcom](https://github.com/badgersoftdotcom)
+GitHub: [@g4dpz](https://github.com/g4dpz)
 
 ---
 
