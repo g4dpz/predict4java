@@ -478,35 +478,35 @@ public class TLE implements Serializable {
      */
     public static List<TLE> importSat(final InputStream fileIS) throws IOException {
 
-            final List<TLE> importedSats = new ArrayList<TLE>();
+        final List<TLE> importedSats = new ArrayList<TLE>();
 
-            final BufferedReader buf = new BufferedReader(new InputStreamReader(fileIS, "UTF-8"));
-            String readString;
+        final BufferedReader buf = new BufferedReader(new InputStreamReader(fileIS, "UTF-8"));
+        String readString;
 
-            int j = 0;
+        int j = 0;
 
-            final String[] lines = new String[3];
+        final String[] lines = new String[3];
 
-            while ((readString = buf.readLine()) != null) {
+        while ((readString = buf.readLine()) != null) {
 
-                switch (j) {
-                    case 0:
-                    case 1:
-                        lines[j] = readString;
-                        j++;
-                        break;
-                    case 2:
-                        lines[j] = readString;
-                        j = 0;
-                        importedSats.add(new TLE(lines));
-                        break;
-                    default:
-                        break;
-                }
+            switch (j) {
+                case 0:
+                case 1:
+                    lines[j] = readString;
+                    j++;
+                    break;
+                case 2:
+                    lines[j] = readString;
+                    j = 0;
+                    importedSats.add(new TLE(lines));
+                    break;
+                default:
+                    break;
             }
-
-            return importedSats;
         }
+
+        return importedSats;
+    }
 
     @Override
     public String toString() {
