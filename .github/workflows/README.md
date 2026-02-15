@@ -118,24 +118,24 @@ Test workflows locally before pushing:
 
 ```bash
 # Run tests
-mvn clean test -Dmaven.clover.skip=true
+mvn clean test
 
 # Run quality checks
 mvn checkstyle:check
 mvn compile spotbugs:check
 
 # Build artifacts
-mvn clean package -Dmaven.clover.skip=true
+mvn clean package
 
 # Generate coverage report
-mvn jacoco:report -Dmaven.clover.skip=true
+mvn jacoco:report
 ```
 
 ## Troubleshooting
 
 ### Workflow Fails on Test Job
 - Check test logs in GitHub Actions
-- Run tests locally: `mvn clean test -Dmaven.clover.skip=true`
+- Run tests locally: `mvn clean test`
 - Ensure all tests pass before pushing
 
 ### Quality Job Shows Violations

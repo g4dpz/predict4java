@@ -88,16 +88,17 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
+
+# Release files (author only, not for public repository)
+pom-release.xml
+RELEASE_WITH_POM.md
+MAVEN_CENTRAL_READY.md
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper
 .mvn/wrapper/maven-wrapper.jar
 
 # REPORTING #
 /output
-
-# Code coverage
-*.exec
-.clover/
 
 # Build logs
 *.log

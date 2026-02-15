@@ -20,7 +20,7 @@ The predict4java project uses GitHub Actions for continuous integration and depl
 - **Steps**:
   1. Checkout code
   2. Set up JDK
-  3. Run tests with `mvn clean test -Dmaven.clover.skip=true`
+  3. Run tests with `mvn clean test`
   4. Generate JaCoCo coverage report (Java 11 only)
   5. Upload coverage to Codecov (Java 11 only)
 
@@ -50,7 +50,7 @@ This ensures compatibility across all supported Java versions.
 - **Steps**:
   1. Checkout code
   2. Set up JDK 11
-  3. Build with `mvn clean package -Dmaven.clover.skip=true`
+  3. Build with `mvn clean package`
   4. Verify JAR files exist
   5. Upload build artifacts (retained for 30 days)
 
@@ -100,7 +100,7 @@ The project uses Codecov for coverage tracking and visualization.
 
 **Locally:**
 ```bash
-mvn clean test jacoco:report -Dmaven.clover.skip=true
+mvn clean test jacoco:report
 open target/site/jacoco/index.html
 ```
 
@@ -149,13 +149,13 @@ Add these badges to your README.md:
 
 ```bash
 # Run all tests
-mvn clean test -Dmaven.clover.skip=true
+mvn clean test
 
 # Run specific test
-mvn test -Dtest=PassPredictorTest -Dmaven.clover.skip=true
+mvn test -Dtest=PassPredictorTest
 
 # Run tests with coverage
-mvn clean test jacoco:report -Dmaven.clover.skip=true
+mvn clean test jacoco:report
 ```
 
 ### Running Quality Checks Locally
@@ -178,21 +178,21 @@ mvn site
 mvn clean package -DskipTests
 
 # Build with all checks
-mvn clean verify -Dmaven.clover.skip=true
+mvn clean verify
 
 # Build release artifacts (requires GPG)
-mvn clean package -P release -Dmaven.clover.skip=true
+mvn clean package -P release
 ```
 
 ## Troubleshooting
 
 ### Test Failures
 
-**Issue**: Tests fail with Clover instrumentation
-**Solution**: Always use `-Dmaven.clover.skip=true` flag
+**Issue**: Tests fail intermittently
+**Solution**: Check for race conditions or timing-dependent tests
 
 **Issue**: ThreadSafetyTest fails intermittently
-**Solution**: This is expected with Clover. The flaky test has been removed.
+**Solution**: The flaky test has been removed from the suite
 
 ### Build Failures
 
@@ -264,7 +264,7 @@ Add to the build job:
 ```yaml
 - name: Check coverage threshold
   run: |
-    mvn jacoco:check -Dmaven.clover.skip=true \
+    mvn jacoco:check \
       -Djacoco.haltOnFailure=true \
       -Djacoco.instructionRatio=0.90 \
       -Djacoco.branchRatio=0.75

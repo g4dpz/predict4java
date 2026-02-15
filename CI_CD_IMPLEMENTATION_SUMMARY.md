@@ -330,7 +330,7 @@ git push origin test-ci
 **Solution:**
 ```bash
 # Test locally with CI Java version
-mvn clean test -Dmaven.clover.skip=true
+mvn clean test
 ```
 
 ### Codecov Upload Fails

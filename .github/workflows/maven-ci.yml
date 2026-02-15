@@ -27,11 +27,11 @@ jobs:
         cache: 'maven'
     
     - name: Run tests
-      run: mvn clean test -Dmaven.clover.skip=true -B
+      run: mvn clean test -B
     
     - name: Generate JaCoCo coverage report
       if: matrix.java == '11'
-      run: mvn jacoco:report -Dmaven.clover.skip=true
+      run: mvn jacoco:report
     
     - name: Upload coverage to Codecov
       if: matrix.java == '11'
@@ -86,13 +86,13 @@ jobs:
         cache: 'maven'
     
     - name: Build with Maven
-      run: mvn clean package -Dmaven.clover.skip=true -B
+      run: mvn clean package -B
     
     - name: Verify artifacts
       run: |
         ls -lh target/*.jar
         echo "Verifying JAR files exist..."
-        test -f target/predict4java-*.jar
+        [ -f target/predict4java-1.2.0.jar ] || exit 1
         echo "Build artifacts verified successfully!"
     
     - name: Upload build artifacts

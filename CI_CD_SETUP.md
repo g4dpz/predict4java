@@ -222,7 +222,7 @@ act -l
 ```bash
 # Test with same Java version as CI
 sdk use java 11.0.x-tem
-mvn clean test -Dmaven.clover.skip=true
+mvn clean test
 
 # Check for hardcoded paths or assumptions
 ```
@@ -254,9 +254,9 @@ mvn clean test -Dmaven.clover.skip=true
 
 ### Quick References
 
-- **Run tests locally**: `mvn clean test -Dmaven.clover.skip=true`
+- **Run tests locally**: `mvn clean test`
 - **Run quality checks**: `mvn checkstyle:check && mvn compile spotbugs:check`
-- **Build artifacts**: `mvn clean package -Dmaven.clover.skip=true`
+- **Build artifacts**: `mvn clean package`
 - **View coverage**: `mvn jacoco:report && open target/site/jacoco/index.html`
 
 ---
@@ -302,7 +302,7 @@ Your CI/CD is working correctly when:
 
 ## 💡 Tips
 
-1. **Always run tests locally first**: `mvn clean test -Dmaven.clover.skip=true`
+1. **Always run tests locally first**: `mvn clean test`
 2. **Check CI logs for warnings**: Even passing builds may have warnings
 3. **Keep dependencies updated**: Review Dependabot PRs regularly
 4. **Monitor build times**: Optimize if builds take too long
