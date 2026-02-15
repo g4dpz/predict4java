@@ -63,7 +63,7 @@ jobs:
       continue-on-error: true
     
     - name: Run SpotBugs
-      run: mvn compile spotbugs:check -B
+      run: mvn compile com.github.spotbugs:spotbugs-maven-plugin:check -B
       continue-on-error: true
     
     - name: Generate quality reports
