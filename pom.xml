@@ -150,7 +150,7 @@
 			<plugin>
 				<groupId>org.openclover</groupId>
 				<artifactId>clover-maven-plugin</artifactId>
-				<version>4.3.1</version>
+				<version>4.5.2</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
