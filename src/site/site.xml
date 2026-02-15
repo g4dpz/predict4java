@@ -10,7 +10,7 @@
             <topBarEnabled>true</topBarEnabled>
             <sideBarEnabled>false</sideBarEnabled>
             <gitHub>
-                <projectId>badgersoftdotcom/predict4java</projectId>
+                <projectId>g4dpz/predict4java</projectId>
                 <ribbonOrientation>right</ribbonOrientation>
             </gitHub>
         </fluidoSkin>

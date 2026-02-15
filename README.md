@@ -54,8 +54,8 @@ import uk.me.g4dpz.satellite.*;
 // Load TLE data
 String[] tle = {
     "ISS (ZARYA)",
-    "1 25544U 98067A   24320.50000000  .00016717  00000-0  10270-3 0  9005",
-    "2 25544  51.6400 208.9163 0006317  69.9862  25.2906 15.54225995 67660"
+    "1 25544U 98067A   26045.79523799  .00007779  00000+0  15107-3 0  9994",
+    "2 25544  51.6315 185.5279 0011056  98.8248 261.3993 15.48601910552787"
 };
 
 // Create satellite
@@ -64,9 +64,9 @@ Satellite satellite = SatelliteFactory.createSatellite(tleData);
 
 // Define ground station
 GroundStationPosition groundStation = new GroundStationPosition(
-    51.5074,  // Latitude (degrees, North positive)
-    -0.1278,  // Longitude (degrees, East positive)
-    0.0       // Altitude (meters above sea level)
+    52.4670,  // Latitude (degrees, North positive)
+    -2.022,   // Longitude (degrees, East positive)
+    200.0     // Altitude (meters above sea level)
 );
 
 // Get current position
@@ -131,7 +131,7 @@ See [OPTIMIZATIONS.md](OPTIMIZATIONS.md) for detailed technical information.
 
 ```bash
 # Clone the repository
-git clone https://github.com/badgersoftdotcom/predict4java.git
+git clone https://github.com/g4dpz/predict4java.git
 cd predict4java
 
 # Build
@@ -199,8 +199,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/badgersoftdotcom/predict4java/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/badgersoftdotcom/predict4java/discussions)
+- **Issues**: [GitHub Issues](https://github.com/g4dpz/predict4java/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/g4dpz/predict4java/discussions)
 - **Email**: dave@g4dpz.me.uk
 
 ## Related Projects
@@ -224,5 +224,5 @@ GitHub: [@g4dpz](https://github.com/g4dpz)
 
 ---
 
-**Version 1.2.0** - November 2024  
+**Version 1.2.0** - February 15, 2026  
 Optimized for performance and modern Java development

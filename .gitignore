@@ -93,6 +93,12 @@ buildNumber.properties
 pom-release.xml
 RELEASE_WITH_POM.md
 MAVEN_CENTRAL_READY.md
+DEPLOYMENT_GUIDE.md
+CI_CD_GUIDE.md
+CI_CD_SETUP.md
+CI_CD_IMPLEMENTATION_SUMMARY.md
+OPTIMIZATIONS.md
+RELEASE_CHECKLIST.md
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper
 .mvn/wrapper/maven-wrapper.jar

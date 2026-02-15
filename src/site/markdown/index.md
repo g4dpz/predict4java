@@ -1,6 +1,6 @@
 **[Project Info](project-info.html)** | **[Project Reports](project-reports.html)**
 
-[![build status](http://img.shields.io/jenkins/s/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](http://jenkins.g4dpz.me.uk/job/predict4java/lastBuild/) [![test results](http://img.shields.io/jenkins/t/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](http://jenkins.g4dpz.me.uk/job/predict4java/lastBuild/testReport) [![issues](http://img.shields.io/github/issues/badgersoftdotcom/predict4java.svg?style=flat-square)](https://github.com/badgersoftdotcom/predict4java/issues/) [![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![build status](http://img.shields.io/jenkins/s/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](http://jenkins.g4dpz.me.uk/job/predict4java/lastBuild/) [![test results](http://img.shields.io/jenkins/t/http/jenkins.g4dpz.me.uk/predict4java.svg?style=flat-square)](http://jenkins.g4dpz.me.uk/job/predict4java/lastBuild/testReport) [![issues](http://img.shields.io/github/issues/g4dpz/predict4java.svg?style=flat-square)](https://github.com/g4dpz/predict4java/issues/) [![licence](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
 predict4java
 ============
 `predict4java` provides real-time satellite tracking and orbital prediction information.
