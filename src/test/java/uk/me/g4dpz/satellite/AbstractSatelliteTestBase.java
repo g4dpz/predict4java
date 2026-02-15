@@ -35,11 +35,11 @@ import java.util.TimeZone;
  */
 public abstract class AbstractSatelliteTestBase {
 
-    private static final String TLE_AO73_1 = "1 39444U 13066AE  24076.81938560  .00006136  00000-0  62122-3 0  9990";
-    private static final String TLE_AO73_2 = "2 39444  97.7100 037.9243 0051699  87.9197 272.7940 14.90302765556930";
+    private static final String TLE_ISS_1 = "1 25544U 98067A   26045.79523799  .00007779  00000+0  15107-3 0  9994";
+    private static final String TLE_ISS_2 = "2 25544  51.6315 185.5279 0011056  98.8248 261.3993 15.48601910552787";
 
     
-    protected static final String EPOCH = "2024-03-18T02:00:00Z";
+    protected static final String EPOCH = "2026-02-15T00:00:00Z";
 
     protected AbstractSatelliteTestBase() {
 
@@ -57,9 +57,9 @@ public abstract class AbstractSatelliteTestBase {
     static final long SECONDS_PER_DAY = 24 * 60 * 60;
 
     protected static final String[] LEO_TLE = {
-            "FUNCUBE-1 (AO-73)",
-            TLE_AO73_1,
-            TLE_AO73_2};
+            "ISS (ZARYA)",
+            TLE_ISS_1,
+            TLE_ISS_2};
 
     protected static final String[] DEEP_SPACE_TLE = {
             "AO-40",
@@ -87,9 +87,9 @@ public abstract class AbstractSatelliteTestBase {
             "2 43924 086.4965 042.8715 0001485 057.7222 302.4127 14.52383246001639"};
 
     protected static final String[] NIL_START_TLE = {
-            "0 FUNCUBE-1 (AO-73)",
-            TLE_AO73_1,
-            TLE_AO73_2};
+            "0 ISS (ZARYA)",
+            TLE_ISS_1,
+            TLE_ISS_2};
 
     protected static final String LATITUDE = "52.4670";
     protected static final String LONGITUDE = "-2.022";

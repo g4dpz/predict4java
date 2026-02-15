@@ -159,7 +159,9 @@ public class LEOSatellite extends AbstractSatellite {
             final double axn, final double ayn) {
         final double ecose = temp[5] + temp[6];
         final double esine = temp[3] - temp[4];
-        final double elsq = AbstractSatellite.sqr(axn) + AbstractSatellite.sqr(ayn);
+        final double axnSq = axn * axn;
+        final double aynSq = ayn * ayn;
+        final double elsq = axnSq + aynSq;
         temp[0] = 1.0 - elsq;
         final double pl = a * temp[0];
         final double r = a * (1.0 - ecose);

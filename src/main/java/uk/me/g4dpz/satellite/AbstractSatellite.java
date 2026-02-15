@@ -217,8 +217,10 @@ abstract class AbstractSatellite implements Satellite, Serializable {
      *
      */
     protected static void magnitude(final Vector4 v) {
-        v.setW(Math.sqrt(AbstractSatellite.sqr(v.getX()) + AbstractSatellite.sqr(v.getY())
-                + AbstractSatellite.sqr(v.getZ())));
+        final double x = v.getX();
+        final double y = v.getY();
+        final double z = v.getZ();
+        v.setW(Math.sqrt(x * x + y * y + z * z));
     }
 
     /**
@@ -280,8 +282,7 @@ abstract class AbstractSatellite implements Satellite, Serializable {
      * @return the dot product
      */
     private static double dot(final Vector4 v1, final Vector4 v2) {
-        return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ()
-                * v2.getZ();
+        return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
     }
 
     /**
@@ -443,15 +444,21 @@ abstract class AbstractSatellite implements Satellite, Serializable {
 
         gsPos.setTheta(AbstractSatellite.mod2PI(AbstractSatellite.thetaGJD(time) + DEG2RAD
                 * gsPos.getLongitude()));
-        final double c = AbstractSatellite.invert(Math.sqrt(1.0 + FLATTENING_FACTOR * (FLATTENING_FACTOR - 2)
-                * AbstractSatellite.sqr(Math.sin(DEG2RAD * gsPos.getLatitude()))));
+        
+        final double sinLat = Math.sin(DEG2RAD * gsPos.getLatitude());
+        final double cosLat = Math.cos(DEG2RAD * gsPos.getLatitude());
+        final double sinLatSq = sinLat * sinLat;
+        
+        final double c = AbstractSatellite.invert(Math.sqrt(1.0 + FLATTENING_FACTOR * (FLATTENING_FACTOR - 2) * sinLatSq));
         final double sq = AbstractSatellite.sqr(1.0 - FLATTENING_FACTOR) * c;
-        final double achcp = (EARTH_RADIUS_KM * c + gsPos.getHeightAMSL() / 1000.0)
-                * Math.cos(DEG2RAD * gsPos.getLatitude());
-        obsPos.setXYZ(achcp * Math.cos(gsPos.getTheta()),
-                achcp * Math.sin(gsPos.getTheta()),
-                (EARTH_RADIUS_KM * sq + gsPos.getHeightAMSL() / 1000.0)
-                        * Math.sin(DEG2RAD * gsPos.getLatitude()));
+        final double achcp = (EARTH_RADIUS_KM * c + gsPos.getHeightAMSL() / 1000.0) * cosLat;
+        
+        final double cosTheta = Math.cos(gsPos.getTheta());
+        final double sinTheta = Math.sin(gsPos.getTheta());
+        
+        obsPos.setXYZ(achcp * cosTheta,
+                achcp * sinTheta,
+                (EARTH_RADIUS_KM * sq + gsPos.getHeightAMSL() / 1000.0) * sinLat);
         obsVel.setXYZ(-MFACTOR * obsPos.getY(),
                 MFACTOR * obsPos.getX(),
                 0);
@@ -981,8 +988,7 @@ abstract class AbstractSatellite implements Satellite, Serializable {
         final double vz = sinik * cosuk;
 
         /* Position and velocity */
-        position.setXYZ(ux, uy, uz);
-        position.multiply(rk);
+        position.setXYZ(rk * ux, rk * uy, rk * uz);
         velocity.setX(rdotk * ux + rfdotk * vx);
         velocity.setY(rdotk * uy + rfdotk * vy);
         velocity.setZ(rdotk * uz + rfdotk * vz);
