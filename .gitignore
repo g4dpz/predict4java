@@ -116,3 +116,8 @@ sonatype_user_token
 !/src/lib/**
 # macOS
 .DS_Store
+
+# Examples directory
+examples/target/
+examples/*.class
+examples/cp.txt
