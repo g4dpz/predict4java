@@ -40,7 +40,11 @@ package uk.me.g4dpz.satellite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Class which provides Pass Prediction.
@@ -122,6 +126,15 @@ public class PassPredictor {
         return sat.getPosition(qth, time);
     }
 
+    /**
+     * Calculates the uplink frequency adjusted for Doppler shift.
+     *
+     * @param freq the base frequency in Hz
+     * @param date the time for the calculation
+     * @return the Doppler-adjusted uplink frequency in Hz
+     * @throws InvalidTleException if the TLE data is invalid
+     * @throws SatNotFoundException if the satellite cannot be found
+     */
     public Long getUplinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
         validateData();
@@ -130,6 +143,14 @@ public class PassPredictor {
         return (long)((double)freq * (SPEED_OF_LIGHT + rangeRate * 1000.0) / SPEED_OF_LIGHT);
     }
 
+    /**
+     * Finds the next satellite pass after the given date.
+     *
+     * @param date the starting date/time for the search
+     * @return the next satellite pass details
+     * @throws InvalidTleException if the TLE data is invalid
+     * @throws SatNotFoundException if the satellite cannot be found
+     */
     public SatPassTime nextSatPass(final Date date) throws InvalidTleException, SatNotFoundException {
         return nextSatPass(date, false);
     }

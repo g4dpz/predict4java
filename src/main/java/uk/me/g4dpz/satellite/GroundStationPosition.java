@@ -140,6 +140,11 @@ public class GroundStationPosition {
         System.arraycopy(theHorizonElevations, 0, this.horizonElevations, 0, theHorizonElevations.length);
     }
 
+    /**
+     * Gets the name of the ground station.
+     *
+     * @return the ground station name
+     */
     public String getName() {
         // TODO Auto-generated method stub
         return name;

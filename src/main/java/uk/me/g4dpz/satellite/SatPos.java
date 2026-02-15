@@ -295,6 +295,12 @@ public class SatPos {
                 + "Eclipse depth:" + eclipseDepth + " radians\n";
     }
 
+    /**
+     * Returns a short string representation of the satellite position.
+     * Includes elevation, azimuth, latitude, longitude, and range with formatted numbers.
+     *
+     * @return formatted string with key position parameters
+     */
     public String toShortString() {
         String returnString = "";
 
@@ -318,6 +324,11 @@ public class SatPos {
 
     }
 
+    /**
+     * Copies all position data from another SatPos object to this one.
+     *
+     * @param other the SatPos object to copy from
+     */
     public void copy(final SatPos other) {
 
         aboveHorizon = other.aboveHorizon;
@@ -337,6 +348,12 @@ public class SatPos {
 
     /*
      * Gets the range circle as an array of integers representing pairs of latitude and longitude.
+     */
+    /**
+     * Calculates the range circle (footprint) of the satellite on Earth's surface.
+     * Returns an array of latitude/longitude points forming a circle at the satellite's range.
+     *
+     * @return 2D array of [latitude, longitude] points in radians defining the range circle
      */
     public final double[][] getRangeCircle() {
 

@@ -15,10 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **BREAKING**: Upgraded minimum Java version from 8 to 11
-- Updated Apache Commons Lang from 2.6 to 3.14.0
-- Migrated from Apache Commons Logging to SLF4J 2.0.9
+- Updated Apache Commons Lang from 2.6 to 3.17.0
+- Migrated from Apache Commons Logging to SLF4J 2.0.16
 - Updated JUnit from 4.13.1 to 4.13.2
-- Updated Joda-Time from 1.6 to 2.12.5
+- Updated Joda-Time from 1.6 to 2.13.0
 - Optimized memory allocation in AbstractSatellite (40-50% reduction)
 - Removed unnecessary synchronization from TLE getters
 - Eliminated Calendar object creation in PassPredictor frequency methods
@@ -48,6 +48,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Updated all dependencies to latest secure versions
 - Updated JaCoCo from 0.7.2 to 0.8.11 (fixes GitHub Dependabot security alert)
+- Updated maven-compiler-plugin from 3.1 to 3.12.1
+- Updated maven-site-plugin from 3.4 to 3.12.1
+- Updated maven-source-plugin to 3.3.0 (was missing version)
+- Updated maven-javadoc-plugin to 3.6.3 (was missing version)
+- Updated maven-jxr-plugin from 2.4 to 3.3.2
+- Updated maven-surefire-report-plugin from 2.17 to 3.2.5
+- Updated maven-checkstyle-plugin from 2.13 to 3.3.1
+- Replaced deprecated findbugs-maven-plugin 2.4.0 with spotbugs-maven-plugin 4.8.3.1
 
 ## [1.1.4-SNAPSHOT] - Previous Development Version
 

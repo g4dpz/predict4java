@@ -39,7 +39,11 @@ package uk.me.g4dpz.satellite;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -120,6 +124,12 @@ public class TLE implements Serializable {
         this.createddate = tle.createddate;
     }
 
+    /**
+     * Constructor that creates a TLE from a three-line string array.
+     *
+     * @param tle the three line elements (name, line 1, line 2)
+     * @throws IllegalArgumentException if the TLE format is invalid
+     */
     public TLE(final String[] tle) throws IllegalArgumentException {
         this(tle, false);
     }
@@ -453,6 +463,14 @@ public class TLE implements Serializable {
                 + "] " + problem;
     }
 
+    /**
+     * Imports satellites from an input stream containing TLE data.
+     * Reads three-line groups (name, line 1, line 2) and creates TLE objects.
+     *
+     * @param fileIS the input stream containing TLE data
+     * @return list of TLE objects parsed from the stream
+     * @throws IOException if there's an error reading the stream
+     */
     public static List<TLE> importSat(final InputStream fileIS) throws IOException {
 
         final List<TLE> importedSats = new ArrayList<TLE>();

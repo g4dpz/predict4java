@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- Suppress MagicNumber for all files - scientific calculations use many constants -->
+    <suppress checks="MagicNumber" files=".*\.java"/>
+    
+    <!-- Suppress JavadocVariable for private fields - internal implementation details -->
+    <suppress checks="JavadocVariable" files=".*\.java"/>
+</suppressions>

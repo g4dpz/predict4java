@@ -60,6 +60,17 @@ public class SatPassTime implements Serializable {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm:ss a");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMMM d, yyyy");
 
+    /**
+     * Constructor for creating a satellite pass with calculated TCA.
+     * TCA is calculated as the midpoint between start and end times.
+     *
+     * @param startTime the pass start time (AOS)
+     * @param endTime the pass end time (LOS)
+     * @param polePassed which pole was passed ("north", "south", or "none")
+     * @param aos the azimuth at acquisition of signal in degrees
+     * @param los the azimuth at loss of signal in degrees
+     * @param maxEl the maximum elevation in degrees
+     */
     public SatPassTime(final Date startTime, final Date endTime, final String polePassed,
             final int aos, final int los, final double maxEl) {
         this(startTime,
@@ -71,9 +82,23 @@ public class SatPassTime implements Serializable {
             maxEl);
     }
 
+    /**
+     * Default constructor.
+     */
     public SatPassTime() {
     }
 
+    /**
+     * Constructor for creating a satellite pass with explicit TCA.
+     *
+     * @param startTime the pass start time (AOS)
+     * @param endTime the pass end time (LOS)
+     * @param tca the time of closest approach
+     * @param polePassed which pole was passed ("north", "south", or "none")
+     * @param aosAzimuth the azimuth at acquisition of signal in degrees
+     * @param losAzimuth the azimuth at loss of signal in degrees
+     * @param maxEl the maximum elevation in degrees
+     */
     public SatPassTime(final Date startTime, final Date endTime, final Date tca, final String polePassed,
             final int aosAzimuth, final int losAzimuth,
             final double maxEl) {
@@ -87,22 +112,47 @@ public class SatPassTime implements Serializable {
         this.tca = new Date(tca.getTime());
     }
 
+    /**
+     * Gets the pass start time (Acquisition of Signal).
+     *
+     * @return the start time
+     */
     public final Date getStartTime() {
         return new Date(startTime.getTime());
     }
 
+    /**
+     * Gets the pass end time (Loss of Signal).
+     *
+     * @return the end time
+     */
     public final Date getEndTime() {
         return new Date(endTime.getTime());
     }
 
+    /**
+     * Gets the Time of Closest Approach (TCA) when the satellite is at maximum elevation.
+     *
+     * @return the TCA date/time
+     */
     public final Date getTCA() {
         return new Date(tca.getTime());
     }
 
+    /**
+     * Sets the Time of Closest Approach (TCA).
+     *
+     * @param theTCA the TCA date/time to set
+     */
     public final void setTCA(final Date theTCA) {
         this.tca = theTCA;
     }
 
+    /**
+     * Gets which pole (north or south) the satellite passed during this pass.
+     *
+     * @return "north", "south", or "none"
+     */
     public final String getPolePassed() {
         return polePassed;
     }

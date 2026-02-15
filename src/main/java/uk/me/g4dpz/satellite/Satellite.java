@@ -39,20 +39,68 @@ package uk.me.g4dpz.satellite;
 
 import java.util.Date;
 
+/**
+ * Interface for satellite position and tracking calculations.
+ * Provides methods for calculating satellite positions relative to ground stations
+ * and determining visibility windows.
+ */
 public interface Satellite {
 
+    /**
+     * Calculates satellite position for a ground station at a specific time.
+     * This method is deprecated - use {@link #getPosition(GroundStationPosition, Date)} instead.
+     *
+     * @param qth the ground station position
+     * @param satPos the satellite position object to populate
+     * @param time the time for the calculation
+     * @deprecated use {@link #getPosition(GroundStationPosition, Date)} instead
+     */
     @Deprecated
     void getPosition(GroundStationPosition qth, SatPos satPos, Date time);
 
+    /**
+     * Determines if the satellite will be visible from the ground station.
+     *
+     * @param qth the ground station position
+     * @return true if the satellite will be seen from this location
+     */
     boolean willBeSeen(GroundStationPosition qth);
 
+    /**
+     * Calculates the satellite's position and velocity vectors at a specific time.
+     *
+     * @param time the time for the calculation
+     */
     void calculateSatelliteVectors(Date time);
 
+    /**
+     * Calculates the satellite's ground track (sub-satellite point on Earth).
+     *
+     * @return satellite position with latitude, longitude, and altitude
+     */
     SatPos calculateSatelliteGroundTrack();
 
+    /**
+     * Calculates satellite position as seen from a specific ground station.
+     *
+     * @param gsPos the ground station position
+     * @return satellite position with azimuth, elevation, range, and other parameters
+     */
     SatPos calculateSatPosForGroundStation(GroundStationPosition gsPos);
 
+    /**
+     * Gets the Two-Line Element (TLE) data for this satellite.
+     *
+     * @return the TLE object containing orbital parameters
+     */
     TLE getTLE();
 
+    /**
+     * Calculates satellite position for a ground station at a specific time.
+     *
+     * @param qth the ground station position
+     * @param time the time for the calculation
+     * @return satellite position with all calculated parameters
+     */
     SatPos getPosition(GroundStationPosition qth, Date time);
 }
