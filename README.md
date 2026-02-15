@@ -1,8 +1,8 @@
 # predict4java
 
-[![License](http://img.shields.io/badge/license-GNU_GPL_V2.0-red.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-11+-blue.svg)](https://www.oracle.com/java/)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.2.0-brightgreen.svg)](https://search.maven.org/artifact/com.badgersoft/predict4java)
+[![Maven Central](https://img.shields.io/maven-central/v/uk.me.g4dpz/predict4java.svg)](https://search.maven.org/artifact/uk.me.g4dpz/predict4java)
 
 Real-time satellite tracking and orbital prediction library for Java.
 
@@ -32,7 +32,7 @@ Real-time satellite tracking and orbital prediction library for Java.
 
 ```xml
 <dependency>
-    <groupId>com.badgersoft</groupId>
+    <groupId>uk.me.g4dpz</groupId>
     <artifactId>predict4java</artifactId>
     <version>1.2.0</version>
 </dependency>
@@ -41,7 +41,7 @@ Real-time satellite tracking and orbital prediction library for Java.
 ### Gradle
 
 ```gradle
-implementation 'com.badgersoft:predict4java:1.2.0'
+implementation 'uk.me.g4dpz:predict4java:1.2.0'
 ```
 
 ### Basic Usage
@@ -160,7 +160,27 @@ This is a Java port of the core elements of the Open Source [Predict program](ht
 
 ## License
 
-GNU General Public License (GPL) version 2.0
+MIT License
+
+Copyright (c) 2026 David A. B. Johnson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 See [LICENSE](LICENSE) for full license text.
 

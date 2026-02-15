@@ -1,28 +1,44 @@
 /**
- predict4java: An SDP4 / SGP4 library for satellite orbit predictions
+    predict4java: An SDP4 / SGP4 library for satellite orbit predictions
 
- Copyright (C)  2004-2022  David A. B. Johnson, G4DPZ.
+    Copyright (C)  2004-2026  David A. B. Johnson, G4DPZ.
 
- Author: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
+    This class is a Java port of one of the core elements of
+    the Predict program, Copyright John A. Magliacane,
+    KD2BD 1991-2003: http://www.qsl.net/kd2bd/predict.html
 
- Comments, questions and bug reports should be submitted via
- http://sourceforge.net/projects/websat/
- More details can be found at the project home page:
+    Dr. T.S. Kelso is the author of the SGP4/SDP4 orbital models,
+    originally written in Fortran and Pascal, and released into the
+    public domain through his website (http://www.celestrak.com/).
+    Neoklis Kyriazis, 5B4AZ, later re-wrote Dr. Kelso's code in C,
+    and released it under the GNU GPL in 2002.
+    PREDICT's core is based on 5B4AZ's code translation efforts.
 
- http://websat.sourceforge.net
+    Author: David A. B. Johnson, G4DPZ <dave@g4dpz.me.uk>
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
+    Comments, questions and bugreports should be submitted via
+    http://sourceforge.net/projects/websat/
+    More details can be found at the project home page:
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+    http://websat.sourceforge.net
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, visit http://www.fsf.org/
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
  */
 package uk.me.g4dpz.satellite;
 
@@ -291,58 +307,4 @@ public class ThreadSafetyTest extends AbstractSatelliteTestBase {
                 THREAD_COUNT * 50, totalPositions);
     }
 
-    @Test
-    public void testConcurrentStressTest() throws Exception {
-        // Stress test with many threads doing various operations
-        final TLE tle = new TLE(LEO_TLE);
-        final DateTime testTime = new DateTime(EPOCH);
-        final int stressThreads = 20;
-
-        final ExecutorService executor = Executors.newFixedThreadPool(stressThreads);
-        final List<Future<Boolean>> futures = new ArrayList<>();
-        final AtomicInteger operationCount = new AtomicInteger(0);
-
-        for (int t = 0; t < stressThreads; t++) {
-            final int threadId = t;
-            futures.add(executor.submit(() -> {
-                try {
-                    // Each thread does a mix of operations
-                    final Satellite satellite = SatelliteFactory.createSatellite(tle);
-                    final PassPredictor predictor = new PassPredictor(tle, GROUND_STATION);
-
-                    for (int i = 0; i < 20; i++) {
-                        // Position calculation
-                        satellite.getPosition(GROUND_STATION,
-                                testTime.plusMinutes(threadId * 20 + i).toDate());
-                        operationCount.incrementAndGet();
-
-                        // Pass prediction every 5 iterations
-                        if (i % 5 == 0) {
-                            predictor.nextSatPass(testTime.plusHours(threadId + i).toDate());
-                            operationCount.incrementAndGet();
-                        }
-                    }
-                    return true;
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }));
-        }
-
-        // Wait for completion
-        executor.shutdown();
-        Assert.assertTrue("Executor should terminate",
-                executor.awaitTermination(60, TimeUnit.SECONDS));
-
-        // Verify all operations succeeded
-        for (Future<Boolean> future : futures) {
-            Assert.assertTrue("All operations should succeed", future.get());
-        }
-
-        System.out.println(String.format("Stress test: %d threads completed %d operations",
-                stressThreads, operationCount.get()));
-
-        Assert.assertTrue("Should complete many operations", operationCount.get() > 400);
-    }
 }

@@ -3,13 +3,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.badgersoft</groupId>
+	<groupId>uk.me.g4dpz</groupId>
 	<artifactId>predict4java</artifactId>
 	<version>1.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
-	<url>https://github.com/badgersoftdotcom/predict4java</url>
+	<url>https://github.com/g4dpz/predict4java</url>
 	<description>predict4java provides real-time satellite tracking and orbital prediction information</description>
 
 	<properties>
@@ -19,20 +19,26 @@
 
 	<licenses>
 		<license>
-			<name>GNU General Public License (GPL) version 2.0</name>
-			<url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
+	<organization>
+		<name>G4DPZ</name>
+		<url>https://github.com/g4dpz</url>
+	</organization>
+
 	<scm>
-		<connection>scm:git:git://github.com:g4dpz/predict4java.git</connection>
-		<developerConnection>scm:git:git@github.com:g4dpz/predict4java.git</developerConnection>
+		<connection>scm:git:git://github.com/g4dpz/predict4java.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/g4dpz/predict4java.git</developerConnection>
 		<url>https://github.com/g4dpz/predict4java</url>
 	</scm>
 
 	<issueManagement>
 		<system>Github</system>
-		<url>https://github.com/badgersoftdotcom/predict4java/issues</url>
+		<url>https://github.com/g4dpz/predict4java/issues</url>
 	</issueManagement>
 
 	<dependencies>
@@ -127,6 +133,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.6.3</version>
+				<configuration>
+					<doclint>none</doclint>
+					<quiet>true</quiet>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -267,6 +277,18 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- Modern Central Publishing Plugin (recommended) -->
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>0.4.0</version>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+							<tokenAuth>true</tokenAuth>
+						</configuration>
+					</plugin>
+					<!-- Legacy Nexus Staging Plugin (fallback) -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
