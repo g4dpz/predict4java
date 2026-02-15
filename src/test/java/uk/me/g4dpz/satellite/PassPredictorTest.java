@@ -41,16 +41,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class PassPredictorTest extends AbstractSatelliteTestBase {
 
-    private static final String DATE_2019_01_05T04_30_00Z = "2019-01-05T04:30:00Z";
     private static final String DATE_2014_03_15T00_00_00Z = "2026-02-15T00:00:00Z";
-    private static final String NORTH = "north";
-    private static final String STRING_PAIR = "%s, %s";
-    private static final String NONE = "none";
     private static final String INVALID_TLE_EXCEPTION_WAS_THROWN = "InvalidTleException was thrown";
     private static final String SAT_NOT_FOUND_EXCEPTION_WAS_THROWN = "SatNotFoundException was thrown";
     private static final String INVALID_TLE_EXCEPTION_WAS_NOT_THROWN = "InvalidTleException was not thrown";
     public static final String T07_20_50_0000 = "2026-02-15T04:33:45+0000";
-    public static final String T07_33_50_0000 = "2026-02-15T04:46:45+0000";
 
     public PassPredictorTest() {
     }
@@ -206,120 +201,7 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
 
     }
 
-    /**
-     * Test method for {@link uk.me.g4dpz.satellite.PassPredictor#nextSatPass(java.util.Date, boolean)}.
-     */
-    @Ignore
-    @Test
-    public final void testNextSatPassWithWindBack() {
 
-        final TLE tle = new TLE(LEO_TLE);
-
-        assertTrue(!tle.isDeepspace());
-
-        try {
-            final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            final DateTime cal = new DateTime(DATE_2019_01_05T04_30_00Z);
-            final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate(), true);
-            assertEquals("2019-01-05T05:45:35+0000", TZ_FORMAT.format(passTime.getStartTime()));
-            assertEquals("2019-01-05T05:54:45+0000", TZ_FORMAT.format(passTime.getEndTime()));
-            assertEquals(NONE, passTime.getPolePassed());
-            assertEquals(35, passTime.getAosAzimuth());
-            assertEquals(126, passTime.getLosAzimuth());
-            assertEquals(7.54, passTime.getMaxEl(), 0.05);
-            assertEquals(Long.valueOf(436806687L),
-                    passPredictor.getDownlinkFreq(436800000L, passTime.getStartTime()));
-            assertEquals(Long.valueOf(145802209L),
-                    passPredictor.getUplinkFreq(145800000L, passTime.getEndTime()));
-        }
-        catch (final InvalidTleException e) {
-            Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
-        }
-        catch (final SatNotFoundException snfe) {
-            Assert.fail(SAT_NOT_FOUND_EXCEPTION_WAS_THROWN);
-        }
-    }
-
-    @Ignore
-    @Test
-    public void correctToStringResult() {
-        final TLE tle = new TLE(LEO_TLE);
-
-        assertTrue(!tle.isDeepspace());
-
-        try {
-            final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            final DateTime cal = new DateTime(DATE_2019_01_05T04_30_00Z);
-            final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate(), true);
-
-            assertEquals("Date: January 5, 2019\n" +
-                    "Start Time: 5:45:35 AM\n" +
-                    "End Time: 5:54:45 AM\n" +
-                    "Duration:  9.2 min.\n" +
-                    "AOS Azimuth: 35 deg.\n" +
-                    "Max Elevation:  7.5 deg.\n" +
-                    "LOS Azimuth: 126 deg.", passTime.toString());
-        }
-        catch (final InvalidTleException e) {
-            Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
-        }
-        catch (final SatNotFoundException snfe) {
-            Assert.fail(SAT_NOT_FOUND_EXCEPTION_WAS_THROWN);
-        }
-    }
-
-    /**
-     * test to determine if the antenna would track through a pole during a pass
-     */
-    @Ignore
-    @Test
-    public final void poleIsPassed() {
-        final TLE tle = new TLE(LEO_TLE);
-
-        assertTrue(!tle.isDeepspace());
-
-        try {
-            final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-            DateTime cal = new DateTime(DATE_2014_03_15T00_00_00Z);
-
-            boolean northFound = false;
-            boolean southFound = false;
-
-            for (int minute = 0; minute < 60 * 24 * 7; minute++) {
-                final long startTime = cal.toDate().getTime();
-                if (northFound && southFound) {
-                    break;
-                }
-                final SatPassTime passTime = passPredictor.nextSatPass(cal.toDate());
-                final long endTime = passTime.getEndTime().getTime();
-                final String polePassed = passTime.getPolePassed();
-                if (!polePassed.equals(NONE)) {
-                    if (!northFound && polePassed.equals(NORTH)) {
-                        assertEquals("2019-01-05T08:57:25+0000, north", String.format(STRING_PAIR,
-                                TZ_FORMAT.format(passTime.getStartTime()), polePassed));
-                        northFound = true;
-
-                        minute += (int)((endTime - startTime) / 60000);
-                    }
-                    else if (!southFound && polePassed.equals("south")) {
-                        assertEquals("2019-01-05T07:20:50+0000, south", String.format(STRING_PAIR,
-                                TZ_FORMAT.format(passTime.getStartTime()), polePassed));
-                        southFound = true;
-
-                        minute += (int)((endTime - startTime) / 60000);
-                    }
-                }
-
-                cal = cal.plusMinutes(minute);
-            }
-        }
-        catch (final InvalidTleException e) {
-            Assert.fail(INVALID_TLE_EXCEPTION_WAS_THROWN);
-        }
-        catch (final SatNotFoundException snfe) {
-            Assert.fail(SAT_NOT_FOUND_EXCEPTION_WAS_THROWN);
-        }
-    }
 
     @Test
     public void testGetPassList() throws InvalidTleException, SatNotFoundException {
@@ -336,21 +218,7 @@ public class PassPredictorTest extends AbstractSatelliteTestBase {
         assertEquals(T07_20_50_0000, TZ_FORMAT.format(passed.get(0).getStartTime()));
     }
 
-    @Ignore
-    @Test
-    public void testGetPassListWithWindBack() throws InvalidTleException, SatNotFoundException {
 
-        final TLE tle = new TLE(LEO_TLE);
-
-        assertTrue(!tle.isDeepspace());
-
-        final PassPredictor passPredictor = new PassPredictor(tle, GROUND_STATION);
-        final DateTime start = new DateTime(DATE_2014_03_15T00_00_00Z);
-
-        final List<SatPassTime> passes = passPredictor.getPasses(start.toDate(), 24, true);
-        assertEquals(9, passes.size());
-        assertEquals(1137, passPredictor.getIterationCount());
-    }
 
     @Test
     public void testGetSatelliteTrack() throws Exception {
