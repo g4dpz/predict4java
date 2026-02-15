@@ -99,6 +99,9 @@ CI_CD_SETUP.md
 CI_CD_IMPLEMENTATION_SUMMARY.md
 OPTIMIZATIONS.md
 RELEASE_CHECKLIST.md
+SONATYPE_SETUP_GUIDE.md
+CENTRAL_PORTAL_QUICK_START.md
+sonatype_user_token
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper
 .mvn/wrapper/maven-wrapper.jar
