@@ -125,8 +125,11 @@ public class GroundStationPosition {
     /**
      * @return the horizonElevations
      */
+    /**
+     * @return a copy of the horizonElevations array
+     */
     public final int[] getHorizonElevations() {
-        return horizonElevations;
+        return horizonElevations.clone();
     }
 
     /**

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependabot configuration for automated dependency updates
 - Build status and coverage badges in README
 - Google-style Checkstyle configuration with suppressions for scientific code
+- SpotBugs exclusion configuration for scientific computing patterns
 - Comprehensive Javadoc for all public methods
 
 ### Changed
@@ -39,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Array copy direction bug in GroundStationPosition.setHorizonElevations()
 - Removed redundant Serializable interface declarations in LEOSatellite and DeepSpaceSatellite
 - Removed unused imports
+- Default encoding issue in TLE.importSat() - now explicitly uses UTF-8
+- Internal representation exposure in GroundStationPosition.getHorizonElevations() - now returns defensive copy
 
 ### Performance
 - 62% reduction in object allocations per position calculation
