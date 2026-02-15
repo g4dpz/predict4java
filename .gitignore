@@ -104,3 +104,5 @@ buildNumber.properties
 
 
 !/src/lib/**
+# macOS
+.DS_Store
