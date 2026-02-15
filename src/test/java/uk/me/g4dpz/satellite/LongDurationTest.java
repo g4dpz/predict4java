@@ -79,7 +79,7 @@ public class LongDurationTest extends AbstractSatelliteTestBase {
             // Verify first pass starts within reasonable time of request
             Assert.assertTrue("First pass should start within the week",
                     passes.get(0).getStartTime().getTime() <= 
-                    startTime.plusDays(7).toDate().getTime() + (24 * 60 * 60 * 1000));
+                    startTime.plusDays(7).toDate().getTime() + (24L * 60 * 60 * 1000));
             
             System.out.println(String.format("One week: found %d passes", passes.size()));
             
@@ -106,7 +106,7 @@ public class LongDurationTest extends AbstractSatelliteTestBase {
             final SatPassTime lastPass = passes.get(passes.size() - 1);
             
             final long durationDays = (lastPass.getEndTime().getTime() - 
-                    firstPass.getStartTime().getTime()) / (24 * 60 * 60 * 1000);
+                    firstPass.getStartTime().getTime()) / (24L * 60 * 60 * 1000);
             
             Assert.assertTrue("Passes should span approximately 14 days",
                     durationDays >= 13 && durationDays <= 15);

@@ -42,6 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed unused imports
 - Default encoding issue in TLE.importSat() - now explicitly uses UTF-8
 - Internal representation exposure in GroundStationPosition.getHorizonElevations() - now returns defensive copy
+- Integer overflow risk in PassPredictor.getPositions() - now uses long literal for millisecond conversion
+- Integer overflow risk in LongDurationTest - now uses long literals for time calculations
+- Implicit narrowing conversion in AbstractSatellite.julianDateOfYear() - now explicitly casts double to long
 
 ### Performance
 - 62% reduction in object allocations per position calculation

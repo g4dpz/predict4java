@@ -154,7 +154,7 @@ abstract class AbstractSatellite implements Satellite, Serializable {
         i = a / 4;
         final long b = 2 - a + i;
         i = (long)Math.floor(365.25 * aYear);
-        i += 30.6001 * 14;
+        i += (long)(30.6001 * 14);
 
         return i + 1720994.5 + b;
     }

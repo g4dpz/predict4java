@@ -429,7 +429,7 @@ public class PassPredictor {
 
             positions.add(getSatPos(trackDate));
 
-            trackDate = new Date(trackDate.getTime() + (incrementSeconds * 1000));
+            trackDate = new Date(trackDate.getTime() + (incrementSeconds * 1000L));
         }
 
         return positions;
