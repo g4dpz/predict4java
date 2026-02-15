@@ -12,17 +12,19 @@ Use this checklist when preparing a new release.
 
 ### 2. Version Management
 - [ ] Update version in `pom.xml` (remove `-SNAPSHOT`)
+- [ ] Update version in `pom-release.xml` (remove `-SNAPSHOT`)
+- [ ] Ensure both POMs have the same version number
 - [ ] Update `CHANGELOG.md` with release notes
 - [ ] Update `README.md` if needed
 - [ ] Update version in documentation examples
 
 ### 3. Testing
 ```bash
-# Run full test suite
+# Run full test suite with public POM
 mvn clean verify
 
-# Check package contents
-mvn clean package -DskipTests
+# Build with release POM to verify all artifacts (skip tests, already run above)
+mvn clean package -f pom-release.xml -DskipTests
 ls -la target/*.jar
 
 # Verify all required JARs are created:
@@ -33,8 +35,8 @@ ls -la target/*.jar
 
 ### 4. Git Preparation
 ```bash
-# Commit version changes
-git add pom.xml CHANGELOG.md README.md
+# Commit version changes (both POMs)
+git add pom.xml pom-release.xml CHANGELOG.md README.md
 git commit -m "Release version X.X.X"
 
 # Create and push tag
@@ -43,22 +45,27 @@ git push origin main
 git push origin vX.X.X
 ```
 
+**Note**: `pom-release.xml` is in `.gitignore` but should be updated locally for deployment.
+
 ## Maven Central Deployment
 
 ### 5. Prerequisites Check
 - [ ] Sonatype OSSRH account created and approved
 - [ ] GPG key generated and published to key servers
 - [ ] Maven settings.xml configured with credentials
+- [ ] `pom-release.xml` file is available locally
 - [ ] Internet connection stable
 
 ### 6. Deploy to Maven Central
 ```bash
-# Deploy with release profile
-mvn clean deploy -P release
+# Deploy using release POM (includes GPG signing)
+mvn clean deploy -f pom-release.xml
 
 # If you need to skip tests (not recommended)
-mvn clean deploy -P release -DskipTests
+mvn clean deploy -f pom-release.xml -DskipTests
 ```
+
+**IMPORTANT**: Always use `-f pom-release.xml` for deployment. The public `pom.xml` does not contain deployment configuration.
 
 ### 7. Verify Deployment
 - [ ] Check staging repository at https://oss.sonatype.org/
@@ -85,14 +92,16 @@ After 2-4 hours:
 
 ### 10. Update to Next Development Version
 ```bash
-# Update version to next SNAPSHOT
+# Update version to next SNAPSHOT in BOTH POMs
 # Example: 1.2.0 -> 1.2.1-SNAPSHOT
-vim pom.xml
+vim pom.xml pom-release.xml
 
 git add pom.xml
 git commit -m "Prepare for next development iteration"
 git push origin main
 ```
+
+**Note**: Only commit `pom.xml` to Git. `pom-release.xml` stays local (in .gitignore).
 
 ### 11. Communication
 - [ ] Announce release on GitHub
@@ -109,16 +118,17 @@ git push origin main
 
 ```bash
 # Full release process
-mvn clean verify                          # Test everything
+mvn clean verify                          # Test with public POM
+mvn clean package -f pom-release.xml -DskipTests  # Verify release artifacts
 git tag -a vX.X.X -m "Version X.X.X"     # Tag release
 git push origin main --tags               # Push to GitHub
-mvn clean deploy -P release               # Deploy to Maven Central
+mvn clean deploy -f pom-release.xml       # Deploy to Maven Central
 
 # Verify deployment
-curl -I https://repo1.maven.org/maven2/com/badgersoft/predict4java/X.X.X/predict4java-X.X.X.jar
+curl -I https://repo1.maven.org/maven2/uk/me/g4dpz/predict4java/X.X.X/predict4java-X.X.X.jar
 
 # Test in sample project
-mvn dependency:get -Dartifact=com.badgersoft:predict4java:X.X.X
+mvn dependency:get -Dartifact=uk.me.g4dpz:predict4java:X.X.X
 ```
 
 ## Rollback Procedure

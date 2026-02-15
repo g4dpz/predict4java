@@ -57,8 +57,11 @@ Add credentials to `~/.m2/settings.xml`:
 ### Step 1: Verify Everything Builds
 
 ```bash
-# Clean build with tests
+# Clean build with tests using public pom.xml
 mvn clean verify
+
+# Build with release POM to generate all artifacts (skip tests to save time)
+mvn clean package -f pom-release.xml -DskipTests
 
 # Check that all required files are generated
 ls -la target/predict4java-*.jar
@@ -71,12 +74,14 @@ Expected files:
 
 ### Step 2: Deploy to Staging Repository
 
+**IMPORTANT**: Use `pom-release.xml` for deployment, not the public `pom.xml`
+
 ```bash
-# Deploy to OSSRH staging
-mvn clean deploy -P release
+# Deploy to OSSRH staging using release POM
+mvn clean deploy -f pom-release.xml
 
 # Or if you want to skip tests (not recommended for releases)
-mvn clean deploy -DskipTests -P release
+mvn clean deploy -f pom-release.xml -DskipTests
 ```
 
 This will:
@@ -85,6 +90,8 @@ This will:
 3. Generate sources and javadoc JARs
 4. Sign all artifacts with GPG
 5. Upload to OSSRH staging repository
+
+**Note**: The public `pom.xml` does not contain deployment configuration. Always use `pom-release.xml` for Maven Central deployment.
 
 ### Step 3: Release from Staging
 
@@ -132,22 +139,22 @@ Always increment version for each release:
 ## Quick Deployment Commands
 
 ```bash
-# 1. Update version in pom.xml (remove -SNAPSHOT)
+# 1. Update version in BOTH pom.xml and pom-release.xml
 # 2. Commit changes
-git add pom.xml
+git add pom.xml pom-release.xml
 git commit -m "Release version 1.2.0"
 git tag -a v1.2.0 -m "Version 1.2.0 - Performance optimizations"
 
-# 3. Deploy to Maven Central
-mvn clean deploy -P release
+# 3. Deploy to Maven Central using release POM
+mvn clean deploy -f pom-release.xml
 
 # 4. Push to GitHub
 git push origin main
 git push origin v1.2.0
 
 # 5. Update to next development version
-# Change version to 1.2.1-SNAPSHOT in pom.xml
-git add pom.xml
+# Change version to 1.2.1-SNAPSHOT in BOTH pom.xml and pom-release.xml
+git add pom.xml pom-release.xml
 git commit -m "Prepare for next development iteration"
 git push origin main
 ```
@@ -193,13 +200,14 @@ gpg --keyserver pgp.mit.edu --send-keys YOUR_KEY_ID
 
 Before deploying:
 - [ ] All tests pass: `mvn clean test`
-- [ ] Version updated (no -SNAPSHOT)
+- [ ] Version updated in BOTH `pom.xml` and `pom-release.xml` (no -SNAPSHOT)
 - [ ] CHANGELOG.md updated
 - [ ] README.md updated with new version
 - [ ] Git tag created
 - [ ] GPG key is published
 - [ ] Maven settings configured
 - [ ] Sonatype account is approved
+- [ ] `pom-release.xml` file is available locally
 
 After deploying:
 - [ ] Verify on Maven Central
