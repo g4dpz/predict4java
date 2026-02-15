@@ -8,24 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2026-02-15
 
 ### Added
-- Comprehensive optimization documentation (OPTIMIZATIONS.md)
-- Deployment guide for Maven Central (DEPLOYMENT_GUIDE.md)
 - Performance test script (performance-test.sh)
 - 149 comprehensive tests covering performance, thread safety, memory, edge cases, and stress testing
 - Advanced GitHub Actions CI/CD pipeline with multi-version Java testing (11, 17, 21)
 - Automated code quality checks (Checkstyle, SpotBugs)
 - JaCoCo coverage reporting with Codecov integration
 - Dependabot configuration for automated dependency updates
-- CI/CD documentation (CI_CD_GUIDE.md)
 - Build status and coverage badges in README
-- Separate `pom-release.xml` for Maven Central deployment (author only)
 - Google-style Checkstyle configuration with suppressions for scientific code
 - Comprehensive Javadoc for all public methods
 
 ### Changed
 - **BREAKING**: Upgraded minimum Java version from 8 to 11
 - **License changed from GPL 2.0 to MIT** for broader adoption
-- Separated Maven Central deployment configuration into `pom-release.xml` (author only)
 - Simplified public `pom.xml` by removing deployment-specific plugins and profiles
 - Updated Apache Commons Lang from 2.6 to 3.17.0
 - Migrated from Apache Commons Logging to SLF4J 2.0.16
@@ -59,7 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Clover code coverage plugin (replaced by JaCoCo)
 - All `-Dmaven.clover.skip=true` flags from commands and documentation
-- Maven Central deployment configuration from public `pom.xml` (moved to `pom-release.xml`)
 - Flaky `testConcurrentStressTest` from ThreadSafetyTest
 - Obsolete CI/CD files (.travis.yml)
 - IDE-specific files (.vscode, .DS_Store, .checkstyle, .classpath, .project)
