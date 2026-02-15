@@ -1,0 +1,103 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Test on Java ${{ matrix.java }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11', '17', '21' ]
+      fail-fast: false
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK ${{ matrix.java }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    - name: Run tests
+      run: mvn clean test -Dmaven.clover.skip=true -B
+    
+    - name: Generate JaCoCo coverage report
+      if: matrix.java == '11'
+      run: mvn jacoco:report -Dmaven.clover.skip=true
+    
+    - name: Upload coverage to Codecov
+      if: matrix.java == '11'
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./target/site/jacoco/jacoco.xml
+        flags: unittests
+        name: codecov-predict4java
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+  quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    - name: Run Checkstyle
+      run: mvn checkstyle:check -B
+      continue-on-error: true
+    
+    - name: Run SpotBugs
+      run: mvn compile spotbugs:check -B
+      continue-on-error: true
+    
+    - name: Generate quality reports
+      run: mvn site -DskipTests -B
+
+  build:
+    name: Build and Verify
+    runs-on: ubuntu-latest
+    needs: [ test, quality ]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    - name: Build with Maven
+      run: mvn clean package -Dmaven.clover.skip=true -B
+    
+    - name: Verify artifacts
+      run: |
+        ls -lh target/*.jar
+        echo "Verifying JAR files exist..."
+        test -f target/predict4java-*.jar
+        echo "Build artifacts verified successfully!"
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: predict4java-jars
+        path: target/*.jar
+        retention-days: 30

@@ -1,8 +1,10 @@
 # predict4java
 
+[![Build Status](https://github.com/g4dpz/predict4java/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/g4dpz/predict4java/actions)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-11+-blue.svg)](https://www.oracle.com/java/)
 [![Maven Central](https://img.shields.io/maven-central/v/uk.me.g4dpz/predict4java.svg)](https://search.maven.org/artifact/uk.me.g4dpz/predict4java)
+[![codecov](https://codecov.io/gh/g4dpz/predict4java/branch/master/graph/badge.svg)](https://codecov.io/gh/g4dpz/predict4java)
 
 Real-time satellite tracking and orbital prediction library for Java.
 
