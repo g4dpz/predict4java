@@ -92,7 +92,7 @@ jobs:
       run: |
         ls -lh target/*.jar
         echo "Verifying JAR files exist..."
-        [ -f target/predict4java-1.2.0.jar ] || exit 1
+        [ -f target/predict4java-1.2.2.jar ] || exit 1
         echo "Build artifacts verified successfully!"
     
     - name: Upload build artifacts
