@@ -49,14 +49,14 @@ Current status: TLE parsing complete, satellite models in progress.
 <dependency>
     <groupId>uk.me.g4dpz</groupId>
     <artifactId>predict4java</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-implementation 'uk.me.g4dpz:predict4java:1.2.1'
+implementation 'uk.me.g4dpz:predict4java:1.2.2'
 ```
 
 ### Basic Usage
@@ -237,5 +237,5 @@ GitHub: [@g4dpz](https://github.com/g4dpz)
 
 ---
 
-**Version 1.2.1** - February 15, 2026  
-Bug fixes, security improvements, and working examples
+**Version 1.2.2** - February 16, 2026  
+Timezone/locale fix for international compatibility
