@@ -121,3 +121,6 @@ sonatype_user_token
 examples/target/
 examples/*.class
 examples/cp.txt
+
+# C++ port (local implementation only, not for public repository)
+predict4cpp/

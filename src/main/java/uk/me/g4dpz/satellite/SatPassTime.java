@@ -43,9 +43,12 @@
 package uk.me.g4dpz.satellite;
 
 import java.io.Serializable;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class SatPassTime implements Serializable {
 
@@ -62,8 +65,18 @@ public class SatPassTime implements Serializable {
     private static final String NEW_LINE = "\n";
     private static final String DEG_NL = " deg.\n";
 
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm:ss a");
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMMM d, yyyy");
+    /** Format dates and times in UTC */
+    private static final TimeZone TZ = TimeZone.getTimeZone("UTC");
+
+    private static final SimpleDateFormat TIME_FORMAT;
+    private static final SimpleDateFormat DATE_FORMAT;
+
+    static {
+        TIME_FORMAT = new SimpleDateFormat("h:mm:ss a", DateFormatSymbols.getInstance(Locale.US));
+        TIME_FORMAT.setTimeZone(TZ);
+        DATE_FORMAT = new SimpleDateFormat("MMMMMM d, yyyy", DateFormatSymbols.getInstance(Locale.US));
+        DATE_FORMAT.setTimeZone(TZ);
+    }
 
     /**
      * Constructor for creating a satellite pass with calculated TCA.
