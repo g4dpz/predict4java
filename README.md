@@ -23,6 +23,7 @@ Real-time satellite tracking and orbital prediction library for Java.
 - ✅ **SGP4/SDP4 Models** - Industry-standard orbital propagation
 - ✅ **Pass Prediction** - Calculate when satellites are visible
 - ✅ **Real-time Tracking** - Get current satellite positions
+- ✅ **Modern Orbital Elements** - JSON format support with automatic fetching from Celestrak API
 - ✅ **Doppler Calculation** - Frequency correction for communications
 - ✅ **Ground Station Support** - Multiple observer locations
 - ✅ **High Performance** - Optimized for speed and low memory usage
@@ -87,6 +88,37 @@ Date now = new Date();
 SatPos position = satellite.getPosition(groundStation, now);
 
 System.out.println("Azimuth: " + Math.toDegrees(position.getAzimuth()));
+System.out.println("Elevation: " + Math.toDegrees(position.getElevation()));
+```
+
+### NEW: Modern Orbital Elements Support
+
+**Always-current orbital data with automatic fetching from Celestrak!**
+
+```java
+import uk.me.g4dpz.satellite.*;
+
+// Fetch current ISS orbital elements automatically from Celestrak JSON API
+TLE tle = TLE.fetchFromCelestrak(25544); // ISS NORAD ID
+
+// Or use utility class for common satellites
+TLE iss = TLEUtil.fetchISS();
+List<TLE> weatherSats = TLEUtil.fetchWeatherSatellites();
+
+// Multiple satellites at once
+int[] satellites = {25544, 33591, 43013}; // ISS, NOAA-19, NOAA-20
+List<TLE> tles = TLE.fetchMultipleFromCelestrak(satellites);
+
+// Same prediction workflow - but with fresh orbital data!
+Satellite satellite = SatelliteFactory.createSatellite(tle);
+SatPos position = satellite.getPosition(groundStation, new Date());
+```
+
+**Benefits:**
+- ✅ **Always current** - No manual orbital element updates required
+- ✅ **Automatic validation** - Built-in error handling
+- ✅ **Structured data** - Clean JSON format from Celestrak
+- ✅ **Fallback support** - Use with traditional TLE format
 System.out.println("Elevation: " + Math.toDegrees(position.getElevation()));
 System.out.println("Range: " + position.getRange() + " km");
 ```

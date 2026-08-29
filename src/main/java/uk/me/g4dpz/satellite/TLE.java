@@ -49,9 +49,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TLE representation to aid SGP4 calculations.
@@ -140,6 +147,150 @@ public class TLE implements Serializable {
     }
 
     /**
+     * Constructor that creates a TLE from Celestrak JSON orbital elements format.
+     *
+     * @param jsonData Map containing orbital elements data in Celestrak JSON format
+     * @throws IllegalArgumentException if the JSON data format is invalid or missing required fields
+     */
+    public TLE(final Map<String, Object> jsonData) throws IllegalArgumentException {
+        if (jsonData == null) {
+            throw new IllegalArgumentException("JSON TLE data was null");
+        }
+
+        try {
+            // Extract required fields from JSON
+            this.name = getStringValue(jsonData, "OBJECT_NAME");
+            this.catnum = getIntValue(jsonData, "NORAD_CAT_ID");
+            this.setnum = getIntValue(jsonData, "ELEMENT_SET_NO");
+            
+            // Parse epoch from ISO format
+            String epochStr = getStringValue(jsonData, "EPOCH");
+            parseEpochFromIso(epochStr);
+            
+            // Orbital parameters
+            this.incl = getDoubleValue(jsonData, "INCLINATION");
+            this.raan = getDoubleValue(jsonData, "RA_OF_ASC_NODE");
+            this.eccn = getDoubleValue(jsonData, "ECCENTRICITY");
+            this.argper = getDoubleValue(jsonData, "ARG_OF_PERICENTER");
+            this.meanan = getDoubleValue(jsonData, "MEAN_ANOMALY");
+            this.meanmo = getDoubleValue(jsonData, "MEAN_MOTION");
+            this.drag = getDoubleValue(jsonData, "MEAN_MOTION_DOT");
+            this.nddot6 = getDoubleValue(jsonData, "MEAN_MOTION_DDOT");
+            this.bstar = getDoubleValue(jsonData, "BSTAR");
+            this.orbitnum = getIntValue(jsonData, "REV_AT_EPOCH");
+
+            // Initialize calculated values
+            initializeCalculatedValues();
+
+            // Preprocess TLE set
+            preProcessTLESet();
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error parsing JSON orbital elements data: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Helper method to extract string values from JSON data.
+     */
+    private String getStringValue(Map<String, Object> jsonData, String key) throws IllegalArgumentException {
+        Object value = jsonData.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required field: " + key);
+        }
+        return value.toString().trim();
+    }
+
+    /**
+     * Helper method to extract integer values from JSON data.
+     */
+    private int getIntValue(Map<String, Object> jsonData, String key) throws IllegalArgumentException {
+        Object value = jsonData.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required field: " + key);
+        }
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        try {
+            return Integer.parseInt(value.toString().trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid integer value for " + key + ": " + value);
+        }
+    }
+
+    /**
+     * Helper method to extract double values from JSON data.
+     */
+    private double getDoubleValue(Map<String, Object> jsonData, String key) throws IllegalArgumentException {
+        Object value = jsonData.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required field: " + key);
+        }
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        try {
+            return Double.parseDouble(value.toString().trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid double value for " + key + ": " + value);
+        }
+    }
+
+    /**
+     * Parse epoch from ISO 8601 format to year and reference epoch.
+     */
+    private void parseEpochFromIso(String isoEpoch) throws IllegalArgumentException {
+        try {
+            // Parse ISO 8601 format: "2026-08-29T12:44:13.287840"
+            ZonedDateTime epochDateTime = ZonedDateTime.parse(isoEpoch + "Z", DateTimeFormatter.ISO_DATE_TIME);
+            
+            this.year = epochDateTime.getYear() % 100; // Two-digit year
+            
+            // Calculate day of year with fractional part
+            LocalDateTime yearStart = LocalDateTime.of(epochDateTime.getYear(), 1, 1, 0, 0, 0);
+            ZonedDateTime yearStartZoned = yearStart.atZone(ZoneId.of("UTC"));
+            
+            long secondsFromYearStart = java.time.Duration.between(yearStartZoned, epochDateTime).getSeconds();
+            double fractionalSeconds = epochDateTime.getNano() / 1e9;
+            
+            this.refepoch = (secondsFromYearStart + fractionalSeconds) / 86400.0 + 1.0; // Day of year (1-based)
+            
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid epoch format: " + isoEpoch + ". Expected ISO 8601 format.");
+        }
+    }
+
+    /**
+     * Initialize calculated values used in orbital calculations.
+     */
+    private void initializeCalculatedValues() {
+        // reassign the values to those which get used in calculations
+        epoch = (1000.0 * getYear()) + getRefepoch();
+        xndt2o = drag;
+
+        double temp = incl;
+        temp *= DEG2RAD;
+        xincl = temp;
+
+        temp = raan;
+        temp *= DEG2RAD;
+        xnodeo = temp;
+
+        eo = eccn;
+
+        temp = argper;
+        temp *= DEG2RAD;
+        omegao = temp;
+
+        temp = meanan;
+        temp *= DEG2RAD;
+        xmo = temp;
+
+        xno = meanmo;
+    }
+
+    /**
      * Constructor.
      *
      * @param tle the three line elements
@@ -193,30 +344,8 @@ public class TLE implements Serializable {
 
         orbitnum = Integer.parseInt(StringUtils.strip(tle[2].substring(63, 68)));
 
-        /* reassign the values to thse which get used in calculations */
-        epoch = (1000.0 * getYear()) + getRefepoch();
-
-        xndt2o = drag;
-
-        double temp = incl;
-        temp *= DEG2RAD;
-        xincl = temp;
-
-        temp = raan;
-        temp *= DEG2RAD;
-        xnodeo = temp;
-
-        eo = eccn;
-
-        temp = argper;
-        temp *= DEG2RAD;
-        omegao = temp;
-
-        temp = meanan;
-        temp *= DEG2RAD;
-        xmo = temp;
-
-        xno = meanmo;
+        /* Initialize calculated values used in calculations */
+        initializeCalculatedValues();
 
         /* Preprocess tle set */
 
@@ -506,6 +635,158 @@ public class TLE implements Serializable {
         }
 
         return importedSats;
+    }
+
+    /**
+     * Fetches orbital elements from Celestrak's JSON API for a specific satellite.
+     *
+     * @param noradCatId the NORAD catalog ID of the satellite
+     * @return TLE object created from the JSON orbital elements data
+     * @throws IOException if there's an error fetching the data
+     * @throws IllegalArgumentException if the satellite is not found or data is invalid
+     */
+    public static TLE fetchFromCelestrak(int noradCatId) throws IOException, IllegalArgumentException {
+        String urlString = "https://celestrak.org/NORAD/elements/gp.php?CATNR=" + noradCatId + "&FORMAT=JSON";
+        
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(10000); // 10 second timeout
+        connection.setReadTimeout(10000);
+        
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            
+            String jsonResponse = response.toString().trim();
+            
+            // Simple JSON parsing for single satellite
+            if (jsonResponse.startsWith("[") && jsonResponse.endsWith("]")) {
+                jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1); // Remove array brackets
+            }
+            
+            if (jsonResponse.isEmpty() || jsonResponse.equals("[]")) {
+                throw new IllegalArgumentException("Satellite with NORAD ID " + noradCatId + " not found");
+            }
+            
+            Map<String, Object> jsonData = parseSimpleJson(jsonResponse);
+            return new TLE(jsonData);
+            
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    /**
+     * Fetches orbital elements from Celestrak's JSON API for multiple satellites.
+     *
+     * @param noradCatIds array of NORAD catalog IDs
+     * @return List of TLE objects
+     * @throws IOException if there's an error fetching the data
+     */
+    public static List<TLE> fetchMultipleFromCelestrak(int[] noradCatIds) throws IOException {
+        List<TLE> tleList = new ArrayList<>();
+        
+        for (int catId : noradCatIds) {
+            try {
+                TLE tle = fetchFromCelestrak(catId);
+                tleList.add(tle);
+            } catch (IllegalArgumentException e) {
+                // Log warning and continue with other satellites
+                System.err.println("Warning: Could not fetch orbital elements for satellite " + catId + ": " + e.getMessage());
+            }
+        }
+        
+        return tleList;
+    }
+
+    /**
+     * Simple JSON parser for orbital elements data (avoids external JSON library dependency).
+     * This is a basic parser that works specifically with Celestrak's JSON format.
+     */
+    private static Map<String, Object> parseSimpleJson(String json) throws IllegalArgumentException {
+        Map<String, Object> result = new java.util.HashMap<>();
+        
+        // Remove outer braces
+        json = json.trim();
+        if (json.startsWith("{") && json.endsWith("}")) {
+            json = json.substring(1, json.length() - 1);
+        }
+        
+        // Split by commas, but be careful about quoted values
+        String[] pairs = splitJsonPairs(json);
+        
+        for (String pair : pairs) {
+            String[] keyValue = pair.split(":", 2);
+            if (keyValue.length != 2) {
+                continue;
+            }
+            
+            String key = keyValue[0].trim();
+            String value = keyValue[1].trim();
+            
+            // Remove quotes from key and value
+            if (key.startsWith("\"") && key.endsWith("\"")) {
+                key = key.substring(1, key.length() - 1);
+            }
+            
+            if (value.startsWith("\"") && value.endsWith("\"")) {
+                value = value.substring(1, value.length() - 1);
+                result.put(key, value);
+            } else if (value.equals("null")) {
+                result.put(key, null);
+            } else {
+                // Try to parse as number
+                try {
+                    if (value.contains(".") || value.toLowerCase().contains("e")) {
+                        result.put(key, Double.parseDouble(value));
+                    } else {
+                        result.put(key, Integer.parseInt(value));
+                    }
+                } catch (NumberFormatException e) {
+                    result.put(key, value); // Keep as string
+                }
+            }
+        }
+        
+        return result;
+    }
+
+    /**
+     * Split JSON string by commas, handling quoted strings properly.
+     */
+    private static String[] splitJsonPairs(String json) {
+        List<String> pairs = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+        boolean escaping = false;
+        
+        for (char c : json.toCharArray()) {
+            if (escaping) {
+                current.append(c);
+                escaping = false;
+            } else if (c == '\\') {
+                current.append(c);
+                escaping = true;
+            } else if (c == '"') {
+                current.append(c);
+                inQuotes = !inQuotes;
+            } else if (c == ',' && !inQuotes) {
+                pairs.add(current.toString());
+                current = new StringBuilder();
+            } else {
+                current.append(c);
+            }
+        }
+        
+        if (current.length() > 0) {
+            pairs.add(current.toString());
+        }
+        
+        return pairs.toArray(new String[0]);
     }
 
     @Override
