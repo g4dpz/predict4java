@@ -176,25 +176,25 @@ public final class TLETest extends AbstractSatelliteTestBase {
         Assert.assertEquals(25544, tle.getCatnum());
         Assert.assertEquals(999, tle.getSetnum());
         Assert.assertEquals(26, tle.getYear());
-        Assert.assertEquals("63.1567954", String.format(FORMAT_10_7F, tle.getRefepoch()));
-        Assert.assertEquals("51.6316000", String.format(FORMAT_10_7F, tle.getIncl()));
-        Assert.assertEquals(" 99.7104000", String.format(FORMAT_11_7F, tle.getRaan()));
-        Assert.assertEquals("0.0008201", String.format(FORMAT_9_7F, tle.getEccn()));
-        Assert.assertEquals("155.0339000", String.format(FORMAT_10_7F, tle.getArgper()));
-        Assert.assertEquals("205.1047000", String.format(FORMAT_11_7F, tle.getMeanan()));
-        Assert.assertEquals("15.4843448", String.format(FORMAT_10_7F, tle.getMeanmo()));
-        Assert.assertEquals("0.0001021", String.format(FORMAT_9_7F, tle.getDrag()));
+        Assert.assertEquals("45.7952380", String.format(FORMAT_10_7F, tle.getRefepoch()));
+        Assert.assertEquals("51.6315000", String.format(FORMAT_10_7F, tle.getIncl()));
+        Assert.assertEquals("185.5279000", String.format(FORMAT_11_7F, tle.getRaan()));
+        Assert.assertEquals("0.0011056", String.format(FORMAT_9_7F, tle.getEccn()));
+        Assert.assertEquals("98.8248000", String.format(FORMAT_10_7F, tle.getArgper()));
+        Assert.assertEquals("261.3993000", String.format(FORMAT_11_7F, tle.getMeanan()));
+        Assert.assertEquals("15.4860191", String.format(FORMAT_10_7F, tle.getMeanmo()));
+        Assert.assertEquals("0.0000778", String.format(FORMAT_9_7F, tle.getDrag()));
         Assert.assertEquals("0.0000", String.format(FORMAT_6_4F, tle.getNddot6()));
-        Assert.assertEquals("0.0001968", String.format(FORMAT_9_7F, tle.getBstar()));
-        Assert.assertEquals(55547, tle.getOrbitnum());
-        Assert.assertEquals("26063.1567954", String.format("%12.7f", tle.getEpoch()));
+        Assert.assertEquals("0.0001511", String.format(FORMAT_9_7F, tle.getBstar()));
+        Assert.assertEquals(55278, tle.getOrbitnum());
+        Assert.assertEquals("26045.7952380", String.format("%12.7f", tle.getEpoch()));
         Assert.assertEquals("0.0000000", String.format(FORMAT_9_7F, tle.getXndt2o()));
-        Assert.assertEquals("0.9011414", String.format(FORMAT_9_7F, tle.getXincl()));
-        Assert.assertEquals("1.7402748", String.format(FORMAT_9_7F, tle.getXnodeo()));
-        Assert.assertEquals("0.0008201", String.format(FORMAT_9_7F, tle.getEo()));
-        Assert.assertEquals("2.7058520", String.format(FORMAT_9_7F, tle.getOmegao()));
-        Assert.assertEquals("3.5797523", String.format(FORMAT_9_7F, tle.getXmo()));
-        Assert.assertEquals("0.067563", String.format("%8.6f", tle.getXno()));
+        Assert.assertEquals("0.9011397", String.format(FORMAT_9_7F, tle.getXincl()));
+        Assert.assertEquals("3.2380727", String.format(FORMAT_9_7F, tle.getXnodeo()));
+        Assert.assertEquals("0.0011056", String.format(FORMAT_9_7F, tle.getEo()));
+        Assert.assertEquals("1.7248181", String.format(FORMAT_9_7F, tle.getOmegao()));
+        Assert.assertEquals("4.5622784", String.format(FORMAT_9_7F, tle.getXmo()));
+        Assert.assertEquals("0.067571", String.format("%8.6f", tle.getXno()));
         Assert.assertFalse(tle.isDeepspace());
     }
 
@@ -471,17 +471,17 @@ public final class TLETest extends AbstractSatelliteTestBase {
         jsonData.put("OBJECT_NAME", "ISS (ZARYA)");
         jsonData.put("NORAD_CAT_ID", 25544);
         jsonData.put("ELEMENT_SET_NO", 999);
-        jsonData.put("EPOCH", "2026-03-04T03:45:47.865600"); // Day 63.1567954 of 2026
-        jsonData.put("INCLINATION", 51.6316);
-        jsonData.put("RA_OF_ASC_NODE", 99.7104);
-        jsonData.put("ECCENTRICITY", 0.0008201);
-        jsonData.put("ARG_OF_PERICENTER", 155.0339);
-        jsonData.put("MEAN_ANOMALY", 205.1047);
-        jsonData.put("MEAN_MOTION", 15.4843448);
-        jsonData.put("MEAN_MOTION_DOT", 0.0001021);
+        jsonData.put("EPOCH", "2026-02-14T19:05:08.405600"); // Day 45.79523799 of 2026
+        jsonData.put("INCLINATION", 51.6315);
+        jsonData.put("RA_OF_ASC_NODE", 185.5279);
+        jsonData.put("ECCENTRICITY", 0.0011056);
+        jsonData.put("ARG_OF_PERICENTER", 98.8248);
+        jsonData.put("MEAN_ANOMALY", 261.3993);
+        jsonData.put("MEAN_MOTION", 15.48601910);
+        jsonData.put("MEAN_MOTION_DOT", 0.00007779);
         jsonData.put("MEAN_MOTION_DDOT", 0.0);
-        jsonData.put("BSTAR", 0.0001968);
-        jsonData.put("REV_AT_EPOCH", 55547);
+        jsonData.put("BSTAR", 0.000015107);
+        jsonData.put("REV_AT_EPOCH", 55278); // Updated to match current TLE
         return jsonData;
     }
 
