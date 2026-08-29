@@ -412,6 +412,35 @@ public final class TLETest extends AbstractSatelliteTestBase {
         }
     }
 
+    @Test
+    public void testJSONParsingWithComplexData() {
+        // Test the JSON parsing with more complex/realistic data
+        Map<String, Object> complexData = new HashMap<>();
+        complexData.put("OBJECT_NAME", "COMPLEX-SAT 1 (TEST)");
+        complexData.put("NORAD_CAT_ID", Double.valueOf(12345.0)); // Test Double to int conversion
+        complexData.put("ELEMENT_SET_NO", "999"); // Test String to int conversion
+        complexData.put("EPOCH", "2026-12-31T23:59:59.999999");
+        complexData.put("INCLINATION", 98.7654);
+        complexData.put("RA_OF_ASC_NODE", 123.4567);
+        complexData.put("ECCENTRICITY", 0.0123456);
+        complexData.put("ARG_OF_PERICENTER", 234.5678);
+        complexData.put("MEAN_ANOMALY", 345.6789);
+        complexData.put("MEAN_MOTION", 14.12345678);
+        complexData.put("MEAN_MOTION_DOT", 1.234e-4);
+        complexData.put("MEAN_MOTION_DDOT", -2.345e-6);
+        complexData.put("BSTAR", 5.678e-5);
+        complexData.put("REV_AT_EPOCH", 12345);
+        
+        TLE tle = new TLE(complexData);
+        
+        Assert.assertEquals("COMPLEX-SAT 1 (TEST)", tle.getName());
+        Assert.assertEquals(12345, tle.getCatnum());
+        Assert.assertEquals(999, tle.getSetnum());
+        Assert.assertEquals(98.7654, tle.getIncl(), 0.0001);
+        Assert.assertEquals(0.0123456, tle.getEccn(), 0.0000001);
+        Assert.assertEquals(14.12345678, tle.getMeanmo(), 0.00000001);
+    }
+
     // ========================================================================
     // Helper Methods
     // ========================================================================
@@ -468,5 +497,34 @@ public final class TLETest extends AbstractSatelliteTestBase {
         if (!data.containsKey("MEAN_MOTION_DDOT")) data.put("MEAN_MOTION_DDOT", 0.0);
         if (!data.containsKey("BSTAR")) data.put("BSTAR", 0.0);
         if (!data.containsKey("REV_AT_EPOCH")) data.put("REV_AT_EPOCH", 1);
+    }
+
+    @Test
+    public void testHelperMethodExercise() {
+        // Test to exercise the helper methods and improve coverage
+        Map<String, Object> testData = new HashMap<>();
+        testData.put("OBJECT_NAME", "TEST SAT");
+        testData.put("NORAD_CAT_ID", 12345);
+        testData.put("INCLINATION", 51.0);
+        
+        // This exercises the addMinimalRequiredFields helper
+        addMinimalRequiredFields(testData);
+        
+        TLE tle = new TLE(testData);
+        Assert.assertEquals("TEST SAT", tle.getName());
+        Assert.assertEquals(12345, tle.getCatnum());
+        Assert.assertEquals(51.0, tle.getIncl(), 0.1);
+        
+        // Test the equivalent JSON data method
+        Map<String, Object> equivalentData = createEquivalentJSONData();
+        Assert.assertNotNull("Equivalent data should not be null", equivalentData);
+        Assert.assertEquals("ISS (ZARYA)", equivalentData.get("OBJECT_NAME"));
+        Assert.assertEquals(25544, equivalentData.get("NORAD_CAT_ID"));
+        
+        // Test the test JSON data method
+        Map<String, Object> testJsonData = createTestJSONData();
+        Assert.assertNotNull("Test JSON data should not be null", testJsonData);
+        Assert.assertEquals("ISS (ZARYA)", testJsonData.get("OBJECT_NAME"));
+        Assert.assertEquals(25544, testJsonData.get("NORAD_CAT_ID"));
     }
 }
