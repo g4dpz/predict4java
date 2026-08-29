@@ -10,7 +10,7 @@ import java.util.TimeZone;
 
 /**
  * Example showing how to predict satellite passes over a ground station.
- * This example demonstrates both traditional TLE format and the new JSON TLE support.
+ * This example demonstrates both traditional TLE format and the new JSON orbital elements support.
  */
 public class PassPrediction {
 
@@ -18,9 +18,9 @@ public class PassPrediction {
         try {
             System.out.println("=== Satellite Pass Prediction Example ===\n");
             
-            // Method 1: Using JSON TLE from Celestrak (recommended for current data)
-            System.out.println("Method 1: Using fresh JSON TLE from Celestrak");
-            System.out.println("Fetching current ISS TLE data...");
+            // Method 1: Using JSON orbital elements from Celestrak (recommended for current data)
+            System.out.println("Method 1: Using fresh JSON orbital elements from Celestrak");
+            System.out.println("Fetching current ISS orbital data...");
             
             TLE jsonTle = null;
             try {
@@ -29,7 +29,7 @@ public class PassPrediction {
                 System.out.println("Epoch: 20" + String.format("%02d", jsonTle.getYear()) + 
                     String.format("%.8f", jsonTle.getRefepoch()));
             } catch (Exception e) {
-                System.out.println("Warning: Could not fetch JSON TLE: " + e.getMessage());
+                System.out.println("Warning: Could not fetch JSON orbital elements: " + e.getMessage());
                 System.out.println("Falling back to traditional TLE method...");
             }
             
@@ -46,10 +46,10 @@ public class PassPrediction {
             System.out.println("Epoch: 20" + String.format("%02d", traditionalTle.getYear()) + 
                 String.format("%.8f", traditionalTle.getRefepoch()));
             
-            // Use the JSON TLE if available, otherwise use traditional
+            // Use the JSON orbital elements if available, otherwise use traditional
             TLE tle = (jsonTle != null) ? jsonTle : traditionalTle;
             
-            System.out.println("\nUsing " + (jsonTle != null ? "JSON" : "traditional") + " TLE for predictions");
+            System.out.println("\nUsing " + (jsonTle != null ? "JSON orbital elements" : "traditional TLE") + " for predictions");
             System.out.println("=====================================\n");
             
             // Ground station: New York City
@@ -95,13 +95,13 @@ public class PassPrediction {
             System.out.println("Total passes found: " + passes.size());
             System.out.println("High-quality passes (>10° elevation): " + (passNumber - 1));
             
-            // Show TLE age information
+            // Show orbital data freshness comparison
             if (jsonTle != null && traditionalTle != null) {
-                System.out.println("\n=== TLE Freshness Comparison ===");
+                System.out.println("\n=== Orbital Data Freshness Comparison ===");
                 double epochDiff = Math.abs(jsonTle.getRefepoch() - traditionalTle.getRefepoch());
-                System.out.println("JSON TLE vs Traditional TLE epoch difference: " + 
+                System.out.println("JSON orbital elements vs Traditional TLE epoch difference: " + 
                     String.format("%.3f", epochDiff) + " days");
-                System.out.println("Note: JSON TLE from Celestrak is always current!");
+                System.out.println("Note: JSON orbital elements from Celestrak are always current!");
             }
             
         } catch (Exception e) {

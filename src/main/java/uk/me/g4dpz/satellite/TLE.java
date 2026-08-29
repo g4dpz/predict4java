@@ -147,9 +147,9 @@ public class TLE implements Serializable {
     }
 
     /**
-     * Constructor that creates a TLE from Celestrak JSON format data.
+     * Constructor that creates a TLE from Celestrak JSON orbital elements format.
      *
-     * @param jsonData Map containing TLE data in Celestrak JSON format
+     * @param jsonData Map containing orbital elements data in Celestrak JSON format
      * @throws IllegalArgumentException if the JSON data format is invalid or missing required fields
      */
     public TLE(final Map<String, Object> jsonData) throws IllegalArgumentException {
@@ -186,7 +186,7 @@ public class TLE implements Serializable {
             preProcessTLESet();
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error parsing JSON TLE data: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Error parsing JSON orbital elements data: " + e.getMessage(), e);
         }
     }
 
@@ -638,10 +638,10 @@ public class TLE implements Serializable {
     }
 
     /**
-     * Fetches TLE data from Celestrak's JSON API for a specific satellite.
+     * Fetches orbital elements from Celestrak's JSON API for a specific satellite.
      *
      * @param noradCatId the NORAD catalog ID of the satellite
-     * @return TLE object created from the JSON data
+     * @return TLE object created from the JSON orbital elements data
      * @throws IOException if there's an error fetching the data
      * @throws IllegalArgumentException if the satellite is not found or data is invalid
      */
@@ -681,7 +681,7 @@ public class TLE implements Serializable {
     }
 
     /**
-     * Fetches TLE data from Celestrak's JSON API for multiple satellites.
+     * Fetches orbital elements from Celestrak's JSON API for multiple satellites.
      *
      * @param noradCatIds array of NORAD catalog IDs
      * @return List of TLE objects
@@ -696,7 +696,7 @@ public class TLE implements Serializable {
                 tleList.add(tle);
             } catch (IllegalArgumentException e) {
                 // Log warning and continue with other satellites
-                System.err.println("Warning: Could not fetch TLE for satellite " + catId + ": " + e.getMessage());
+                System.err.println("Warning: Could not fetch orbital elements for satellite " + catId + ": " + e.getMessage());
             }
         }
         
@@ -704,7 +704,7 @@ public class TLE implements Serializable {
     }
 
     /**
-     * Simple JSON parser for TLE data (avoids external JSON library dependency).
+     * Simple JSON parser for orbital elements data (avoids external JSON library dependency).
      * This is a basic parser that works specifically with Celestrak's JSON format.
      */
     private static Map<String, Object> parseSimpleJson(String json) throws IllegalArgumentException {

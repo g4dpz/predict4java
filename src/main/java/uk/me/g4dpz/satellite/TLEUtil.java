@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Utility class for working with TLE data, especially JSON TLE data from Celestrak.
+ * Utility class for working with orbital elements data, especially JSON orbital elements from Celestrak.
  * Provides convenience methods for common satellite tracking operations.
  */
 public final class TLEUtil {
@@ -71,7 +71,7 @@ public final class TLEUtil {
     }
 
     /**
-     * Fetches current TLE for the International Space Station.
+     * Fetches current orbital elements for the International Space Station.
      *
      * @return TLE object for the ISS
      * @throws IOException if there's an error fetching the data
@@ -81,7 +81,7 @@ public final class TLEUtil {
     }
 
     /**
-     * Fetches TLE data for all weather satellites.
+     * Fetches orbital elements data for all weather satellites.
      *
      * @return List of TLE objects for weather satellites
      * @throws IOException if there's an error fetching the data
@@ -91,7 +91,7 @@ public final class TLEUtil {
     }
 
     /**
-     * Fetches TLE data for amateur radio satellites.
+     * Fetches orbital elements data for amateur radio satellites.
      *
      * @return List of TLE objects for amateur radio satellites
      * @throws IOException if there's an error fetching the data
@@ -101,7 +101,7 @@ public final class TLEUtil {
     }
 
     /**
-     * Fetches TLE data for a list of satellite names by searching common satellites.
+     * Fetches orbital elements data for a list of satellite names by searching common satellites.
      * Note: This is a basic implementation that matches common satellites.
      *
      * @param satelliteNames Array of satellite names to search for
@@ -140,16 +140,16 @@ public final class TLEUtil {
     }
 
     /**
-     * Checks if a TLE is considered fresh (less than 7 days old).
+     * Checks if orbital elements are considered fresh (less than 7 days old).
      * Note: This is a simple approximation based on current system date.
      *
      * @param tle the TLE to check
-     * @return true if the TLE appears to be fresh
+     * @return true if the orbital elements appear to be fresh
      */
     public static boolean isFresh(TLE tle) {
         // This is a simplified check. In reality, you'd compare against current date
-        // For now, we'll assume any TLE fetched from JSON API is fresh
-        return true; // JSON TLEs from Celestrak are always current
+        // For now, we'll assume any orbital elements fetched from JSON API are fresh
+        return true; // JSON orbital elements from Celestrak are always current
     }
 
     /**
@@ -217,7 +217,7 @@ public final class TLEUtil {
     }
 
     /**
-     * Creates a simple JSON string representation of TLE data (for debugging/logging).
+     * Creates a simple JSON string representation of orbital elements data (for debugging/logging).
      *
      * @param tle the TLE object
      * @return JSON-like string representation

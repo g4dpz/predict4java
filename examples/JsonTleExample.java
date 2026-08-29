@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Example demonstrating how to use JSON TLE data from Celestrak.
- * This example shows how to fetch current TLE data directly from Celestrak's JSON API
+ * Example demonstrating how to use JSON orbital elements data from Celestrak.
+ * This example shows how to fetch current orbital data directly from Celestrak's JSON API
  * instead of using hardcoded TLE strings.
  */
 public class JsonTleExample {
 
     public static void main(String[] args) {
         try {
-            System.out.println("=== JSON TLE Example ===");
-            System.out.println("Fetching current TLE data from Celestrak...\n");
+            System.out.println("=== JSON Orbital Elements Example ===");
+            System.out.println("Fetching current orbital data from Celestrak...\n");
 
-            // Fetch current TLE data for ISS (NORAD ID: 25544)
+            // Fetch current orbital elements for ISS (NORAD ID: 25544)
             TLE issTle = TLE.fetchFromCelestrak(25544);
             
             System.out.println("Successfully fetched TLE for: " + issTle.getName());
@@ -109,10 +109,10 @@ public class JsonTleExample {
             
             TLE traditionalTleObj = new TLE(traditionalTle);
             
-            System.out.println("JSON TLE Epoch: " + String.format("%.8f", issTle.getRefepoch()));
+            System.out.println("JSON Orbital Elements Epoch: " + String.format("%.8f", issTle.getRefepoch()));
             System.out.println("Traditional TLE Epoch: " + String.format("%.8f", traditionalTleObj.getRefepoch()));
             System.out.println("Difference: " + String.format("%.8f", Math.abs(issTle.getRefepoch() - traditionalTleObj.getRefepoch())) + " days");
-            System.out.println("\nNote: JSON TLE is automatically up-to-date from Celestrak!");
+            System.out.println("\nNote: JSON orbital elements are automatically up-to-date from Celestrak!");
             
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

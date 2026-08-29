@@ -14,21 +14,21 @@ Shows how to:
 **Use case:** Real-time satellite position tracking
 
 ### 2. PassPrediction.java
-**Updated with JSON TLE support!** Demonstrates:
-- Predicting satellite passes over a ground station using both traditional TLE format and the new JSON TLE support
-- Automatic fetching of current TLE data from Celestrak's JSON API
+**Updated with modern orbital elements support!** Demonstrates:
+- Predicting satellite passes over a ground station using both traditional TLE format and the new JSON orbital elements support
+- Automatic fetching of current orbital data from Celestrak's JSON API
 - Filtering passes by elevation angle
 - Calculating pass duration and timing
 - Finding optimal viewing opportunities
 
-**Use case:** Planning satellite observations, amateur radio contacts with always-current data
+**Use case:** Planning satellite observations, amateur radio contacts with always-current orbital data
 
 ### 2a. JsonTleExample.java
-**NEW!** Comprehensive example showing JSON TLE functionality:
-- Fetching current TLE data for individual satellites from Celestrak's JSON API
+**NEW!** Comprehensive example showing modern orbital elements functionality:
+- Fetching current orbital data for individual satellites from Celestrak's JSON API
 - Fetching multiple satellites at once
 - Comparing JSON vs traditional TLE formats
-- Real-time position calculations with fresh data
+- Real-time position calculations with fresh orbital data
 - No need to manually update TLE files
 
 **Use case:** Applications requiring always-current orbital data
@@ -119,7 +119,7 @@ Then run:
 ```bash
 mvn compile exec:java
 ```
-*Note: Requires internet connection to fetch JSON TLE data from Celestrak*
+*Note: Requires internet connection to fetch orbital elements from Celestrak*
 
 **DopplerShiftCalculation:**
 Change mainClass to `DopplerShiftCalculation` and run:
@@ -152,16 +152,16 @@ TLE (Two-Line Element) data in traditional format can be obtained from:
 
 - **Space-Track.org**: https://www.space-track.org/ (requires free registration)
 
-### NEW: JSON TLE Format (Recommended!)
+### NEW: JSON Orbital Elements Format (Recommended!)
 
-The predict4java library now supports Celestrak's JSON TLE format, which provides several advantages:
+The predict4java library now supports Celestrak's JSON orbital elements format, which provides several advantages:
 
 - **Always current**: Automatically fetches the latest orbital data
 - **No manual updates**: API calls ensure you always have fresh data
 - **Structured format**: Easier to parse and validate than traditional TLE
 - **Error handling**: Built-in validation and meaningful error messages
 
-#### JSON TLE Examples:
+#### JSON Orbital Elements Examples:
 
 ```java
 // Fetch current ISS TLE automatically
@@ -180,7 +180,7 @@ List<TLE> weatherSats = TLEUtil.fetchWeatherSatellites();
 - **Single satellite**: `https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=JSON`
 - **Multiple satellites**: `https://celestrak.org/NORAD/elements/gp.php?CATNR=25544,33591&FORMAT=JSON`
 
-**Important:** JSON TLE fetching requires an internet connection. For offline applications, use traditional TLE format.
+**Important:** JSON orbital elements fetching requires an internet connection. For offline applications, use traditional TLE format.
 
 ## Project Structure
 

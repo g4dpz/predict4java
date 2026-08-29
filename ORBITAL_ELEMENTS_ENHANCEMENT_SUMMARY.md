@@ -1,14 +1,14 @@
-# JSON TLE Enhancement Summary
+# Orbital Elements Enhancement Summary
 
 ## Overview
 
-Successfully enhanced predict4java library with comprehensive JSON TLE support, allowing automatic fetching of current orbital data from Celestrak's JSON API.
+Successfully enhanced predict4java library with comprehensive JSON orbital elements support, allowing automatic fetching of current orbital data from Celestrak's JSON API.
 
 ## Key Features Added
 
-### 1. JSON TLE Constructor
+### 1. JSON Orbital Elements Constructor
 - **New Constructor**: `TLE(Map<String, Object> jsonData)`
-- **Automatic Parsing**: Handles Celestrak JSON format seamlessly
+- **Automatic Parsing**: Handles Celestrak JSON orbital elements format seamlessly
 - **ISO 8601 Support**: Parses epoch timestamps from JSON format
 - **Validation**: Built-in error handling for malformed data
 
@@ -28,8 +28,8 @@ Successfully enhanced predict4java library with comprehensive JSON TLE support, 
 - **Helper Functions**: Satellite type identification, JSON formatting
 
 ### 4. Enhanced Examples
-- **JsonTleExample.java**: Comprehensive demonstration of JSON TLE features
-- **Updated PassPrediction.java**: Shows both traditional and JSON TLE usage
+- **JsonTleExample.java**: Comprehensive demonstration of JSON orbital elements features
+- **Updated PassPrediction.java**: Shows both traditional and JSON orbital elements usage
 - **Updated README.md**: Complete documentation of new features
 
 ## Technical Implementation
@@ -54,11 +54,11 @@ Celestrak JSON API → HTTP Fetch → JSON Parse → TLE Object → SGP4/SDP4 Mo
 ## Testing Results
 
 ### Successful Tests
-✅ **ISS TLE Fetch**: Retrieved current orbital data (NORAD 25544)  
+✅ **ISS Orbital Elements Fetch**: Retrieved current orbital data (NORAD 25544)  
 ✅ **Multiple Satellites**: Fetched ISS, NOAA-20, METEOR-M2, METEOR-M2-2  
 ✅ **Pass Prediction**: Generated 43 high-quality passes over 7 days  
 ✅ **Position Calculation**: Real-time ISS position (-39.4°, 333.5°, 435.3 km)  
-✅ **Epoch Comparison**: JSON TLE 195 days fresher than traditional example  
+✅ **Epoch Comparison**: JSON orbital elements 195 days fresher than traditional example  
 
 ### Performance
 - **Network latency**: ~2-3 seconds for API calls
@@ -68,7 +68,7 @@ Celestrak JSON API → HTTP Fetch → JSON Parse → TLE Object → SGP4/SDP4 Mo
 ## Benefits
 
 ### For Developers
-1. **No Manual Updates**: TLE data automatically current
+1. **No Manual Updates**: Orbital elements automatically current
 2. **Simplified Workflow**: One API call vs file management
 3. **Better Accuracy**: Fresh orbital data improves prediction quality
 4. **Error Resilience**: Built-in validation and error handling
@@ -103,7 +103,7 @@ String[] tle = {
 TLE tleObj = new TLE(tle); // Data may be outdated
 ```
 
-### After (JSON TLE)
+### After (JSON Orbital Elements)
 ```java
 TLE tle = TLE.fetchFromCelestrak(25544); // Always current
 ```
@@ -113,39 +113,39 @@ TLE tle = TLE.fetchFromCelestrak(25544); // Always current
 - ✅ **Full Compatibility**: All existing code works unchanged
 - ✅ **No Dependencies**: No new external libraries required  
 - ✅ **Same API**: Existing TLE methods unchanged
-- ✅ **Mixed Usage**: Can use both traditional and JSON TLEs together
+- ✅ **Mixed Usage**: Can use both traditional and JSON orbital elements together
 
 ## Documentation Updates
 
-1. **README.md**: Added JSON TLE section with examples
-2. **examples/README.md**: Updated with JSON TLE instructions
+1. **README.md**: Added JSON orbital elements section with examples
+2. **examples/README.md**: Updated with JSON orbital elements instructions
 3. **JavaDoc**: Complete documentation for new methods
 4. **Examples**: Two new comprehensive example files
 
 ## Future Enhancements
 
 ### Potential Additions
-1. **Caching**: Local TLE cache with expiration
+1. **Caching**: Local orbital elements cache with expiration
 2. **Batch APIs**: Support for Celestrak group endpoints
-3. **Async Fetching**: Non-blocking TLE retrieval
+3. **Async Fetching**: Non-blocking orbital data retrieval
 4. **Configuration**: Customizable API endpoints and timeouts
 
 ## File Changes Summary
 
 ### Core Library
-- `src/main/java/uk/me/g4dpz/satellite/TLE.java` - Enhanced with JSON support
+- `src/main/java/uk/me/g4dpz/satellite/TLE.java` - Enhanced with JSON orbital elements support
 - `src/main/java/uk/me/g4dpz/satellite/TLEUtil.java` - New utility class
 
 ### Examples
 - `examples/JsonTleExample.java` - New comprehensive example
-- `examples/PassPrediction.java` - Enhanced with JSON TLE support
+- `examples/PassPrediction.java` - Enhanced with JSON orbital elements support
 - `examples/README.md` - Updated documentation
 - `examples/pom.xml` - Updated to use version 1.2.2
 
 ### Documentation
-- `README.md` - Added JSON TLE section
-- `JSON_TLE_ENHANCEMENT_SUMMARY.md` - This summary document
+- `README.md` - Added JSON orbital elements section
+- `ORBITAL_ELEMENTS_ENHANCEMENT_SUMMARY.md` - This summary document
 
 ## Conclusion
 
-The JSON TLE enhancement significantly modernizes predict4java by enabling automatic access to current orbital data. This removes the manual TLE update burden while maintaining full backward compatibility and adding robust error handling. The implementation is production-ready and provides immediate benefits for any satellite tracking application requiring current orbital data.
+The orbital elements enhancement significantly modernizes predict4java by enabling automatic access to current orbital data. This removes the manual orbital element update burden while maintaining full backward compatibility and adding robust error handling. The implementation is production-ready and provides immediate benefits for any satellite tracking application requiring current orbital data.
