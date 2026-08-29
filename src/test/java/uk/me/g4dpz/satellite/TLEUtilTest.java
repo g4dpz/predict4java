@@ -146,6 +146,7 @@ public final class TLEUtilTest extends AbstractSatelliteTestBase {
      * Test fetchByNames with empty results.
      */
     @Test
+    @Ignore("Requires internet connection - manual testing only")
     public void testFetchByNamesNoMatches() {
         try {
             String[] satelliteNames = {"NONEXISTENT_SATELLITE_XYZ123"};
@@ -249,6 +250,7 @@ public final class TLEUtilTest extends AbstractSatelliteTestBase {
      * Test edge cases in satellite name matching.
      */
     @Test
+    @Ignore("Requires internet connection - manual testing only")
     public void testSatelliteNameMatching() {
         try {
             // Test case-insensitive matching

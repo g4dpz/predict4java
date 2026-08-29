@@ -399,6 +399,7 @@ public final class TLETest extends AbstractSatelliteTestBase {
     }
 
     @Test
+    @Ignore("Requires internet connection - manual testing only")
     public void testFetchFromCelestrakInvalidSatellite() {
         // Test with obviously invalid satellite ID that shouldn't exist
         try {
