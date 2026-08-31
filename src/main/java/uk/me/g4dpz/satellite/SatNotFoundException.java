@@ -57,22 +57,28 @@ public class SatNotFoundException extends PredictionException {
     }
 
     /**
-     * @param message
+     * Creates a new SatNotFoundException with a descriptive message.
+     *
+     * @param message descriptive error message explaining why the satellite could not be found
      */
     public SatNotFoundException(final String message) {
         super(message);
     }
 
     /**
-     * @param cause
+     * Creates a new SatNotFoundException wrapping another throwable cause.
+     *
+     * @param cause the underlying exception that caused the satellite lookup to fail
      */
     public SatNotFoundException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message
-     * @param cause
+     * Creates a new SatNotFoundException with both a message and underlying cause.
+     *
+     * @param message descriptive error message explaining why the satellite could not be found
+     * @param cause the underlying exception that caused the satellite lookup to fail
      */
     public SatNotFoundException(final String message, final Throwable cause) {
         super(message, cause);

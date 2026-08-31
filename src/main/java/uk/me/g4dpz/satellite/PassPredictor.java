@@ -52,10 +52,35 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Class which provides Pass Prediction.
+ * Class which provides Pass Prediction capabilities for satellite tracking.
+ * 
+ * <p>This is the main class for calculating satellite passes, positions, and Doppler frequency shifts.
+ * It uses SGP4/SDP4 orbital models to predict satellite motion based on Two Line Element (TLE) data.</p>
+ * 
+ * <h2>Usage Example:</h2>
+ * <pre>
+ * // Create TLE data for ISS
+ * String[] tleLine = {
+ *     "ISS (ZARYA)",
+ *     "1 25544U 98067A   21001.00000000  .00002182  00000-0  40864-4 0  9990",
+ *     "2 25544  51.6461 339.2364 0002829  16.4851 343.6542 15.48919103123456"
+ * };
+ * TLE tle = new TLE(tleLine);
+ * 
+ * // Define ground station position (latitude, longitude, altitude in meters)
+ * GroundStationPosition groundStation = new GroundStationPosition(52.4670, -2.0220, 200.0);
+ * 
+ * // Create pass predictor
+ * PassPredictor predictor = new PassPredictor(tle, groundStation);
+ * 
+ * // Get next satellite pass
+ * SatPassTime nextPass = predictor.nextSatPass(new Date());
+ * 
+ * // Get multiple passes over next 24 hours
+ * List&lt;SatPassTime&gt; passes = predictor.getPasses(new Date(), 24, true);
+ * </pre>
  *
  * @author David A. B. Johnson, badgersoft
- *
  */
 public class PassPredictor {
 
@@ -83,11 +108,14 @@ public class PassPredictor {
     private Date tca;
 
     /**
-     * Constructor.
+     * Constructor for creating a PassPredictor instance.
+     * Initializes the predictor with satellite TLE data and ground station position.
      *
-     * @throws IllegalArgumentException bad argument passed in
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @param theTLE the Two Line Element data containing satellite orbital parameters
+     * @param theQTH the ground station position for viewing calculations
+     * @throws IllegalArgumentException if TLE or ground station position is null
+     * @throws SatNotFoundException if the satellite cannot be created or will not be visible
+     * @throws InvalidTleException if the TLE data is invalid or corrupted
      */
     public PassPredictor(final TLE theTLE, final GroundStationPosition theQTH)
             throws IllegalArgumentException, InvalidTleException, SatNotFoundException {
@@ -110,12 +138,14 @@ public class PassPredictor {
     }
 
     /**
-     * Gets the downlink frequency corrected for doppler.
+     * Gets the downlink frequency corrected for doppler shift.
+     * Calculates the frequency shift due to satellite motion relative to the ground station.
      *
-     * @param freq the original frequency in Hz
-     * @return the doppler corrected frequency in Hz
-     * @throws InvalidTleException bad TLE passed in
-     * @throws SatNotFoundException
+     * @param freq the original transmit frequency in Hz
+     * @param date the time for which to calculate the doppler correction
+     * @return the doppler corrected receive frequency in Hz
+     * @throws InvalidTleException if the TLE data is invalid or corrupted
+     * @throws SatNotFoundException if the satellite cannot be found or initialized
      */
     public Long getDownlinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
@@ -133,12 +163,13 @@ public class PassPredictor {
 
     /**
      * Calculates the uplink frequency adjusted for Doppler shift.
+     * Accounts for satellite motion to determine the correct transmit frequency.
      *
-     * @param freq the base frequency in Hz
-     * @param date the time for the calculation
+     * @param freq the base transmit frequency in Hz
+     * @param date the time for which to calculate the doppler correction
      * @return the Doppler-adjusted uplink frequency in Hz
-     * @throws InvalidTleException if the TLE data is invalid
-     * @throws SatNotFoundException if the satellite cannot be found
+     * @throws InvalidTleException if the TLE data is invalid or corrupted
+     * @throws SatNotFoundException if the satellite cannot be found or initialized
      */
     public Long getUplinkFreq(final Long freq, final Date date) throws InvalidTleException,
             SatNotFoundException {
@@ -161,14 +192,14 @@ public class PassPredictor {
     }
 
     /**
+     * Find the next satellite pass for a specific date.
+     * Optionally winds back time to ensure complete pass detection.
      *
-     * Find the next satellite pass for a specific date
-     *
-     * @param date The date fo find the next pass for
-     * @param windBack Whether to wind back 1/4 of an orbit
-     * @return The satellite pass time
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * @param date the starting date/time to search from
+     * @param windBack whether to wind back 1/4 of an orbit before starting the search
+     * @return the next satellite pass with timing and trajectory details
+     * @throws InvalidTleException if the TLE data is invalid or corrupted
+     * @throws SatNotFoundException if the satellite cannot be found or will never be visible
      */
     public SatPassTime nextSatPass(final Date date, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -282,11 +313,14 @@ public class PassPredictor {
     }
 
     /**
-     * @param cal
-     * @param offSet
-     * @return
-     * @throws InvalidTleException
-     * @throws SatNotFoundException
+     * Gets satellite position at a specific time with specified time increment.
+     * Internal utility method for pass prediction calculations.
+     *
+     * @param cal the calendar object to advance
+     * @param offSet the time offset in seconds to add to the calendar
+     * @return the calculated satellite position
+     * @throws InvalidTleException if the TLE data becomes invalid during calculation
+     * @throws SatNotFoundException if the satellite cannot be positioned
      */
     private SatPos getPosition(final Calendar cal, final int offSet)
             throws InvalidTleException, SatNotFoundException {
@@ -297,14 +331,15 @@ public class PassPredictor {
     }
 
     /**
-     * Gets a list of SatPassTime
+     * Gets a list of satellite passes over a specified time period.
+     * Calculates multiple sequential passes for tracking and planning purposes.
      *
-     * @param start Date
-     *
-     *            newTLE = true; validateData();
-     * @return List&lt;SatPassTime&gt;
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @param start the starting date/time for pass predictions
+     * @param hoursAhead the number of hours ahead to calculate passes for
+     * @param windBack whether to wind back time for the first pass to ensure completeness
+     * @return list of SatPassTime objects containing pass details
+     * @throws InvalidTleException if the TLE data is invalid or becomes corrupted
+     * @throws SatNotFoundException if the satellite cannot be found or tracked
      */
     public List<SatPassTime> getPasses(final Date start, final int hoursAhead, final boolean windBack)
             throws InvalidTleException, SatNotFoundException {
@@ -403,15 +438,16 @@ public class PassPredictor {
     }
 
     /**
-     * Calculates positions of satellite for a given point in time, time range and step incremen.
+     * Calculates satellite positions over a time range with specified intervals.
+     * Useful for generating satellite tracks and continuous position data.
      *
-     * @param referenceDate
-     * @param incrementSeconds
-     * @param minutesBefore
-     * @param minutesAfter
-     * @return list of SatPos
-     * @throws SatNotFoundException
-     * @throws InvalidTleException
+     * @param referenceDate the central reference time for the calculation window
+     * @param incrementSeconds the time step between position calculations in seconds
+     * @param minutesBefore how many minutes before reference date to start calculations
+     * @param minutesAfter how many minutes after reference date to end calculations
+     * @return list of SatPos objects with positions at each time increment
+     * @throws InvalidTleException if the TLE data is invalid or corrupted
+     * @throws SatNotFoundException if the satellite cannot be positioned
      */
     public List<SatPos> getPositions(
             final Date referenceDate,
@@ -420,16 +456,20 @@ public class PassPredictor {
             final int minutesAfter)
             throws InvalidTleException, SatNotFoundException {
 
-        Date trackDate = new Date(referenceDate.getTime() - (minutesBefore * 60L * 1000L));
-        final Date endDateDate = new Date(referenceDate.getTime() + (minutesAfter * 60L * 1000L));
+        // Use timestamps for efficiency instead of creating Date objects repeatedly
+        long trackTime = referenceDate.getTime() - (minutesBefore * 60L * 1000L);
+        final long endTime = referenceDate.getTime() + (minutesAfter * 60L * 1000L);
+        final long incrementMillis = incrementSeconds * 1000L;
 
         final List<SatPos> positions = new ArrayList<SatPos>();
+        
+        // Reuse a single Date object instead of creating new ones
+        final Date trackDate = new Date();
 
-        while (trackDate.before(endDateDate)) {
-
+        while (trackTime < endTime) {
+            trackDate.setTime(trackTime);
             positions.add(getSatPos(trackDate));
-
-            trackDate = new Date(trackDate.getTime() + (incrementSeconds * 1000L));
+            trackTime += incrementMillis;
         }
 
         return positions;

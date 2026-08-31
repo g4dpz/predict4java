@@ -59,22 +59,28 @@ public class InvalidTleException extends PredictionException {
     }
 
     /**
-     * @param message The message
+     * Creates a new InvalidTleException with a descriptive message.
+     *
+     * @param message descriptive error message explaining the TLE validation failure
      */
     public InvalidTleException(final String message) {
         super(message);
     }
 
     /**
-     * @param cause The cause
+     * Creates a new InvalidTleException wrapping another throwable cause.
+     *
+     * @param cause the underlying exception that caused the TLE validation to fail
      */
     public InvalidTleException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message The message
-     * @param cause The cause
+     * Creates a new InvalidTleException with both a message and underlying cause.
+     *
+     * @param message descriptive error message explaining the TLE validation failure
+     * @param cause the underlying exception that caused the TLE validation to fail
      */
     public InvalidTleException(final String message, final Throwable cause) {
         super(message, cause);

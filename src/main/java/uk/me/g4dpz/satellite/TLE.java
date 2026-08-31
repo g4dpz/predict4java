@@ -54,7 +54,33 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * TLE representation to aid SGP4 calculations.
+ * TLE representation to aid SGP4/SDP4 calculations.
+ * 
+ * <p>This class parses and validates Two Line Element (TLE) data format used for satellite orbital elements.
+ * TLE format is the standard way to distribute satellite orbital parameters for tracking calculations.</p>
+ * 
+ * <h2>TLE Format:</h2>
+ * <pre>
+ * Line 0: Satellite Name
+ * Line 1: [Catalog Number] [Classification] [International Designator] [Epoch] [1st Derivative of Mean Motion] 
+ *         [2nd Derivative of Mean Motion] [BSTAR drag term] [Ephemeris type] [Element number] [Checksum]
+ * Line 2: [Catalog Number] [Inclination] [Right Ascension of Ascending Node] [Eccentricity] 
+ *         [Argument of Perigee] [Mean Anomaly] [Mean Motion] [Revolution number] [Checksum]
+ * </pre>
+ * 
+ * <h2>Usage Example:</h2>
+ * <pre>
+ * String[] tleData = {
+ *     "ISS (ZARYA)",
+ *     "1 25544U 98067A   21001.00000000  .00002182  00000-0  40864-4 0  9990", 
+ *     "2 25544  51.6461 339.2364 0002829  16.4851 343.6542 15.48919103123456"
+ * };
+ * 
+ * TLE tle = new TLE(tleData);
+ * System.out.println("Satellite: " + tle.getName());
+ * System.out.println("Inclination: " + tle.getIncl() + " degrees");
+ * System.out.println("Mean Motion: " + tle.getMeanmo() + " rev/day");
+ * </pre>
  */
 public class TLE implements Serializable {
 
@@ -67,6 +93,30 @@ public class TLE implements Serializable {
     private static final double XKE = 7.43669161E-2;
     private static final double TWO_THIRDS = 2.0 / 3.0;
     private static final double CK2 = 5.413079E-4;
+    
+    /** TLE field position constants for optimized parsing */
+    private static final int CATNUM_START = 2, CATNUM_END = 7;
+    private static final int SETNUM_START = 64, SETNUM_END = 68;
+    private static final int YEAR_START = 18, YEAR_END = 20;
+    private static final int EPOCH_START = 20, EPOCH_END = 32;
+    private static final int DRAG_START = 33, DRAG_END = 43;
+    private static final int NDDOT_START = 44, NDDOT_END = 50;
+    private static final int NDDOT_EXP_START = 51, NDDOT_EXP_END = 52;
+    private static final int BSTAR_START = 53, BSTAR_END = 59;
+    private static final int BSTAR_EXP_START = 60, BSTAR_EXP_END = 61;
+    
+    private static final int INCL_START = 8, INCL_END = 16;
+    private static final int RAAN_START = 17, RAAN_END = 25;
+    private static final int ECCN_START = 26, ECCN_END = 33;
+    private static final int ARGPER_START = 34, ARGPER_END = 42;
+    private static final int MEANAN_START = 43, MEANAN_END = 51;
+    private static final int MEANMO_START = 52, MEANMO_END = 63;
+    private static final int ORBITNUM_START = 63, ORBITNUM_END = 68;
+    
+    /** Pre-calculated common multipliers */
+    private static final double ECCN_MULTIPLIER = 1.0e-07;
+    private static final double NDDOT_MULTIPLIER = 1.0e-5;
+    private static final double BSTAR_MULTIPLIER = 1.0e-5;
 
     private int catnum;
     private String name;
@@ -169,29 +219,26 @@ public class TLE implements Serializable {
             lineCount++;
         }
 
-        catnum = Integer.parseInt(StringUtils.strip(tle[1].substring(2, 7)));
+        catnum = Integer.parseInt(StringUtils.strip(tle[1].substring(CATNUM_START, CATNUM_END)));
         name = tle[0].trim();
-        setnum = Integer.parseInt(StringUtils.strip(tle[1].substring(64, 68)));
-        year = Integer.parseInt(StringUtils.strip(tle[1].substring(18, 20)));
-        refepoch = Double.parseDouble(tle[1].substring(20, 32));
-        incl = Double.parseDouble(tle[2].substring(8, 16));
-        raan = Double.parseDouble(tle[2].substring(17, 25));
-        eccn = 1.0e-07 * Double.parseDouble(tle[2].substring(26, 33));
-        argper = Double.parseDouble(tle[2].substring(34, 42));
-        meanan = Double.parseDouble(tle[2].substring(43, 51));
-        meanmo = Double.parseDouble(tle[2].substring(52, 63));
-        drag = Double.parseDouble(tle[1].substring(33, 43));
+        setnum = Integer.parseInt(StringUtils.strip(tle[1].substring(SETNUM_START, SETNUM_END)));
+        year = Integer.parseInt(StringUtils.strip(tle[1].substring(YEAR_START, YEAR_END)));
+        refepoch = Double.parseDouble(tle[1].substring(EPOCH_START, EPOCH_END));
+        incl = Double.parseDouble(tle[2].substring(INCL_START, INCL_END));
+        raan = Double.parseDouble(tle[2].substring(RAAN_START, RAAN_END));
+        eccn = ECCN_MULTIPLIER * Double.parseDouble(tle[2].substring(ECCN_START, ECCN_END));
+        argper = Double.parseDouble(tle[2].substring(ARGPER_START, ARGPER_END));
+        meanan = Double.parseDouble(tle[2].substring(MEANAN_START, MEANAN_END));
+        meanmo = Double.parseDouble(tle[2].substring(MEANMO_START, MEANMO_END));
+        drag = Double.parseDouble(tle[1].substring(DRAG_START, DRAG_END));
 
-        double tempnum = 1.0e-5 * Double.parseDouble(tle[1].substring(44, 50));
-        nddot6 = tempnum
-                / Math.pow(10.0, Double.parseDouble(tle[1].substring(51, 52)));
+        double tempnum = NDDOT_MULTIPLIER * Double.parseDouble(tle[1].substring(NDDOT_START, NDDOT_END));
+        nddot6 = tempnum / Math.pow(10.0, Double.parseDouble(tle[1].substring(NDDOT_EXP_START, NDDOT_EXP_END)));
 
-        tempnum = 1.0e-5 * Double.parseDouble(tle[1].substring(53, 59));
+        tempnum = BSTAR_MULTIPLIER * Double.parseDouble(tle[1].substring(BSTAR_START, BSTAR_END));
+        bstar = tempnum / Math.pow(10.0, Double.parseDouble(tle[1].substring(BSTAR_EXP_START, BSTAR_EXP_END)));
 
-        bstar = tempnum
-                / Math.pow(10.0, Double.parseDouble(tle[1].substring(60, 61)));
-
-        orbitnum = Integer.parseInt(StringUtils.strip(tle[2].substring(63, 68)));
+        orbitnum = Integer.parseInt(StringUtils.strip(tle[2].substring(ORBITNUM_START, ORBITNUM_END)));
 
         /* reassign the values to thse which get used in calculations */
         epoch = (1000.0 * getYear()) + getRefepoch();
@@ -312,77 +359,99 @@ public class TLE implements Serializable {
     }
 
     /**
-     * @return the inclination of the satellite orbit
+     * Gets the orbital inclination angle.
+     *
+     * @return the inclination of the satellite orbit in degrees (0-180°)
      */
     public double getIncl() {
         return this.incl;
     }
 
     /**
-     * @return the Right Ascention of the Acending Node of the orbit
+     * Gets the Right Ascension of the Ascending Node.
+     *
+     * @return the Right Ascension of the Ascending Node of the orbit in degrees (0-360°)
      */
     public double getRaan() {
         return this.raan;
     }
 
     /**
-     * @return the Eccentricity of the orbit
+     * Gets the orbital eccentricity.
+     *
+     * @return the eccentricity of the orbit (0.0 for circular, less than 1.0 for elliptical)
      */
     public double getEccn() {
         return this.eccn;
     }
 
     /**
-     * @return the Argument of Perigee of the orbit
+     * Gets the argument of perigee.
+     *
+     * @return the argument of perigee of the orbit in degrees (0-360°)
      */
     public double getArgper() {
         return this.argper;
     }
 
     /**
-     * @return the Mean Anomoly of the orbit
+     * Gets the mean anomaly at epoch.
+     *
+     * @return the mean anomaly of the orbit at epoch time in degrees (0-360°)
      */
     public double getMeanan() {
         return this.meanan;
     }
 
     /**
-     * @return the Mean Motion of the satellite
+     * Gets the mean motion (orbital frequency).
+     *
+     * @return the mean motion of the satellite in revolutions per day
      */
     public double getMeanmo() {
         return this.meanmo;
     }
 
     /**
-     * @return the Drag factor
+     * Gets the atmospheric drag coefficient.
+     *
+     * @return the first derivative of mean motion (drag factor) in revolutions per day squared
      */
     public double getDrag() {
         return this.drag;
     }
 
     /**
-     * @return Nddot6
+     * Gets the second derivative of mean motion.
+     *
+     * @return the second derivative of mean motion divided by 6, used for long-term orbital predictions
      */
     public double getNddot6() {
         return this.nddot6;
     }
 
     /**
-     * @return Bstar
+     * Gets the BSTAR drag coefficient.
+     *
+     * @return the BSTAR drag term used in SGP4/SDP4 atmospheric drag modeling
      */
     public double getBstar() {
         return this.bstar;
     }
 
     /**
-     * @return Orbitnum
+     * Gets the orbit number at epoch.
+     *
+     * @return the orbit/revolution number at the TLE epoch time
      */
     public int getOrbitnum() {
         return this.orbitnum;
     }
 
     /**
-     * @return Deepspace
+     * Determines if this satellite requires deep space orbital calculations.
+     *
+     * @return true if this is a deep space satellite (orbital period > 225 minutes), false for LEO
      */
     public boolean isDeepspace() {
         return deepspace;
@@ -464,8 +533,12 @@ public class TLE implements Serializable {
      * @return the description
      */
     private String createIllegalArgumentMessage(final int lineCount, final String problem) {
-        return "TLE line[" + lineCount
-                + "] " + problem;
+        // Use StringBuilder for better performance in string concatenation
+        return new StringBuilder("TLE line[")
+            .append(lineCount)
+            .append("] ")
+            .append(problem)
+            .toString();
     }
 
     /**

@@ -367,10 +367,12 @@ public class SatPos {
     }
 
     /**
-     * Calculates the footprint range circle.
+     * Calculates the footprint range circle points for the satellite.
+     * Internal helper method that computes latitude/longitude pairs forming the satellite's 
+     * visibility circle on Earth's surface.
      *
-     * @param pos
-     * @return double array of lat/long
+     * @param pos the satellite position containing altitude and coordinates
+     * @return 2D array of [latitude, longitude] pairs in degrees defining the range circle
      */
     private static double[][] calculateRangeCirclePoints(final SatPos pos) {
 

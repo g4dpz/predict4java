@@ -16,19 +16,19 @@ public class BasicSatelliteTracking {
             // ISS TLE data (update with current TLE from celestrak.com)
             String[] tleLine = {
                 "ISS (ZARYA)",
-                "1 25544U 98067A   26046.50000000  .00016717  00000-0  10270-3 0  9005",
-                "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537"
+                "1 25544U 98067A   26243.14365400  .00005331  00000+0  10505-3 0  9995",
+                "2 25544  51.6314 289.0986 0005054  92.1995 267.9572 15.48946173583375"
             };
             
             // Create TLE object
             TLE tle = new TLE(tleLine);
             
             // Define ground station position (latitude, longitude, altitude in meters)
-            // Example: London, UK
+            // G4DPZ location
             GroundStationPosition groundStation = new GroundStationPosition(
-                51.5074,  // Latitude (degrees, North positive)
-                -0.1278,  // Longitude (degrees, East positive)
-                11.0      // Altitude (meters above sea level)
+                52.4670,  // Latitude (degrees, North positive)
+                -2.0220,  // Longitude (degrees, East positive)
+                200.0     // Altitude (meters above sea level)
             );
             
             // Create predictor

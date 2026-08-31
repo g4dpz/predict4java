@@ -60,22 +60,28 @@ public class PredictionException extends Exception {
     }
 
     /**
-     * @param message the exception message
+     * Creates a new PredictionException with a descriptive message.
+     *
+     * @param message descriptive error message explaining the prediction calculation failure
      */
     public PredictionException(final String message) {
         super(message);
     }
 
     /**
-     * @param cause the original exception
+     * Creates a new PredictionException wrapping another throwable cause.
+     *
+     * @param cause the underlying exception that caused the prediction calculation to fail
      */
     public PredictionException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message the exception message
-     * @param cause the original exception
+     * Creates a new PredictionException with both a message and underlying cause.
+     *
+     * @param message descriptive error message explaining the prediction calculation failure
+     * @param cause the underlying exception that caused the prediction calculation to fail
      */
     public PredictionException(final String message, final Throwable cause) {
         super(message, cause);

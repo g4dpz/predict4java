@@ -21,35 +21,35 @@ public class MultiSatelliteTracking {
             // ISS
             satellites.put("ISS", new String[]{
                 "ISS (ZARYA)",
-                "1 25544U 98067A   26046.50000000  .00016717  00000-0  10270-3 0  9005",
-                "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537"
+                "1 25544U 98067A   26243.14365400  .00005331  00000+0  10505-3 0  9995",
+                "2 25544  51.6314 289.0986 0005054  92.1995 267.9572 15.48946173583375"
             });
             
             // Hubble Space Telescope
             satellites.put("HST", new String[]{
                 "HST",
-                "1 20580U 90037B   26046.50000000  .00001234  00000-0  12345-4 0  9999",
-                "2 20580  28.4699 123.4567 0002345  45.6789 314.5678 15.09876543123456"
+                "1 20580U 90037B   26242.83844338  .00005591  00000+0  17102-3 0  9994",
+                "2 20580  28.4726 290.0642 0001561 244.0475 115.9960 15.31512856800026"
             });
             
             // NOAA 19 (Weather satellite)
-            satellites.put("NOAA-19", new String[]{
-                "NOAA 19",
-                "1 33591U 09005A   26046.50000000  .00000123  00000-0  12345-4 0  9999",
-                "2 33591  99.1234 123.4567 0012345  45.6789 314.5678 14.12345678123456"
+            satellites.put("NOAA-20", new String[]{
+                "NOAA 20 (JPSS-1)",
+                "1 43013U 17073A   26243.13949125  .00000039  00000+0  39569-4 0  9997",
+                "2 43013  98.7796 181.9439 0001907  67.8872 292.2507 14.19523597455107"
             });
             
-            // Ground station
+            // Ground station: G4DPZ
             GroundStationPosition groundStation = new GroundStationPosition(
-                37.7749,   // San Francisco
-                -122.4194,
-                50.0
+                52.4670,   // G4DPZ latitude
+                -2.0220,   // G4DPZ longitude
+                200.0      // Altitude (meters)
             );
             
             Date now = new Date();
             
             System.out.println("Multi-Satellite Tracking");
-            System.out.println("Ground Station: San Francisco, CA");
+            System.out.println("Ground Station: G4DPZ");
             System.out.println("Time: " + now);
             System.out.println("=====================================\n");
             
