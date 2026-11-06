@@ -175,6 +175,30 @@ int main(int argc, char** argv) {
     CHECK(api.passpredictor_get_passes(pp, kEpoch, kEpoch, passes, 64, &none) == 1);
     CHECK(none == 0);
 
+    // A reversed window is empty, not an error.
+    int reversed = -1;
+    CHECK(api.passpredictor_get_passes(pp, kEpoch + 3600, kEpoch, passes, 64, &reversed) == 1);
+    CHECK(reversed == 0);
+
+    // Equal fractional endpoints must not be widened into a one-second window by
+    // rounding; they are still an empty window.
+    int frac = -1;
+    CHECK(api.passpredictor_get_passes(pp, kFirstAos + 60.5, kFirstAos + 60.5, passes, 64, &frac) == 1);
+    CHECK(frac == 0);
+
+    // --- out-of-range timestamps are rejected, not cast with UB --------------------
+    // A short window whose start is beyond the supported range (year > 2200).
+    int oob = -1;
+    const double farFuture = 7258118400.0 + 1000.0; // just past 2200-01-01
+    CHECK(api.passpredictor_get_passes(pp, farFuture, farFuture + 3600.0, passes, 64, &oob) == 0);
+    CHECK(std::string(api.p4c_last_error()).find("supported time range") != std::string::npos);
+    // A short window whose start is before the supported range (year < 1900).
+    const double farPast = -2208988800.0 - 1000.0; // just before 1900-01-01
+    CHECK(api.passpredictor_get_passes(pp, farPast, farPast + 3600.0, passes, 64, &oob) == 0);
+    // A huge but finite forward window is rejected as too long, before any cast.
+    CHECK(api.passpredictor_get_passes(pp, kEpoch, kEpoch + 1e18, passes, 64, &oob) == 0);
+    CHECK(std::string(api.p4c_last_error()).find("too long") != std::string::npos);
+
     // --- bad arguments return 0 and set a message ----------------------------------
     int c = 0;
     CHECK(api.passpredictor_get_passes(nullptr, kEpoch, kEpoch + 60, passes, 64, &c) == 0);

@@ -119,21 +119,32 @@ def compare(name, sf, cpp):
     d_aos, d_los, d_tca, d_el = [], [], [], []
     missed, problems = 0, []
 
+    # One-to-one matching: each C++ pass can match at most one Skyfield pass.
+    # A matched C++ pass is removed from the candidate pool, so a duplicated C++
+    # pass is left over and reported as extra. This lets the cross-check detect
+    # duplicate predictions, not just missing or shifted ones.
+    remaining = list(full_cpp)
     for s in sf:
-        match = min(full_cpp, key=lambda p: abs(p["start"] - s["rise"]), default=None)
-        if match is None or abs(match["start"] - s["rise"]) > 120:
+        best = None
+        best_delta = None
+        for p in remaining:
+            delta = abs(p["start"] - s["rise"])
+            if best_delta is None or delta < best_delta:
+                best, best_delta = p, delta
+        if best is None or best_delta > 120:
             missed += 1
             problems.append(f"no predict4cpp pass for Skyfield pass at {s['rise']:.0f}")
             continue
-        d_aos.append(match["start"] - s["rise"])
-        d_los.append(match["end"] - s["set"])
-        d_tca.append(match["tca"] - s["culm"])
-        d_el.append(match["max_el"] - s["max_el"])
+        remaining.remove(best)
+        d_aos.append(best["start"] - s["rise"])
+        d_los.append(best["end"] - s["set"])
+        d_tca.append(best["tca"] - s["culm"])
+        d_el.append(best["max_el"] - s["max_el"])
 
-    sf_starts = [s["rise"] for s in sf]
-    extra = [p for p in full_cpp if min((abs(p["start"] - r) for r in sf_starts), default=1e9) > 120]
+    # Anything left in the pool is an extra C++ pass (including duplicates).
+    extra = remaining
     for p in extra:
-        problems.append(f"predict4cpp pass at {p['start']} has no Skyfield pass")
+        problems.append(f"predict4cpp pass at {p['start']} has no matching Skyfield pass")
 
     for label, values, lo, hi in (
         ("AOS", d_aos, AOS_LOS_MIN, AOS_LOS_MAX),

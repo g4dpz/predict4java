@@ -16,6 +16,14 @@ class DeepSpaceSatellite : public AbstractSatellite {
 public:
     explicit DeepSpaceSatellite(const TLE& tle);
     ~DeepSpaceSatellite();
+
+    // Owns raw pointers (dsv_, deep_) with manual delete, so a shallow copy
+    // would double-free and share propagation state. No deep copy is needed
+    // (instances are used via pointers), so copying and moving are disabled.
+    DeepSpaceSatellite(const DeepSpaceSatellite&) = delete;
+    DeepSpaceSatellite& operator=(const DeepSpaceSatellite&) = delete;
+    DeepSpaceSatellite(DeepSpaceSatellite&&) = delete;
+    DeepSpaceSatellite& operator=(DeepSpaceSatellite&&) = delete;
     
 protected:
     void calculateSGP4(double tsince) override {} // Not used for deep space

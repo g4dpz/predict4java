@@ -152,6 +152,14 @@ struct SatPassResult {
 // Longest window passpredictor_get_passes accepts, to guard against runaway calls.
 static const double P4C_MAX_WINDOW_SECONDS = 400.0 * 86400.0;
 
+// Supported absolute time range for pass prediction, as Unix seconds. Roughly
+// the years 1900 to 2200: comfortably inside the range of std::chrono::seconds
+// and system_clock, with room for the predictor's internal wind-back and the
+// 10-day look-ahead, so the floor/ceil casts can never overflow. TLE-based
+// prediction is meaningless outside a few decades of the epoch anyway.
+static const double P4C_MIN_UNIX_SECONDS = -2208988800.0; // 1900-01-01
+static const double P4C_MAX_UNIX_SECONDS = 7258118400.0;  // 2200-01-01
+
 // Message for the most recent failed call on this thread. Valid until the next
 // call on the same thread. Returns an empty string if there was no error.
 const char* p4c_last_error() {
@@ -205,9 +213,27 @@ int passpredictor_get_passes(PassPredictorHandle handle,
         setLastError("passpredictor_get_passes: invalid output buffer");
         return 0;
     }
-    if (!std::isfinite(start_unix) || !std::isfinite(end_unix) ||
-        end_unix - start_unix > P4C_MAX_WINDOW_SECONDS) {
-        setLastError("passpredictor_get_passes: invalid or too long a time window");
+    if (!std::isfinite(start_unix) || !std::isfinite(end_unix)) {
+        setLastError("passpredictor_get_passes: start or end is not a finite time");
+        return 0;
+    }
+    // An empty or reversed window has no passes. Check this on the raw inputs,
+    // before rounding, so that e.g. equal fractional endpoints are not widened
+    // into a one-second window by floor/ceil.
+    if (end_unix <= start_unix) {
+        *count = 0;
+        return 1;
+    }
+    if (end_unix - start_unix > P4C_MAX_WINDOW_SECONDS) {
+        setLastError("passpredictor_get_passes: time window is too long");
+        return 0;
+    }
+    // Guard the casts: the floor/ceil values, plus the predictor's internal
+    // wind-back and look-ahead, must stay within the range std::chrono::seconds
+    // and system_clock can represent. Reject anything near the limits rather
+    // than risk undefined behaviour in the conversion.
+    if (start_unix < P4C_MIN_UNIX_SECONDS || end_unix > P4C_MAX_UNIX_SECONDS) {
+        setLastError("passpredictor_get_passes: start or end is outside the supported time range");
         return 0;
     }
 
