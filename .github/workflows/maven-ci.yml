@@ -91,8 +91,9 @@ jobs:
     - name: Verify artifacts
       run: |
         ls -lh target/*.jar
-        echo "Verifying JAR files exist..."
-        [ -f target/predict4java-1.2.2.jar ] || exit 1
+        VERSION=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)
+        echo "Verifying target/predict4java-${VERSION}.jar exists..."
+        [ -f "target/predict4java-${VERSION}.jar" ] || exit 1
         echo "Build artifacts verified successfully!"
     
     - name: Upload build artifacts
