@@ -1,0 +1,20 @@
+# Build output (never commit binaries)
+build/
+build-*/
+cmake-build-*/
+*.dylib
+*.so
+*.dll
+*.a
+*.o
+*.obj
+a.out
+
+# Compiled Java comparison programs
+*.class
+
+# Deno cache and local state
+.deno/
+
+# macOS
+.DS_Store

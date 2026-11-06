@@ -1,0 +1,22 @@
+{
+  "name": "@predict4/deno",
+  "version": "1.0.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "example": "deno run --unstable-ffi --allow-read deno/example.ts",
+    "server": "deno run --allow-net --unstable-ffi --allow-read deno/server.ts",
+    "build": "cd .. && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -S .. -B . && cmake --build ."
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": false
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}
