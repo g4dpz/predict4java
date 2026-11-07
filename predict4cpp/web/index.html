@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISS Tracker - Predict4CPP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-row:last-child {
+            border-bottom: none;
+        }
+        
+        .label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .value {
+            font-weight: bold;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .value.large {
+            font-size: 1.8em;
+            color: #667eea;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .status.visible {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .status.not-visible {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .update-time {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛰️ ISS Tracker</h1>
+        <div class="subtitle">
+            Observer: 52.4670°N, 2.022°W, 200m
+        </div>
+        
+        <div id="loading" class="loading pulse">
+            Loading ISS data...
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div class="grid">
+                <div class="card">
+                    <h2>Current Position</h2>
+                    <div id="status" class="status"></div>
+                    <div class="data-row">
+                        <span class="label">Latitude:</span>
+                        <span class="value" id="lat">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Longitude:</span>
+                        <span class="value" id="lon">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Altitude:</span>
+                        <span class="value" id="alt">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Range:</span>
+                        <span class="value" id="range">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Range Rate:</span>
+                        <span class="value" id="rangeRate">-</span>
+                    </div>
+                    <div class="update-time" id="updateTime">-</div>
+                </div>
+                
+                <div class="card">
+                    <h2>Observer View</h2>
+                    <div class="data-row">
+                        <span class="label">Azimuth:</span>
+                        <span class="value large" id="az">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Elevation:</span>
+                        <span class="value large" id="el">-</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Next Pass</h2>
+                    <div class="data-row">
+                        <span class="label">AOS:</span>
+                        <span class="value" id="aos">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">AOS Azimuth:</span>
+                        <span class="value" id="aosAz">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Max Elevation:</span>
+                        <span class="value" id="maxEl">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Max El Time:</span>
+                        <span class="value" id="maxElTime">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">LOS:</span>
+                        <span class="value" id="los">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">LOS Azimuth:</span>
+                        <span class="value" id="losAz">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Duration:</span>
+                        <span class="value" id="duration">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleTimeString('en-GB', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+        }
+        
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('en-GB', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        async function updateCurrent() {
+            try {
+                const response = await fetch('/api/current');
+                const data = await response.json();
+                
+                document.getElementById('lat').textContent = data.latitude + '°';
+                document.getElementById('lon').textContent = data.longitude + '°';
+                document.getElementById('alt').textContent = data.altitude + ' km';
+                document.getElementById('az').textContent = data.azimuth + '°';
+                document.getElementById('el').textContent = data.elevation + '°';
+                document.getElementById('range').textContent = data.range + ' km';
+                document.getElementById('rangeRate').textContent = data.rangeRate + ' km/s';
+                document.getElementById('updateTime').textContent = 'Updated: ' + formatTime(data.time);
+                
+                const elevation = parseFloat(data.elevation);
+                const status = document.getElementById('status');
+                if (elevation > 0) {
+                    status.textContent = '✓ VISIBLE';
+                    status.className = 'status visible';
+                } else {
+                    status.textContent = '✗ NOT VISIBLE';
+                    status.className = 'status not-visible';
+                }
+            } catch (error) {
+                console.error('Error fetching current position:', error);
+            }
+        }
+        
+        async function updateNextPass() {
+            try {
+                const response = await fetch('/api/nextpass');
+                const data = await response.json();
+                
+                if (data) {
+                    document.getElementById('aos').textContent = formatDate(data.aos);
+                    document.getElementById('aosAz').textContent = data.aosAz + '°';
+                    document.getElementById('maxEl').textContent = data.maxEl + '°';
+                    document.getElementById('maxElTime').textContent = formatDate(data.maxElTime);
+                    document.getElementById('los').textContent = formatDate(data.los);
+                    document.getElementById('losAz').textContent = data.losAz + '°';
+                    document.getElementById('duration').textContent = data.duration + ' min';
+                } else {
+                    document.getElementById('aos').textContent = 'No pass found';
+                }
+            } catch (error) {
+                console.error('Error fetching next pass:', error);
+            }
+        }
+        
+        async function init() {
+            await Promise.all([updateCurrent(), updateNextPass()]);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            
+            // Update current position every second
+            setInterval(updateCurrent, 1000);
+            
+            // Update next pass every minute
+            setInterval(updateNextPass, 60000);
+        }
+        
+        init();
+    </script>
+</body>
+</html>
