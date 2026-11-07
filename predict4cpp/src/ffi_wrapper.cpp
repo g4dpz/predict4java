@@ -54,6 +54,62 @@ TLEHandle tle_create(const char* line1, const char* line2, const char* line3) {
     }
 }
 
+// Mean orbital elements in OMM form (CCSDS 502.0-B-3), for tle_create_from_elements.
+// Angles are degrees, mean_motion is rev/day, and the two derivatives are the
+// values the OMM feeds carry, which equal the TLE columns. The layout is
+// part of the FFI contract: foreign callers declare it by hand, and the FFI
+// test pins it. Size is 96 bytes.
+struct OrbitElementsC {
+    double epoch_day_of_year;   // offset 0: 1-based, with fraction
+    double inclination_deg;     // 8
+    double raan_deg;            // 16
+    double eccentricity;        // 24
+    double arg_perigee_deg;     // 32
+    double mean_anomaly_deg;    // 40
+    double mean_motion;         // 48
+    double bstar;               // 56
+    double mean_motion_dot;     // 64
+    double mean_motion_ddot;    // 72
+    int epoch_year;             // 80: four digits, 1957 to 2056
+    int norad_cat_id;           // 84: 1 to 999999999
+    int element_set_no;         // 88
+    int rev_at_epoch;           // 92
+};
+
+// Create a TLE object from OMM-style elements. Unlike tle_create this has no
+// five-digit catalogue number limit. Returns NULL on failure (see p4c_last_error).
+TLEHandle tle_create_from_elements(const char* name, const OrbitElementsC* e) {
+    if (e == nullptr) {
+        setLastError("tle_create_from_elements: null elements");
+        return nullptr;
+    }
+    try {
+        predict4cpp::OrbitElements elements;
+        elements.name = name != nullptr ? name : "";
+        elements.catalogNumber = e->norad_cat_id;
+        elements.epochYear = e->epoch_year;
+        elements.epochDayOfYear = e->epoch_day_of_year;
+        elements.inclinationDeg = e->inclination_deg;
+        elements.raanDeg = e->raan_deg;
+        elements.eccentricity = e->eccentricity;
+        elements.argPerigeeDeg = e->arg_perigee_deg;
+        elements.meanAnomalyDeg = e->mean_anomaly_deg;
+        elements.meanMotion = e->mean_motion;
+        elements.bstar = e->bstar;
+        elements.meanMotionDot = e->mean_motion_dot;
+        elements.meanMotionDdot = e->mean_motion_ddot;
+        elements.elementSetNumber = e->element_set_no;
+        elements.revolutionNumber = e->rev_at_epoch;
+        return new predict4cpp::TLE(elements);
+    } catch (const std::exception& ex) {
+        setLastError(ex.what());
+        return nullptr;
+    } catch (...) {
+        setLastError("tle_create_from_elements: unknown error");
+        return nullptr;
+    }
+}
+
 void tle_destroy(TLEHandle handle) {
     delete static_cast<predict4cpp::TLE*>(handle);
 }

@@ -83,6 +83,16 @@ if(BUILD_TESTS)
     endif()
     add_test(NAME pass_predictor COMMAND test_pass_predictor)
 
+    # Building a TLE object from OMM-style elements
+    add_executable(test_tle_elements tests/test_tle_elements.cpp ${CORE_SOURCES})
+    target_include_directories(test_tle_elements PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(test_tle_elements PRIVATE -Wall -Wextra -O2)
+    endif()
+    add_test(NAME tle_elements COMMAND test_tle_elements)
+
     # Tests the C FFI by loading the built shared library with dlopen
     add_executable(test_ffi_pass_predictor tests/test_ffi_pass_predictor.cpp)
     target_link_libraries(test_ffi_pass_predictor PRIVATE ${CMAKE_DL_LIBS})

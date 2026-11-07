@@ -133,6 +133,35 @@ Differences from the Java class:
 - An instance keeps satellite state while it works, so do not share one
   between threads.
 
+#### Orbit elements without a TLE
+
+A TLE cannot hold a catalogue number above 99999, and the 5-digit range ran out
+in July 2026, so new objects are distributed only as OMM data (CCSDS 502.0-B-3)
+in JSON, XML or KVN. `TLE` can be built directly from OMM-style mean elements:
+
+```cpp
+OrbitElements e;
+e.name = "ISS (ZARYA)";
+e.catalogNumber = 100123;            // up to nine digits
+e.epochYear = 2026;
+e.epochDayOfYear = 45.79523799;      // 1-based, with fraction
+e.inclinationDeg = 51.6315;          // angles in degrees
+e.raanDeg = 185.5279;
+e.eccentricity = 0.0011056;
+e.argPerigeeDeg = 98.8248;
+e.meanAnomalyDeg = 261.3993;
+e.meanMotion = 15.48601910;          // rev/day
+e.bstar = 0.00015107;
+e.meanMotionDot = 0.00007779;        // as the OMM feeds carry it: the TLE column
+e.meanMotionDdot = 0.0;              // likewise (SGP4 does not use either term)
+TLE tle(e);                          // then use it like any other TLE
+```
+
+The result is identical to a TLE with the same values. Only the SGP4 mean
+element theory is supported, so deep-space elements are detected as before and
+refused by `PassPredictor`. The C equivalent is `tle_create_from_elements`
+(`OrbitElementsC`, 96 bytes; see `src/ffi_wrapper.cpp`).
+
 #### C interface
 
 The shared library exports the predictor for foreign callers (for example

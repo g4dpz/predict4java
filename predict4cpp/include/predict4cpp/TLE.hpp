@@ -18,6 +18,41 @@ public:
 };
 
 /**
+ * Mean orbital elements in the form of a CCSDS Orbit Mean-Elements Message
+ * (OMM, CCSDS 502.0-B-3) for the SGP4 mean element theory.
+ *
+ * Unlike a TLE this has no limit on the catalogue number (up to nine digits),
+ * which matters because the 5-digit TLE range was exhausted in July 2026.
+ *
+ * Units follow the OMM: angles in degrees, mean motion in rev/day,
+ * MEAN_MOTION_DOT in rev/day^2 and MEAN_MOTION_DDOT in rev/day^3.
+ *
+ * About the two derivatives: CCSDS 502.0-B-3 (section 4.2, note 2) says a true
+ * derivative must be divided by 2 and 6 to give the numbers printed in a TLE.
+ * The OMM data actually distributed by Space-Track and CelesTrak does not do
+ * this: its values are the TLE columns unchanged, so that is what these fields
+ * hold and they are used as they are. SGP4 does not use either term, so this
+ * does not affect predictions.
+ */
+struct OrbitElements {
+    std::string name;
+    int catalogNumber = 0;          ///< NORAD_CAT_ID, 1 to 999999999
+    int epochYear = 0;              ///< four-digit year of the epoch, 1957 to 2056
+    double epochDayOfYear = 0.0;    ///< day of the year, 1-based, with fraction (1.0 = 00:00 on 1 January)
+    double inclinationDeg = 0.0;
+    double raanDeg = 0.0;           ///< RA_OF_ASC_NODE
+    double eccentricity = 0.0;
+    double argPerigeeDeg = 0.0;     ///< ARG_OF_PERICENTER
+    double meanAnomalyDeg = 0.0;
+    double meanMotion = 0.0;        ///< rev/day
+    double bstar = 0.0;             ///< drag term
+    double meanMotionDot = 0.0;     ///< rev/day^2, as in the feeds (equals the TLE column)
+    double meanMotionDdot = 0.0;    ///< rev/day^3, as in the feeds (equals the TLE field)
+    int elementSetNumber = 0;
+    int revolutionNumber = 0;       ///< REV_AT_EPOCH
+};
+
+/**
  * Two-Line Element (TLE) set for satellite orbital parameters
  * 
  * Represents NORAD two-line element sets used for satellite tracking.
@@ -38,6 +73,13 @@ public:
      * @throws InvalidTleException if TLE data is malformed
      */
     explicit TLE(const std::array<std::string, 2>& lines);
+
+    /**
+     * Construct from OMM-style mean elements. The result is identical to a TLE
+     * with the same values, but the catalogue number may have up to nine digits.
+     * @throws InvalidTleException if any value is out of range
+     */
+    explicit TLE(const OrbitElements& elements);
     
     // Getters
     std::string getName() const { return name_; }

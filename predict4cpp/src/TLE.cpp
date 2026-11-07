@@ -45,6 +45,83 @@ TLE::TLE(const std::array<std::string, 2>& lines) {
     initialize();
 }
 
+namespace {
+
+void requireFinite(double value, const char* what) {
+    if (!std::isfinite(value)) {
+        throw InvalidTleException(std::string(what) + " must be a finite number");
+    }
+}
+
+void requireRange(double value, double low, double high, const char* what) {
+    requireFinite(value, what);
+    if (value < low || value > high) {
+        throw InvalidTleException(std::string(what) + " is out of range [" + std::to_string(low) +
+                                  ", " + std::to_string(high) + "]: " + std::to_string(value));
+    }
+}
+
+} // namespace
+
+TLE::TLE(const OrbitElements& e) {
+    if (e.catalogNumber < 1 || e.catalogNumber > 999999999) {
+        throw InvalidTleException("Catalogue number must be between 1 and 999999999");
+    }
+    // A TLE epoch has a two-digit year, which the propagator reads as 1957 to
+    // 2056. Outside that range the epoch would be misread, so refuse it.
+    if (e.epochYear < 1957 || e.epochYear > 2056) {
+        throw InvalidTleException("Epoch year must be between 1957 and 2056: " +
+                                  std::to_string(e.epochYear));
+    }
+    requireFinite(e.epochDayOfYear, "Epoch day of year");
+    const bool leapYear = (e.epochYear % 4 == 0 && e.epochYear % 100 != 0) || e.epochYear % 400 == 0;
+    const double daysInYear = leapYear ? 366.0 : 365.0;
+    if (e.epochDayOfYear < 1.0 || e.epochDayOfYear >= daysInYear + 1.0) {
+        throw InvalidTleException("Epoch day of year must be at least 1 and below " +
+                                  std::to_string(static_cast<int>(daysInYear) + 1) + " for " +
+                                  std::to_string(e.epochYear) + ": " +
+                                  std::to_string(e.epochDayOfYear));
+    }
+    requireRange(e.inclinationDeg, 0.0, 180.0, "Inclination");
+    requireRange(e.raanDeg, 0.0, 360.0, "Right ascension of ascending node");
+    requireRange(e.argPerigeeDeg, 0.0, 360.0, "Argument of perigee");
+    requireRange(e.meanAnomalyDeg, 0.0, 360.0, "Mean anomaly");
+    requireFinite(e.eccentricity, "Eccentricity");
+    if (e.eccentricity < 0.0 || e.eccentricity >= 1.0) {
+        throw InvalidTleException("Eccentricity must be at least 0 and below 1: " +
+                                  std::to_string(e.eccentricity));
+    }
+    requireFinite(e.meanMotion, "Mean motion");
+    if (e.meanMotion <= 0.0 || e.meanMotion > 30.0) {
+        throw InvalidTleException("Mean motion must be above 0 and at most 30 rev/day: " +
+                                  std::to_string(e.meanMotion));
+    }
+    requireFinite(e.bstar, "BSTAR");
+    requireFinite(e.meanMotionDot, "Mean motion first derivative");
+    requireFinite(e.meanMotionDdot, "Mean motion second derivative");
+
+    name_ = e.name.empty() ? "UNKNOWN" : trim(e.name);
+    catnum_ = e.catalogNumber;
+    setnum_ = e.elementSetNumber;
+    // Same encoding as a parsed TLE: a two-digit year and the day of the year,
+    // which initialize() combines into epoch = 1000 * year + day.
+    year_ = e.epochYear % 100;
+    refepoch_ = e.epochDayOfYear;
+    incl_ = e.inclinationDeg;
+    raan_ = e.raanDeg;
+    eccn_ = e.eccentricity;
+    argper_ = e.argPerigeeDeg;
+    meanan_ = e.meanAnomalyDeg;
+    meanmo_ = e.meanMotion;
+    // The OMM feeds carry the TLE values unchanged (see OrbitElements), so they
+    // are used as they are, not divided by 2 and 6 as the standard's note says.
+    drag_ = e.meanMotionDot;
+    nddot6_ = e.meanMotionDdot;
+    bstar_ = e.bstar;
+    orbitnum_ = e.revolutionNumber;
+    initialize();
+}
+
 void TLE::parseLine1(const std::string& line) {
     if (line.length() < 69) {
         throw InvalidTleException("TLE line 1 too short: " + std::to_string(line.length()));

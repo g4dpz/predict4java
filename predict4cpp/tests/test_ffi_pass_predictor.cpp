@@ -54,9 +54,64 @@ static_assert(offsetof(SatPassResult, pole_passed) == 40, "layout");
 static_assert(offsetof(SatPassResult, truncated_start) == 44, "layout");
 static_assert(offsetof(SatPassResult, truncated_end) == 48, "layout");
 
+// Must match struct OrbitElementsC in ffi_wrapper.cpp (96 bytes).
+struct OrbitElementsC {
+    double epoch_day_of_year;
+    double inclination_deg;
+    double raan_deg;
+    double eccentricity;
+    double arg_perigee_deg;
+    double mean_anomaly_deg;
+    double mean_motion;
+    double bstar;
+    double mean_motion_dot;
+    double mean_motion_ddot;
+    int epoch_year;
+    int norad_cat_id;
+    int element_set_no;
+    int rev_at_epoch;
+};
+
+static_assert(sizeof(OrbitElementsC) == 96, "OrbitElementsC size changed");
+static_assert(offsetof(OrbitElementsC, epoch_day_of_year) == 0, "layout");
+static_assert(offsetof(OrbitElementsC, inclination_deg) == 8, "layout");
+static_assert(offsetof(OrbitElementsC, raan_deg) == 16, "layout");
+static_assert(offsetof(OrbitElementsC, eccentricity) == 24, "layout");
+static_assert(offsetof(OrbitElementsC, arg_perigee_deg) == 32, "layout");
+static_assert(offsetof(OrbitElementsC, mean_anomaly_deg) == 40, "layout");
+static_assert(offsetof(OrbitElementsC, mean_motion) == 48, "layout");
+static_assert(offsetof(OrbitElementsC, bstar) == 56, "layout");
+static_assert(offsetof(OrbitElementsC, mean_motion_dot) == 64, "layout");
+static_assert(offsetof(OrbitElementsC, mean_motion_ddot) == 72, "layout");
+static_assert(offsetof(OrbitElementsC, epoch_year) == 80, "layout");
+static_assert(offsetof(OrbitElementsC, norad_cat_id) == 84, "layout");
+static_assert(offsetof(OrbitElementsC, element_set_no) == 88, "layout");
+static_assert(offsetof(OrbitElementsC, rev_at_epoch) == 92, "layout");
+
+// The ISS elements from the TLE used below, in OMM form.
+OrbitElementsC issElements() {
+    OrbitElementsC e{};
+    e.epoch_day_of_year = 45.79523799;
+    e.inclination_deg = 51.6315;
+    e.raan_deg = 185.5279;
+    e.eccentricity = 0.0011056;
+    e.arg_perigee_deg = 98.8248;
+    e.mean_anomaly_deg = 261.3993;
+    e.mean_motion = 15.48601910;
+    e.bstar = 0.00015107;
+    e.mean_motion_dot = 0.00007779; // as the feeds carry it: the TLE column unchanged
+    e.mean_motion_ddot = 0.0;
+    e.epoch_year = 2026;
+    e.norad_cat_id = 25544;
+    e.element_set_no = 999;
+    e.rev_at_epoch = 55278;
+    return e;
+}
+
 using Handle = void*;
 
 struct Api {
+    Handle (*tle_create_from_elements)(const char*, const OrbitElementsC*);
     Handle (*tle_create)(const char*, const char*, const char*);
     void (*tle_destroy)(Handle);
     Handle (*groundstation_create)(double, double, double);
@@ -101,6 +156,7 @@ int main(int argc, char** argv) {
 
     Api api{};
     bool ok = load(lib, "tle_create", api.tle_create) && load(lib, "tle_destroy", api.tle_destroy) &&
+              load(lib, "tle_create_from_elements", api.tle_create_from_elements) &&
               load(lib, "groundstation_create", api.groundstation_create) &&
               load(lib, "groundstation_destroy", api.groundstation_destroy) &&
               load(lib, "p4c_last_error", api.p4c_last_error) &&
@@ -268,6 +324,67 @@ int main(int argc, char** argv) {
     Handle badTle = api.tle_create("BAD", "not a tle", "not a tle either");
     CHECK(badTle == nullptr);
     CHECK(std::strlen(api.p4c_last_error()) > 0);
+
+    // --- building the orbit from OMM-style elements -----------------------------------------
+    {
+        const OrbitElementsC elements = issElements();
+        Handle fromElements = api.tle_create_from_elements("ISS (ZARYA)", &elements);
+        CHECK(fromElements != nullptr);
+        Handle epp = api.passpredictor_create(fromElements, gs, 0.0);
+        CHECK(epp != nullptr);
+
+        // Same passes as the TLE-built predictor, and the same first pass as Java.
+        SatPassResult viaElements[64];
+        int elementCount = -1;
+        CHECK(api.passpredictor_get_passes(epp, kEpoch, kEpoch + 86400.0, viaElements, 64,
+                                           &elementCount) == 1);
+        CHECK(elementCount == count);
+        if (elementCount > 0 && count > 0) {
+            CHECK(viaElements[0].start == kFirstAos);
+            CHECK(viaElements[0].start == passes[0].start);
+            CHECK(viaElements[0].end == passes[0].end);
+            CHECK(viaElements[0].aos_azimuth == passes[0].aos_azimuth);
+        }
+        api.passpredictor_destroy(epp);
+        api.tle_destroy(fromElements);
+
+        // A six-digit catalogue number, which a TLE cannot hold, is accepted and
+        // does not change the orbit.
+        OrbitElementsC six = issElements();
+        six.norad_cat_id = 100123;
+        Handle sixTle = api.tle_create_from_elements("NEW OBJECT", &six);
+        CHECK(sixTle != nullptr);
+        Handle spp = api.passpredictor_create(sixTle, gs, 0.0);
+        CHECK(spp != nullptr);
+        int sixCount = -1;
+        CHECK(api.passpredictor_get_passes(spp, kEpoch, kEpoch + 86400.0, viaElements, 64,
+                                           &sixCount) == 1);
+        CHECK(sixCount == count);
+        api.passpredictor_destroy(spp);
+        api.tle_destroy(sixTle);
+
+        // A null name is allowed; invalid values and null elements are refused with a message.
+        Handle noName = api.tle_create_from_elements(nullptr, &elements);
+        CHECK(noName != nullptr);
+        api.tle_destroy(noName);
+
+        OrbitElementsC bad = issElements();
+        bad.eccentricity = 1.0;
+        CHECK(api.tle_create_from_elements("BAD", &bad) == nullptr);
+        CHECK(std::string(api.p4c_last_error()).find("Eccentricity") != std::string::npos);
+
+        bad = issElements();
+        bad.epoch_year = 1900;
+        CHECK(api.tle_create_from_elements("BAD", &bad) == nullptr);
+        CHECK(std::string(api.p4c_last_error()).find("Epoch year") != std::string::npos);
+
+        bad = issElements();
+        bad.norad_cat_id = 0;
+        CHECK(api.tle_create_from_elements("BAD", &bad) == nullptr);
+
+        CHECK(api.tle_create_from_elements("BAD", nullptr) == nullptr);
+        CHECK(std::string(api.p4c_last_error()).find("null") != std::string::npos);
+    }
 
     // --- destroying NULL is harmless -------------------------------------------------------
     api.passpredictor_destroy(nullptr);
