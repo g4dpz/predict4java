@@ -74,8 +74,12 @@ TLE::TLE(const OrbitElements& e) {
                                   std::to_string(e.epochYear));
     }
     requireFinite(e.epochDayOfYear, "Epoch day of year");
-    if (e.epochDayOfYear < 1.0 || e.epochDayOfYear >= 367.0) {
-        throw InvalidTleException("Epoch day of year must be at least 1 and below 367: " +
+    const bool leapYear = (e.epochYear % 4 == 0 && e.epochYear % 100 != 0) || e.epochYear % 400 == 0;
+    const double daysInYear = leapYear ? 366.0 : 365.0;
+    if (e.epochDayOfYear < 1.0 || e.epochDayOfYear >= daysInYear + 1.0) {
+        throw InvalidTleException("Epoch day of year must be at least 1 and below " +
+                                  std::to_string(static_cast<int>(daysInYear) + 1) + " for " +
+                                  std::to_string(e.epochYear) + ": " +
                                   std::to_string(e.epochDayOfYear));
     }
     requireRange(e.inclinationDeg, 0.0, 180.0, "Inclination");

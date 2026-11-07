@@ -146,7 +146,12 @@ void DeepSpaceSatellite::initSDP4() {
          2.0 * temp3 * (3.0 - 7.0 * dsv_->theta2)) * dsv_->cosio;
     xnodcf_ = 3.5 * dsv_->betao2 * xhdot1 * c1_;
     t2cof_ = 1.5 * c1_;
-    xlcof_ = 0.125 * a3ovk2 * dsv_->sinio * (3.0 + 5.0 * dsv_->cosio) / (1.0 + dsv_->cosio);
+    // Limit 1 + cosio at an inclination of exactly 180 degrees (reference SGP4: 1.5e-12).
+    double onePlusCosio = 1.0 + dsv_->cosio;
+    if (std::abs(onePlusCosio) < 1.5e-12) {
+        onePlusCosio = 1.5e-12;
+    }
+    xlcof_ = 0.125 * a3ovk2 * dsv_->sinio * (3.0 + 5.0 * dsv_->cosio) / onePlusCosio;
     aycof_ = 0.25 * a3ovk2 * dsv_->sinio;
     x7thm1_ = 7.0 * dsv_->theta2 - 1.0;
 

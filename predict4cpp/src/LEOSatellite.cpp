@@ -76,7 +76,8 @@ void LEOSatellite::sgp4Init() {
     c1_ = bstar * c2;
     sinio_ = std::sin(tle_.getXincl());
     double a3ovk2 = -J3_HARMONIC / CK2;
-    double c3 = coef * tsi * a3ovk2 * xnodp_ * sinio_ / eo;
+    // A circular orbit (eo == 0) has no eccentricity-driven term, so c3 is 0, not infinite.
+    double c3 = (eo > 0.0) ? coef * tsi * a3ovk2 * xnodp_ * sinio_ / eo : 0.0;
     x1mth2_ = 1.0 - theta2;
     
     double omegao = tle_.getOmegao();
@@ -102,10 +103,17 @@ void LEOSatellite::sgp4Init() {
     xnodot_ = xhdot1 + (0.5 * temp2 * (4.0 - 19.0 * theta2) +
                         2.0 * temp3 * (3.0 - 7.0 * theta2)) * cosio_;
     omgcof_ = bstar * c3 * std::cos(omegao);
-    xmcof_ = -TWO_THIRDS * coef * bstar / eeta;
+    // eeta is 0 for a circular orbit; the drag correction that uses xmcof_ is then 0.
+    xmcof_ = (eeta != 0.0) ? -TWO_THIRDS * coef * bstar / eeta : 0.0;
     xnodcf_ = 3.5 * betao2 * xhdot1 * c1_;
     t2cof_ = 1.5 * c1_;
-    xlcof_ = 0.125 * a3ovk2 * sinio_ * (3.0 + 5.0 * cosio_) / (1.0 + cosio_);
+    // 1 + cosio is 0 at an inclination of exactly 180 degrees; limit it as the
+    // reference SGP4 does (1.5e-12) so the coefficient stays finite.
+    double onePlusCosio = 1.0 + cosio_;
+    if (std::abs(onePlusCosio) < 1.5e-12) {
+        onePlusCosio = 1.5e-12;
+    }
+    xlcof_ = 0.125 * a3ovk2 * sinio_ * (3.0 + 5.0 * cosio_) / onePlusCosio;
     aycof_ = 0.25 * a3ovk2 * sinio_;
     double xmo = tle_.getXmo();
     delmo_ = std::pow(1.0 + eta_ * std::cos(xmo), 3.0);

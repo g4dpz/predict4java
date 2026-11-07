@@ -6,6 +6,7 @@
 // arrive from JSON rather than from a fixed-width text format.
 
 #include "predict4cpp/GroundStationPosition.hpp"
+#include "predict4cpp/LEOSatellite.hpp"
 #include "predict4cpp/PassPredictor.hpp"
 #include "predict4cpp/TLE.hpp"
 
@@ -166,6 +167,9 @@ void testRejectsInvalidValues() {
     CHECK(bad([](OrbitElements& e) { e.epochYear = 2057; }));
     CHECK(bad([](OrbitElements& e) { e.epochDayOfYear = 0.99; }));
     CHECK(bad([](OrbitElements& e) { e.epochDayOfYear = 367.0; }));
+    // 2026 is a common year: day 366.5 would be read as the next year.
+    CHECK(bad([](OrbitElements& e) { e.epochYear = 2026; e.epochDayOfYear = 366.0; }));
+    CHECK(bad([](OrbitElements& e) { e.epochYear = 2026; e.epochDayOfYear = 366.5; }));
     CHECK(bad([&](OrbitElements& e) { e.epochDayOfYear = nan; }));
     CHECK(bad([](OrbitElements& e) { e.inclinationDeg = -0.1; }));
     CHECK(bad([](OrbitElements& e) { e.inclinationDeg = 180.1; }));
@@ -184,7 +188,9 @@ void testRejectsInvalidValues() {
 
     // Boundaries that are allowed.
     CHECK(!bad([](OrbitElements& e) { e.epochDayOfYear = 1.0; }));
-    CHECK(!bad([](OrbitElements& e) { e.epochDayOfYear = 366.99999999; }));
+    CHECK(!bad([](OrbitElements& e) { e.epochYear = 2024; e.epochDayOfYear = 366.99999999; })); // leap year
+    CHECK(!bad([](OrbitElements& e) { e.epochYear = 2000; e.epochDayOfYear = 366.5; }));        // leap (divisible by 400)
+    CHECK(!bad([](OrbitElements& e) { e.epochYear = 2026; e.epochDayOfYear = 365.99999999; })); // common year
     CHECK(!bad([](OrbitElements& e) { e.epochYear = 1957; }));
     CHECK(!bad([](OrbitElements& e) { e.epochYear = 2056; }));
     CHECK(!bad([](OrbitElements& e) { e.inclinationDeg = 0.0; }));
@@ -192,6 +198,46 @@ void testRejectsInvalidValues() {
     CHECK(!bad([](OrbitElements& e) { e.bstar = -0.00012; })); // negative BSTAR is real
 }
 
+// The propagator divides by the eccentricity and by 1 + cos(inclination), which
+// are zero for a circular orbit and for an inclination of exactly 180 degrees.
+// Both are valid in OMM data and must give finite positions.
+bool finitePositions(const OrbitElements& e) {
+    const TLE tle(e);
+    LEOSatellite sat(tle);
+    const GroundStationPosition gs = station();
+    const auto start = epoch();
+    for (int minutes = 0; minutes <= 24 * 60; minutes += 37) {
+        const SatPos pos = sat.getPosition(start + std::chrono::minutes(minutes), gs);
+        if (!std::isfinite(pos.getLatitude()) || !std::isfinite(pos.getLongitude()) ||
+            !std::isfinite(pos.getAltitude()) || !std::isfinite(pos.getRange()) ||
+            !std::isfinite(pos.getElevation())) {
+            return false;
+        }
+    }
+    return true;
+}
+void testBoundaryOrbitsGiveFinitePositions() {
+    CHECK(finitePositions(issElements()));
+
+    OrbitElements circular = issElements();
+    circular.eccentricity = 0.0;
+    CHECK(finitePositions(circular));
+
+    OrbitElements retrograde = issElements();
+    retrograde.inclinationDeg = 180.0;
+    CHECK(finitePositions(retrograde));
+
+    OrbitElements both = issElements();
+    both.eccentricity = 0.0;
+    both.inclinationDeg = 180.0;
+    CHECK(finitePositions(both));
+
+    // A circular orbit stays close to its mean altitude (about 400 km here).
+    const TLE tle(circular);
+    LEOSatellite sat(tle);
+    const SatPos pos = sat.getPosition(epoch(), station());
+    CHECK(pos.getAltitude() > 300.0 && pos.getAltitude() < 500.0);
+}
 void testEmptyNameBecomesUnknown() {
     OrbitElements e = issElements();
     e.name = "";
@@ -232,6 +278,7 @@ int main() {
     testPassesMatchTheTleBuiltObject();
     testSixDigitCatalogueNumber();
     testRejectsInvalidValues();
+    testBoundaryOrbitsGiveFinitePositions();
     testEmptyNameBecomesUnknown();
     testDeepSpaceIsDetected();
 
