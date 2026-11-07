@@ -25,9 +25,14 @@ public:
  * which matters because the 5-digit TLE range was exhausted in July 2026.
  *
  * Units follow the OMM: angles in degrees, mean motion in rev/day,
- * MEAN_MOTION_DOT in rev/day^2 and MEAN_MOTION_DDOT in rev/day^3. Note that the
- * OMM derivatives are twice and six times the values printed in a TLE; the
- * conversion is done by TLE::TLE(const OrbitElements&).
+ * MEAN_MOTION_DOT in rev/day^2 and MEAN_MOTION_DDOT in rev/day^3.
+ *
+ * About the two derivatives: CCSDS 502.0-B-3 (section 4.2, note 2) says a true
+ * derivative must be divided by 2 and 6 to give the numbers printed in a TLE.
+ * The OMM data actually distributed by Space-Track and CelesTrak does not do
+ * this: its values are the TLE columns unchanged, so that is what these fields
+ * hold and they are used as they are. SGP4 does not use either term, so this
+ * does not affect predictions.
  */
 struct OrbitElements {
     std::string name;
@@ -41,8 +46,8 @@ struct OrbitElements {
     double meanAnomalyDeg = 0.0;
     double meanMotion = 0.0;        ///< rev/day
     double bstar = 0.0;             ///< drag term
-    double meanMotionDot = 0.0;     ///< rev/day^2 (OMM convention)
-    double meanMotionDdot = 0.0;    ///< rev/day^3 (OMM convention)
+    double meanMotionDot = 0.0;     ///< rev/day^2, as in the feeds (equals the TLE column)
+    double meanMotionDdot = 0.0;    ///< rev/day^3, as in the feeds (equals the TLE field)
     int elementSetNumber = 0;
     int revolutionNumber = 0;       ///< REV_AT_EPOCH
 };

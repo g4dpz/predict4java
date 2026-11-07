@@ -99,7 +99,7 @@ OrbitElementsC issElements() {
     e.mean_anomaly_deg = 261.3993;
     e.mean_motion = 15.48601910;
     e.bstar = 0.00015107;
-    e.mean_motion_dot = 2.0 * 0.00007779; // OMM value: twice the TLE column
+    e.mean_motion_dot = 0.00007779; // as the feeds carry it: the TLE column unchanged
     e.mean_motion_ddot = 0.0;
     e.epoch_year = 2026;
     e.norad_cat_id = 25544;

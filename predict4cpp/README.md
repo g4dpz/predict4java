@@ -152,8 +152,8 @@ e.argPerigeeDeg = 98.8248;
 e.meanAnomalyDeg = 261.3993;
 e.meanMotion = 15.48601910;          // rev/day
 e.bstar = 0.00015107;
-e.meanMotionDot = 2 * 0.00007779;    // OMM value: twice the TLE column
-e.meanMotionDdot = 0.0;              // OMM value: six times the TLE column
+e.meanMotionDot = 0.00007779;        // as the OMM feeds carry it: the TLE column
+e.meanMotionDdot = 0.0;              // likewise (SGP4 does not use either term)
 TLE tle(e);                          // then use it like any other TLE
 ```
 

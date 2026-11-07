@@ -109,10 +109,10 @@ TLE::TLE(const OrbitElements& e) {
     argper_ = e.argPerigeeDeg;
     meanan_ = e.meanAnomalyDeg;
     meanmo_ = e.meanMotion;
-    // A TLE prints the first derivative divided by 2 and the second divided
-    // by 6; the OMM carries the undivided values (CCSDS 502.0-B-3, section 4.2).
-    drag_ = e.meanMotionDot / 2.0;
-    nddot6_ = e.meanMotionDdot / 6.0;
+    // The OMM feeds carry the TLE values unchanged (see OrbitElements), so they
+    // are used as they are, not divided by 2 and 6 as the standard's note says.
+    drag_ = e.meanMotionDot;
+    nddot6_ = e.meanMotionDdot;
     bstar_ = e.bstar;
     orbitnum_ = e.revolutionNumber;
     initialize();

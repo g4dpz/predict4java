@@ -55,8 +55,8 @@ TLEHandle tle_create(const char* line1, const char* line2, const char* line3) {
 }
 
 // Mean orbital elements in OMM form (CCSDS 502.0-B-3), for tle_create_from_elements.
-// Angles are degrees, mean_motion is rev/day, and the two derivatives use the OMM
-// convention (twice and six times the values printed in a TLE). The layout is
+// Angles are degrees, mean_motion is rev/day, and the two derivatives are the
+// values the OMM feeds carry, which equal the TLE columns. The layout is
 // part of the FFI contract: foreign callers declare it by hand, and the FFI
 // test pins it. Size is 96 bytes.
 struct OrbitElementsC {

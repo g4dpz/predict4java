@@ -37,7 +37,7 @@ const std::array<std::string, 3> kIssTle = {
     "2 25544  51.6315 185.5279 0011056  98.8248 261.3993 15.48601910552787"};
 
 // The same values as the ISS TLE above, written as OMM elements. The
-// derivatives are the OMM values: twice the TLE's .00007779 and six times 0.
+// derivatives are the TLE's, unchanged, as the OMM feeds carry them.
 OrbitElements issElements() {
     OrbitElements e;
     e.name = "ISS (ZARYA)";
@@ -51,7 +51,7 @@ OrbitElements issElements() {
     e.meanAnomalyDeg = 261.3993;
     e.meanMotion = 15.48601910;
     e.bstar = 0.00015107;
-    e.meanMotionDot = 2.0 * 0.00007779;
+    e.meanMotionDot = 0.00007779;
     e.meanMotionDdot = 0.0;
     e.elementSetNumber = 999;
     e.revolutionNumber = 55278;
@@ -111,8 +111,7 @@ void testSameValuesAsTle() {
     CHECK(std::fabs(fromElements.getBstar() - fromText.getBstar()) < 1e-12);
     CHECK(std::fabs(fromElements.getBstar() - 0.00015107) < 1e-12);
 
-    // The OMM first derivative is twice the TLE column, so halving it must
-    // reproduce the value a TLE parse produces.
+    // The first derivative is used as given, so it matches the TLE column.
     CHECK(std::fabs(fromElements.getDrag() - fromText.getDrag()) < 1e-12);
     CHECK(std::fabs(fromElements.getDrag() - 0.00007779) < 1e-12);
 }
