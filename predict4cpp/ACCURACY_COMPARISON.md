@@ -2,7 +2,7 @@
 
 ## Test Configuration
 
-**Test Date**: 2026-02-15 12:00:00 UTC  
+**Test Date**: 2025-02-15 12:00:00 UTC  
 **Unix Timestamp**: 1739620800  
 **Satellite**: ISS (ZARYA) - Catalog #25544  
 **Ground Station**: London, UK (51.5074°N, 0.1278°W, 11m AMSL)  

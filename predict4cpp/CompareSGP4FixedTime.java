@@ -33,10 +33,10 @@ public class CompareSGP4FixedTime {
             System.out.println("Longitude: " + groundStation.getLongitude() + " degrees");
             System.out.println("Height AMSL: " + groundStation.getHeightAMSL() + " meters\n");
             
-            // Use a fixed time: 2026-02-15 12:00:00 UTC
+            // Use a fixed time: 2025-02-15 12:00:00 UTC
             Date fixedTime = new Date(1739620800000L);
             
-            System.out.println("Test Time: 2026-02-15 12:00:00 UTC");
+            System.out.println("Test Time: 2025-02-15 12:00:00 UTC");
             System.out.println("Unix Timestamp: 1739620800\n");
             
             System.out.println("Calculating satellite position...\n");

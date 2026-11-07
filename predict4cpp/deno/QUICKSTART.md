@@ -52,7 +52,7 @@ To change, edit `server.ts`:
 ```typescript
 const OBSERVER_LAT = 52.4670;  // Your latitude
 const OBSERVER_LON = -2.022;   // Your longitude  
-const OBSERVER_ALT = 0.2;      // Your altitude in km
+const OBSERVER_ALT = 200;      // Your altitude in metres
 ```
 
 ## How It Works

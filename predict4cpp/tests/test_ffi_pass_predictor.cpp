@@ -170,6 +170,38 @@ int main(int argc, char** argv) {
         CHECK(cut[1].truncated_start == 0 && cut[1].truncated_end == 1);
     }
 
+    // --- truncation is judged against the caller's endpoints, not rounded ones ----
+    // The first pass starts at the whole second kFirstAos. A window opening 0.5 s
+    // later must still flag it as already in progress (the search window is
+    // floored to kFirstAos, which would hide that if flags used the rounded value).
+    SatPassResult edge[8];
+    int edgeCount = -1;
+    CHECK(api.passpredictor_get_passes(pp, kFirstAos + 0.5, kFirstAos + 3600.0, edge, 8, &edgeCount) == 1);
+    CHECK(edgeCount >= 1);
+    if (edgeCount >= 1) {
+        CHECK(edge[0].start == kFirstAos);
+        CHECK(edge[0].truncated_start == 1);
+    }
+    // A window opening exactly at the AOS second does not flag it.
+    CHECK(api.passpredictor_get_passes(pp, kFirstAos, kFirstAos + 3600.0, edge, 8, &edgeCount) == 1);
+    if (edgeCount >= 1) {
+        CHECK(edge[0].start == kFirstAos);
+        CHECK(edge[0].truncated_start == 0);
+    }
+    // The same holds at the end: a window closing 0.5 s before the LOS second
+    // flags the pass as still in progress.
+    const double firstLos = kEpoch + 4 * 3600 + 41 * 60;
+    CHECK(api.passpredictor_get_passes(pp, kEpoch, firstLos - 0.5, edge, 8, &edgeCount) == 1);
+    CHECK(edgeCount >= 1);
+    if (edgeCount >= 1) {
+        CHECK(edge[0].end == firstLos);
+        CHECK(edge[0].truncated_end == 1);
+    }
+    CHECK(api.passpredictor_get_passes(pp, kEpoch, firstLos, edge, 8, &edgeCount) == 1);
+    if (edgeCount >= 1) {
+        CHECK(edge[0].truncated_end == 0);
+    }
+
     // --- an empty window ----------------------------------------------------------
     int none = -1;
     CHECK(api.passpredictor_get_passes(pp, kEpoch, kEpoch, passes, 64, &none) == 1);

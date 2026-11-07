@@ -264,8 +264,12 @@ int passpredictor_get_passes(PassPredictorHandle handle,
             out[i].pole_passed = p.getPolePassed() == "north" ? P4C_POLE_NORTH
                                : p.getPolePassed() == "south" ? P4C_POLE_SOUTH
                                                               : P4C_POLE_NONE;
-            out[i].truncated_start = p.isTruncatedStart() ? 1 : 0;
-            out[i].truncated_end = p.isTruncatedEnd() ? 1 : 0;
+            // The search window above is rounded outwards to whole seconds, so
+            // the C++ flags describe that rounded window. Report truncation
+            // against the caller's original endpoints instead: a pass that
+            // began 0.5 s before start_unix did start before the window.
+            out[i].truncated_start = out[i].start < start_unix ? 1 : 0;
+            out[i].truncated_end = out[i].end > end_unix ? 1 : 0;
         }
         return 1;
     } catch (const std::exception& e) {

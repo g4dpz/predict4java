@@ -16,10 +16,8 @@ First, build the FFI shared library:
 
 ```bash
 cd predict4cpp
-mkdir -p build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -f ../CMakeLists_ffi.txt ..
-cmake --build .
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake --build build
 ```
 
 This will create:
@@ -103,16 +101,18 @@ class Satellite {
 ### PositionResult
 
 ```typescript
+// Values are returned exactly as the native library produces them.
+// Angles are in RADIANS; convert with `rad * 180 / Math.PI` for degrees.
 interface PositionResult {
-  latitude: number;      // degrees
-  longitude: number;     // degrees
+  latitude: number;      // radians
+  longitude: number;     // radians
   altitude: number;      // km
   range: number;         // km
-  azimuth: number;       // degrees
-  elevation: number;     // degrees
+  azimuth: number;       // radians
+  elevation: number;     // radians
   rangeRate: number;     // km/s
   theta: number;         // radians
-  time: number;          // Julian date
+  time: number;          // Unix time (seconds)
 }
 ```
 

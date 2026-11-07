@@ -1,6 +1,9 @@
-#!/usr/bin/env -S deno run --unstable-ffi --allow-read
+#!/usr/bin/env -S deno run --allow-ffi --allow-read
 
 import { TLE, GroundStation, Satellite } from "./mod.ts";
+
+// getPosition() returns the native angles in radians; convert for display.
+const deg = (radians: number): number => radians * (180 / Math.PI);
 
 // ISS TLE
 const tle = new TLE(
@@ -23,12 +26,12 @@ const position = satellite.getPosition(groundStation, now);
 
 if (position) {
   console.log("\nISS Position:");
-  console.log(`  Latitude:  ${position.latitude.toFixed(4)}°`);
-  console.log(`  Longitude: ${position.longitude.toFixed(4)}°`);
+  console.log(`  Latitude:  ${deg(position.latitude).toFixed(4)}°`);
+  console.log(`  Longitude: ${deg(position.longitude).toFixed(4)}°`);
   console.log(`  Altitude:  ${position.altitude.toFixed(2)} km`);
   console.log(`  Range:     ${position.range.toFixed(2)} km`);
-  console.log(`  Azimuth:   ${position.azimuth.toFixed(2)}°`);
-  console.log(`  Elevation: ${position.elevation.toFixed(2)}°`);
+  console.log(`  Azimuth:   ${deg(position.azimuth).toFixed(2)}°`);
+  console.log(`  Elevation: ${deg(position.elevation).toFixed(2)}°`);
   console.log(`  Range Rate: ${position.rangeRate.toFixed(4)} km/s`);
 }
 
@@ -40,7 +43,7 @@ for (let i = 0; i <= 60; i += 10) {
   
   if (pos) {
     console.log(`+${i}min: alt=${pos.altitude.toFixed(1)}km, ` +
-                `az=${pos.azimuth.toFixed(1)}°, el=${pos.elevation.toFixed(1)}°`);
+                `az=${deg(pos.azimuth).toFixed(1)}°, el=${deg(pos.elevation).toFixed(1)}°`);
   }
 }
 

@@ -27,7 +27,7 @@ java -cp .:../target/classes CompareSGP4FixedTime
 
 **Satellite:** ISS (ZARYA)
 **Model:** SGP4 (Low Earth Orbit)
-**Test Time:** 2026-02-15 12:00:00 UTC
+**Test Time:** 2025-02-15 12:00:00 UTC
 
 ### CompareSDP4.java
 Compares SDP4 (deep space satellite) calculations between Java and C++ implementations.

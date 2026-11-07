@@ -134,12 +134,17 @@ TLE createTLE() {
 
 ## Linking in CMake
 
-```cmake
-# Find predict4cpp
-find_package(predict4cpp REQUIRED)
+predict4cpp does not install a CMake package or its headers, so
+`find_package(predict4cpp)` is not available. Build it as part of your project
+with `add_subdirectory` instead:
 
-# Link to your target
-target_link_libraries(your_app PRIVATE predict4cpp)
+```cmake
+# Build predict4cpp from source as part of this project
+add_subdirectory(path/to/predict4cpp predict4cpp-build)
+
+# Link your target and add the public headers
+target_include_directories(your_app PRIVATE path/to/predict4cpp/include)
+target_link_libraries(your_app PRIVATE predict4cpp_ffi)
 ```
 
 ## Next Steps

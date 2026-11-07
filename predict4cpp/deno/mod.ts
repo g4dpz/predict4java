@@ -9,11 +9,12 @@ const LIBRARY_PATH = Deno.build.os === "darwin"
   ? "../build/predict4cpp_ffi.dll"
   : "../build/libpredict4cpp_ffi.so";
 
-// Get the directory of the current module
-const moduleDir = new URL(".", import.meta.url).pathname;
-const libraryPath = moduleDir + LIBRARY_PATH;
+// Resolve the library as a file URL and pass the URL to Deno.dlopen. Do not use
+// URL.pathname: it is percent-encoded (a checkout under a directory with spaces
+// arrives as %20) and is not a valid path for Windows drive letters.
+const libraryUrl = new URL(LIBRARY_PATH, import.meta.url);
 
-const lib = Deno.dlopen(libraryPath, {
+const lib = Deno.dlopen(libraryUrl, {
   // TLE functions
   tle_create: {
     parameters: ["buffer", "buffer", "buffer"],

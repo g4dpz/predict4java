@@ -11,7 +11,7 @@ The C++ port of predict4java delivers **151x faster** satellite position calcula
 - **C++ Compiler**: AppleClang 17.0.0 (C++17, -O2)
 - **Java Runtime**: OpenJDK 21 with G1 GC
 - **Test Satellite**: ISS (ZARYA) - Catalog #25544
-- **Test Time**: 2026-02-15 12:00:00 UTC (Unix: 1739620800)
+- **Test Time**: 2025-02-15 12:00:00 UTC (Unix: 1739620800)
 - **Ground Station**: London, UK (51.5074°N, 0.1278°W, 11m)
 
 ## Performance Results

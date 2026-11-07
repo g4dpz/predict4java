@@ -4,7 +4,7 @@ import { TLE, GroundStation, Satellite } from "../deno/mod.ts";
 
 const OBSERVER_LAT = 52.4670;
 const OBSERVER_LON = -2.022;
-const OBSERVER_ALT = 0.2; // 200m in km
+const OBSERVER_ALT = 200; // metres above mean sea level
 
 // ISS TLE
 const tle = new TLE(
@@ -29,8 +29,22 @@ function findNextPass(startTime: Date): any {
   let aosAz = 0;
   let losAz = 0;
   
+  // If the satellite is already above the horizon, a pass is in progress. Skip
+  // it, as PassPredictor.nextSatPass does, so the AOS reported below is a real
+  // rise and the maximum elevation covers the whole pass, not just the part
+  // after "now".
+  let startIndex = 0;
+  const initial = satellite.getPosition(groundStation, startTime);
+  if (initial && radToDeg(initial.elevation) > 0) {
+    while (startIndex < 24 * 60 * 6) {
+      const p = satellite.getPosition(groundStation, new Date(now + startIndex * 10 * 1000));
+      if (p && radToDeg(p.elevation) <= 0) break;
+      startIndex++;
+    }
+  }
+
   // Search for next 24 hours, checking every 10 seconds
-  for (let i = 0; i < 24 * 60 * 6; i++) {
+  for (let i = startIndex; i < 24 * 60 * 6; i++) {
     const time = new Date(now + i * 10 * 1000);
     const pos = satellite.getPosition(groundStation, time);
     

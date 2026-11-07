@@ -38,10 +38,10 @@ int main() {
         std::cout << "Longitude: " << groundStation.getLongitude() << " degrees\n";
         std::cout << "Height AMSL: " << groundStation.getHeightAMSL() << " meters\n\n";
         
-        // Use a fixed time: 2026-02-15 12:00:00 UTC
+        // Use a fixed time: 2025-02-15 12:00:00 UTC
         auto fixedTime = std::chrono::system_clock::from_time_t(1739620800);
         
-        std::cout << "Test Time: 2026-02-15 12:00:00 UTC\n";
+        std::cout << "Test Time: 2025-02-15 12:00:00 UTC\n";
         std::cout << "Unix Timestamp: 1739620800\n\n";
         
         std::cout << "Calculating satellite position...\n";

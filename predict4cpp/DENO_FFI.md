@@ -77,7 +77,7 @@ const tle = new TLE(
   "2 25544  51.6316  99.7104 0008201 155.0339 205.1047 15.48434477555473"
 );
 
-// Define ground station (lat, lon, alt in km)
+// Define ground station (lat, lon, alt in metres)
 const station = new GroundStation(51.5074, -0.1278, 0.0);
 
 // Create satellite
@@ -161,7 +161,7 @@ class GroundStation {
 **Parameters:**
 - `latitude`: Degrees north (-90 to 90)
 - `longitude`: Degrees east (-180 to 180)
-- `altitude`: Kilometers above sea level
+- `altitude`: Metres above mean sea level
 
 ### Satellite Class
 
@@ -183,16 +183,18 @@ class Satellite {
 ### PositionResult Interface
 
 ```typescript
+// Values are returned exactly as the native library produces them.
+// Angles are in RADIANS; convert with `rad * 180 / Math.PI` for degrees.
 interface PositionResult {
-  latitude: number;      // Satellite latitude (degrees)
-  longitude: number;     // Satellite longitude (degrees)
+  latitude: number;      // Satellite latitude (radians)
+  longitude: number;     // Satellite longitude (radians)
   altitude: number;      // Altitude above Earth (km)
   range: number;         // Distance from ground station (km)
-  azimuth: number;       // Azimuth from ground station (degrees, 0=N)
-  elevation: number;     // Elevation angle (degrees, 0=horizon)
+  azimuth: number;       // Azimuth from ground station (radians, 0=N)
+  elevation: number;     // Elevation angle (radians, 0=horizon)
   rangeRate: number;     // Rate of range change (km/s)
   theta: number;         // Orbital phase angle (radians)
-  time: number;          // Julian date
+  time: number;          // Unix time (seconds since 1970-01-01 UTC)
 }
 ```
 

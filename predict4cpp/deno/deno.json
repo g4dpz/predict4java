@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "exports": "./mod.ts",
   "tasks": {
-    "example": "deno run --unstable-ffi --allow-read deno/example.ts",
-    "server": "deno run --allow-net --unstable-ffi --allow-read deno/server.ts",
+    "example": "deno run --allow-ffi --allow-read example.ts",
+    "server": "deno run --allow-net --allow-ffi --allow-read server.ts",
     "build": "cd .. && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -S .. -B . && cmake --build ."
   },
   "fmt": {

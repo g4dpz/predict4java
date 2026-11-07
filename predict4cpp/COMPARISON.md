@@ -56,7 +56,7 @@ The C++ implementation is approximately 7-14x faster for TLE parsing.
 
 ### SGP4 Position Calculation Speed
 
-**Test Configuration**: 100 iterations, fixed timestamp (2026-02-15 12:00:00 UTC)
+**Test Configuration**: 100 iterations, fixed timestamp (2025-02-15 12:00:00 UTC)
 
 | Implementation | Total Time (100 iter) | Average Time | Speedup |
 |----------------|----------------------|--------------|---------|
@@ -132,7 +132,7 @@ std::cout << "Inclination: " << tle.getIncl() << "\n";
 
 ## Accuracy Verification
 
-**Test Date**: 2026-02-15 12:00:00 UTC  
+**Test Date**: 2025-02-15 12:00:00 UTC  
 **Satellite**: ISS (ZARYA)  
 **Ground Station**: London, UK
 
